@@ -330,20 +330,20 @@
                         💀 你們在前面階段曾因心理防線崩潰而淘汰，現在請透過設計「方案 D」來打破系統困境！
                     </div>
 
-                    <!-- 小輸入格：行動命名 -->
+                    <!-- 第一部分（單行）：行動方案命名 -->
                     <div class="space-y-1 shrink-0">
                         <label for="student-solution-d-title" class="text-xs sm:text-sm font-black text-neon-purple block">
-                            1️⃣ 為你們的破局行動取一個名字：
+                            1️⃣ 為你們的破局行動方案取名（單行命名）：
                         </label>
                         <input type="text" id="student-solution-d-title" oninput="window.onSolDInputChange()" placeholder="範例：溫柔的破冰船（或：圖書館的秘密邀請）" class="w-full bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl px-4 py-3 text-base font-black text-white placeholder-gray-400/50 outline-none transition-all">
                     </div>
 
-                    <!-- 大輸入格：具體行為與步驟 -->
+                    <!-- 第二部分（下方多行）：行動細項補充 -->
                     <div class="space-y-1 flex-1 flex flex-col">
                         <label for="student-solution-d-input" class="text-xs sm:text-sm font-black text-neon-purple block">
-                            2️⃣ 寫出具體行為與執行步驟：
+                            2️⃣ 補充具體行動細項與執行步驟：
                         </label>
-                        <textarea id="student-solution-d-input" rows="5" oninput="window.onSolDInputChange()" placeholder="範例步驟：&#10;1. 下課時不在教室大聲找阿光，避免引發阿健正面衝突。&#10;2. 趁去裝水時私下遞紙條或傳訊息，約阿光午休一起去圖書館。&#10;3. 邀請平時也覺得阿健太過分的同學加入，建立友善支持小圈圈。" class="w-full min-h-[145px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-sm sm:text-base text-white placeholder-gray-400/50 outline-none resize-y leading-relaxed transition-all"></textarea>
+                        <textarea id="student-solution-d-input" rows="5" oninput="window.onSolDInputChange()" placeholder="範例細項：&#10;1. 下課時不在教室大聲找阿光，避免引發阿健正面衝突。&#10;2. 趁去裝水時私下遞紙條或傳訊息，約阿光午休一起去圖書館。&#10;3. 邀請平時也覺得阿健太過分的同學加入，建立友善支持小圈圈。" class="w-full min-h-[145px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-sm sm:text-base font-normal text-white placeholder-gray-400/50 outline-none resize-y leading-relaxed transition-all"></textarea>
                     </div>
 
                     <button id="btn-submit-solution-d" onclick="window.submitSolutionD()" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-purple to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-black text-base shadow-lg transition-all shrink-0">
@@ -461,7 +461,7 @@
                 <h4 id="viewer-sol-d-action-title" class="text-xl sm:text-2xl font-black text-white mt-0.5"></h4>
             </div>
             <div class="flex-1 overflow-y-auto custom-scrollbar pr-1">
-                <p id="viewer-sol-d-content" class="text-lg sm:text-xl text-gray-100 font-semibold leading-relaxed whitespace-pre-wrap py-2"></p>
+                <p id="viewer-sol-d-content" class="text-lg sm:text-xl text-gray-100 font-normal leading-relaxed whitespace-pre-wrap py-2"></p>
             </div>
         </div>
     </div>
@@ -1458,11 +1458,10 @@
                 let solDHtml = '';
                 if (currentStage.isBreakthrough) {
                     if (solD && solD.submitted && (solD.text || solD.title)) {
-                        const titleLabel = solD.title ? `【${escapeHtml(solD.title)}】` : '';
                         solDHtml = `
-                            <div onclick="window.openSolutionDViewerById(${i})" class="mt-1.5 p-2.5 rounded-xl bg-neon-purple/20 border border-neon-purple text-sm sm:text-base xl:text-[17px] text-white font-bold cursor-pointer hover:bg-neon-purple/30 transition-all space-y-0.5" title="點擊全螢幕放大檢視">
-                                ${titleLabel ? `<div class="text-neon-purple font-black truncate">💡 ${titleLabel}</div>` : ''}
-                                <div class="line-clamp-2 text-gray-100 leading-snug">${escapeHtml(solD.text)}</div>
+                            <div onclick="window.openSolutionDViewerById(${i})" class="mt-1.5 p-2.5 rounded-xl bg-neon-purple/20 border border-neon-purple text-white cursor-pointer hover:bg-neon-purple/30 transition-all space-y-1" title="點擊全螢幕放大檢視">
+                                ${solD.title ? `<div class="text-base sm:text-lg xl:text-[19px] font-black text-white leading-tight">💡 <strong>${escapeHtml(solD.title)}</strong></div>` : ''}
+                                <div class="text-xs sm:text-sm xl:text-[15px] font-normal text-purple-100/95 line-clamp-3 whitespace-pre-line leading-snug">${escapeHtml(solD.text)}</div>
                             </div>
                         `;
                     } else {
@@ -1719,13 +1718,22 @@
             window.updateStudentUI();
         };
 
-        // 根據每一階段實際行動與心理變化，生成具備完整心路歷程的死亡故事報告
+        // 根據每一階段實際行動、心理拉扯軌跡與歸零數值組合，動態生成客製化心路歷程死亡報告
         function generateCustomDeathStory(team, currentScenario, currentStage, finalChoiceKey, finalOpt) {
             const scHist = (team.history && team.history[currentScenario.id]) || {};
             const steps = [];
             let conformCount = 0;
             let confrontCount = 0;
             let avoidCount = 0;
+            let switchCount = 0;
+            let prevStyle = null;
+
+            // 嘗試從情境標題擷取主角名稱（如「情境 1：小宇的轉學生風暴」->「小宇」），若無則自然使用「主角」
+            let protagonist = '主角';
+            const titleMatch = String(currentScenario.title || '').match(/[：:]\s*([^\s的之，,。！!？?]{2,4})的/);
+            if (titleMatch && titleMatch[1]) {
+                protagonist = titleMatch[1];
+            }
 
             currentScenario.stages.forEach((st, idx) => {
                 if (st.isBreakthrough) return;
@@ -1749,60 +1757,71 @@
                     const sDelta = optObj ? (optObj.safety || 0) : 0;
                     const eDelta = optObj ? (optObj.esteem || 0) : 0;
                     const enDelta = optObj ? (optObj.energy || 0) : 0;
-                    const optDesc = optObj && optObj.desc ? optObj.desc.replace(/[。.]$/, '') : '';
+                    const optTitle = rec.choiceTitle || (optObj ? optObj.title : `方案 ${rec.choice}`);
 
-                    // 為每一步生成具體行動與內心感受描述
-                    let innerFeeling = '';
+                    let curStyle = 'avoid';
+                    let innerVoice = '';
                     if (sDelta >= 10 && eDelta < 0) {
+                        curStyle = 'conform';
                         conformCount++;
-                        innerFeeling = '雖然表面上換來了小圈圈的暫時接納，但夜深人靜想起自己違背良心的模樣，內心的愧疚與自我厭惡又深了一層。';
+                        innerVoice = `表面上暫時換來了群體裡的安穩席位，但轉過身後，${protagonist}心裡對「不敢堅持原則」的愧疚卻悄悄發酵。`;
                     } else if (sDelta < 0 && eDelta >= 10) {
+                        curStyle = 'confront';
                         confrontCount++;
-                        innerFeeling = '雖然守住了做人的底線，但隨之而來的冷眼、孤立與無聲排擠，讓小宇在教室裡每分每秒都感到如坐針氈。';
+                        innerVoice = `雖然守住了心中的那把尺，但隨之而來的冷漠眼神與刻意疏遠，讓${protagonist}在人群裡顯得格外孤單。`;
                     } else {
+                        curStyle = 'avoid';
                         avoidCount++;
-                        innerFeeling = '選擇把情緒吞進肚子裡獨自承受，看似避開了眼前的風暴，卻讓焦慮與無力感在心底不斷累積、無處宣洩。';
+                        innerVoice = `${protagonist}選擇把疑問與不安都吞進肚子裡，看似避開了眼前的衝突，心底的焦慮卻像雪球般越滾越大。`;
                     }
 
-                    const deltaSummary = `安全感 ${formatSignedDelta(sDelta)}、道德自尊 ${formatSignedDelta(eDelta)}、社交能量 ${formatSignedDelta(enDelta)}`;
+                    if (prevStyle && prevStyle !== curStyle) {
+                        switchCount++;
+                    }
+                    prevStyle = curStyle;
+
+                    const deltaText = `安全感 ${formatSignedDelta(sDelta)}／道德自尊 ${formatSignedDelta(eDelta)}／社交能量 ${formatSignedDelta(enDelta)}`;
                     steps.push(
-                        `▸ 第 ${idx + 1} 步【${cleanStageTitle}】：\n` +
-                        `   你們選擇了「${rec.choiceTitle || (optObj ? optObj.title : `方案 ${rec.choice}`)}」（方案 ${rec.choice}）${optDesc ? `——${optDesc}` : ''}（${deltaSummary}）。${innerFeeling}`
+                        `▸ 階段 ${idx + 1}【${cleanStageTitle}】選擇「${optTitle}」（${deltaText}）：\n   ${innerVoice}`
                     );
                 }
             });
 
-            // 整體心理歷程總結
-            let overallPsychology = '';
-            if (conformCount > 0 && confrontCount > 0) {
-                overallPsychology = '【內心撕裂的掙扎歷程】\n一路走來，小宇在「渴望被群體接納」與「不想違背良心」之間反覆拉扯——時而為了自保戴上面具順從多數，時而又忍不住想守住底線。這種搖擺與自我懷疑，讓他既得不到小圈圈的真正信任，也無法原諒曾經妥協的自己。';
+            // 依據整趟歷程的決策風格，生成專屬心理演變敘述
+            let journeyNarrative = '';
+            if (switchCount >= 2 || (conformCount > 0 && confrontCount > 0)) {
+                journeyNarrative = `在這段過程中，${protagonist}一直在「想被大家接納」與「不想違背良心」之間反覆掙扎——時而為了自保選擇低頭迎合，時而又忍不住想替弱勢發聲。反覆的自我懷疑與搖擺，讓他既融不進核心圈子，也無法原諒曾經妥協的自己。`;
             } else if (conformCount >= confrontCount && conformCount >= avoidCount) {
-                overallPsychology = '【不斷退讓的自我否定歷程】\n為了不被班上排擠，你們一次次選擇用順從與沉默換取表面的安全。但每一次低頭，都像親手把真實的自己推得更遠；看著無助的阿光與鏡子裡越來越陌生的自己，那種「明明知道不對卻不敢發聲」的羞愧感逐漸吞噬了整個內心。';
+                journeyNarrative = `為了不被群體貼上異類標籤，${protagonist}一次次選擇順從多數人的臉色。然而每一次退讓，都像親手把真實的自己推向角落；當他發現無論怎麼迎合都換不到真正的安心時，對自我的否定終於吞沒了所有勇氣。`;
             } else if (confrontCount >= conformCount && confrontCount >= avoidCount) {
-                overallPsychology = '【孤軍奮戰的孤立消耗歷程】\n面對不公，你們始終選擇正面迎戰、絕不低頭。然而在缺乏同盟與支持系統的情況下，每一次硬碰硬都讓小宇成為眾矢之的——下課時刻意壓低的竊竊私語、分組時無人靠近的冷漠，讓他在全班孤立的寒風中耗盡了所有心理防護。';
+                journeyNarrative = `面對不合理的排擠壓力，${protagonist}始終選擇正面迎戰、絕不低頭。但在沒有同盟支援的情況下，每一次硬碰硬都讓他承受成倍的敵意與冷落，長期孤軍奮戰終於耗盡了他所有的心理防線。`;
             } else {
-                overallPsychology = '【長期壓抑的獨自內耗歷程】\n在這場人際風暴中，你們習慣把所有壓力與委屈鎖進心底、獨自消化。小宇小心翼翼地閃躲每一個眼神與質問，深怕說錯一句話就引爆危機；長期的過度警覺與孤立無援，讓他的心理能量在無人看見的角落裡一點一滴徹底枯竭。';
+                journeyNarrative = `面對接踵而來的人際暗流，${protagonist}習慣把所有委屈與焦慮鎖在心底獨自消化。他小心翼翼地閃躲每一次衝突，深怕說錯一句話就引爆危機，長期的過度緊繃讓身心在無聲中徹底透支。`;
             }
 
-            // 判斷哪些數值歸零（支援同時多個歸零）
-            const zeroReasons = [];
-            if (team.safety <= 0) {
-                zeroReasons.push('【同儕安全感歸零】在鋪天蓋地的排擠、孤立與敵意包圍下，小宇感覺自己在班上再也沒有任何容身之處。');
-            }
-            if (team.esteem <= 0) {
-                zeroReasons.push('【道德自尊歸零】在無止盡的妥協、表忠與自我背叛中，小宇再也無法認同自己，自我價值感徹底崩塌。');
-            }
-            if (team.energy <= 0) {
-                zeroReasons.push('【社交能量歸零】長期處於高壓警覺與情緒過載之中，小宇的身心已達極限，再也無力回應任何一句話或一個眼神。');
-            }
+            // 依據實際歸零的數值組合（單項或多項同時歸零），動態生成專屬結局宣告與心理崩潰說明
+            const zeroKeys = [];
+            const zeroLabels = [];
+            if (team.safety <= 0) { zeroKeys.push('safety'); zeroLabels.push('同儕安全感'); }
+            if (team.esteem <= 0) { zeroKeys.push('esteem'); zeroLabels.push('道德自尊'); }
+            if (team.energy <= 0) { zeroKeys.push('energy'); zeroLabels.push('社交能量'); }
 
-            const collapseSection =
-                `【最終崩潰的臨界點】\n` +
-                `當在「${currentStage.name.replace(/^階段\s*\d+[：:]\s*/, '')}」做出「${finalOpt.title}」的決定後，壓垮心理防線的最後一根稻草終於落下：\n` +
-                (zeroReasons.length > 0 ? zeroReasons.map(r => `• ${r}`).join('\n') : '• 核心心理籌碼耗盡，心理防線在重壓下全面潰堤。') +
-                `\n\n💡 思考提示：回頭看看上面的每一步選擇，在「順從同流」與「正面硬碰硬」之外，哪一個時間點其實還有機會用不傷害自己、也不犧牲他人的方式破局？`;
+            const comboKey = zeroKeys.join('+');
+            const endingMap = {
+                'safety': `最終同儕安全感徹底歸零，四周的冷眼、孤立與排擠全面襲來，${protagonist}感覺自己在人群中再也沒有任何可以安心立足的位置，強烈的孤絕感讓他徹底關上了心門。`,
+                'esteem': `最終道德自尊徹底歸零，在無數次違心妥協與自我懷疑之後，${protagonist}再也無法認同鏡子裡的自己，沉重的羞愧與無力感讓他選擇封閉內心、拒絕與外界連結。`,
+                'energy': `最終社交能量徹底歸零，長期處於高壓警覺與情緒超載之中，${protagonist}的心靈電池已徹底耗盡，再也沒有力氣回應任何一句話或一個眼神，只能縮回自己的世界裡。`,
+                'safety+esteem': `最終同儕安全感與道德自尊雙雙歸零——既沒能換來群體的真正接納，也失去了對自我的肯定，內外交迫的痛苦讓${protagonist}在班上徹底失去支撐，只能選擇封閉自己。`,
+                'safety+energy': `最終同儕安全感與社交能量同時歸零，長期的孤立排擠早已耗光他的精力，當最後一絲歸屬感也消失時，身心俱疲的${protagonist}再也無力面對群體。`,
+                'esteem+energy': `最終道德自尊與社交能量同時歸零，反覆的內心掙扎與壓抑耗盡了所有力氣，在徹底否定自己的那一刻，${protagonist}選擇切斷與周遭的一切互動。`,
+                'safety+esteem+energy': `最終同儕安全感、道德自尊與社交能量全面歸零，所有的心理支柱在重壓下同時瓦解，${protagonist}再也無法承受這一切，徹底封閉了自己的內心。`
+            };
 
-            return `【你們的決策軌跡與心路歷程】\n${steps.join('\n\n')}\n\n${overallPsychology}\n\n${collapseSection}`;
+            const endingExplanation = endingMap[comboKey] || `在「${currentStage.name.replace(/^階段\s*\d+[：:]\s*/, '')}」做出「${finalOpt.title}」的決定後，壓垮心理防線的最後一根稻草終於落下，${protagonist}的心理防線全面潰堤。`;
+            const headline = `${protagonist}「${zeroLabels.join('、') || '心理防線'}」數值歸零，宣布淘汰。`;
+            const triggerClause = `在「${currentStage.name.replace(/^階段\s*\d+[：:]\s*/, '')}」選擇「${finalOpt.title}」後，${endingExplanation}`;
+
+            return `${headline}${journeyNarrative}${triggerClause}\n\n【決策軌跡與內心變化回顧】\n${steps.join('\n\n')}`;
         }
 
         window.confirmAndSubmitChoice = async function() {
@@ -2028,7 +2047,33 @@
                     const opt = currentStage.options[k];
                     if (!opt) return '';
                     const isSelected = submittedRec ? submittedRec.choice === k : window.studentTempChoice === k;
-                    return `<button onclick="window.selectStudentOption('${k}')" ${submittedRec ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-2xl transition-all flex items-center justify-between gap-3 ${isSelected ? 'border-2 border-neon-cyan bg-neon-cyan/15 shadow-[0_0_20px_rgba(0,243,255,0.2)]' : 'border border-gray-800 bg-dark-950/80 hover:border-gray-600'}"><div class="space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-md text-xs font-black ${isSelected ? 'bg-neon-cyan text-dark-950' : 'bg-dark-800 text-gray-300'}">方案 ${k}</span><span class="text-sm sm:text-base font-black text-white">${escapeHtml(opt.title)}</span></div><p class="text-xs text-gray-400">${escapeHtml(opt.desc)}</p></div><span class="text-xl shrink-0">${isSelected ? '🔘' : '⚪'}</span></button>`;
+
+                    const renderStatChip = (icon, label, val) => {
+                        const num = Number(val) || 0;
+                        const signStr = num > 0 ? `+${num}` : `${num}`;
+                        const badgeStyle = num > 0
+                            ? 'bg-emerald-950/90 text-neon-green border-neon-green/50'
+                            : (num < 0 ? 'bg-rose-950/90 text-neon-rose border-neon-rose/50' : 'bg-dark-900 text-gray-300 border-gray-700');
+                        return `<span class="px-2 py-0.5 rounded-md border text-xs sm:text-sm font-mono font-black ${badgeStyle}">${icon} ${label} ${signStr}</span>`;
+                    };
+
+                    return `
+                        <button onclick="window.selectStudentOption('${k}')" ${submittedRec ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-2xl transition-all flex items-center justify-between gap-3 ${isSelected ? 'border-2 border-neon-cyan bg-neon-cyan/15 shadow-[0_0_20px_rgba(0,243,255,0.2)]' : 'border border-gray-800 bg-dark-950/80 hover:border-gray-600'}">
+                            <div class="space-y-1.5 flex-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="px-2.5 py-0.5 rounded-md text-xs font-black ${isSelected ? 'bg-neon-cyan text-dark-950' : 'bg-dark-800 text-gray-300'}">方案 ${k}</span>
+                                    <span class="text-sm sm:text-base font-black text-white">${escapeHtml(opt.title)}</span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-gray-300 leading-snug">${escapeHtml(opt.desc)}</p>
+                                <div class="flex flex-wrap gap-1.5 pt-1">
+                                    ${renderStatChip('🛡️', '安全感', opt.safety)}
+                                    ${renderStatChip('👑', '道德自尊', opt.esteem)}
+                                    ${renderStatChip('⚡', '社交能量', opt.energy)}
+                                </div>
+                            </div>
+                            <span class="text-xl shrink-0">${isSelected ? '🔘' : '⚪'}</span>
+                        </button>
+                    `;
                 }).join('');
             }
         };
@@ -2370,12 +2415,16 @@
                         }
                     });
                     if (steps.length > 0 || (solD && (solD.text || solD.title))) {
-                        const solTitleStr = solD && solD.title ? `【${escapeHtml(solD.title)}】` : '';
                         historyLines += `
                             <div class="mt-2 p-2.5 rounded-lg bg-dark-900 border border-gray-800 text-xs space-y-1">
                                 <span class="font-bold text-neon-cyan block">${escapeHtml(sc.title)}</span>
                                 <p class="text-gray-300">決策軌跡：${steps.join(' ➔ ') || '無'}</p>
-                                ${solD && (solD.text || solD.title) ? `<p class="text-neon-purple font-bold whitespace-pre-line">💡 方案 D ${solTitleStr}：${escapeHtml(solD.text)}</p>` : ''}
+                                ${solD && (solD.text || solD.title) ? `
+                                    <div class="pt-1 border-t border-gray-800/80 space-y-0.5">
+                                        ${solD.title ? `<div class="text-neon-purple font-black">💡 方案 D：<strong>${escapeHtml(solD.title)}</strong></div>` : '<div class="text-neon-purple font-black">💡 方案 D 提案：</div>'}
+                                        <p class="text-gray-200 font-normal whitespace-pre-line leading-relaxed">${escapeHtml(solD.text)}</p>
+                                    </div>
+                                ` : ''}
                             </div>
                         `;
                     }
