@@ -18,7 +18,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
     <style>
         body {
@@ -34,7 +34,7 @@
             -webkit-user-select: text;
         }
         .glass-panel {
-            background: rgba(13, 20, 36, 0.9);
+            background: rgba(13, 20, 36, 0.92);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -146,7 +146,7 @@
     </header>
 
     <!-- ==================== 3. 講台大螢幕主控台 (大字體高可讀性全覽佈局) ==================== -->
-    <main id="view-teacher" class="flex-1 w-full max-w-[1600px] mx-auto p-3 sm:p-4 grid grid-cols-12 gap-3.5 overflow-y-auto lg:overflow-hidden">
+    <main id="view-teacher" class="flex-1 w-full max-w-[1680px] mx-auto p-3 sm:p-4 grid grid-cols-12 gap-3.5 overflow-y-auto lg:overflow-hidden">
         <!-- 左側 5 欄：情境翻頁選單、階段切換與放大故事選項區 -->
         <section class="col-span-12 lg:col-span-5 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-hidden border border-gray-800">
             <div class="space-y-2.5 shrink-0">
@@ -163,10 +163,10 @@
                 </div>
             </div>
 
-            <!-- 故事標題與敘述 (大字體優化) -->
+            <!-- 故事標題與敘述 (大字體高對比) -->
             <div class="my-2.5 p-4 rounded-2xl bg-dark-950/95 border border-gray-700/80 space-y-2 shrink-0 shadow-inner">
                 <div class="flex items-start justify-between gap-2">
-                    <h2 id="stage-title" class="text-xl sm:text-2xl xl:text-[26px] font-black text-white leading-snug">載入中...</h2>
+                    <h2 id="stage-title" class="text-xl sm:text-2xl xl:text-[27px] font-black text-white leading-snug">載入中...</h2>
                     <div class="flex flex-col items-end gap-1 shrink-0">
                         <span id="stage-type-badge" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-black bg-blue-500/20 text-blue-300 border border-blue-500/30">
                             🎯 抉擇階段
@@ -176,7 +176,7 @@
                         </span>
                     </div>
                 </div>
-                <p id="stage-story" class="text-base sm:text-lg xl:text-[19px] text-gray-100 leading-relaxed font-semibold">正在載入情境內容...</p>
+                <p id="stage-story" class="text-base sm:text-lg xl:text-[20px] text-gray-100 leading-relaxed font-semibold">正在載入情境內容...</p>
             </div>
 
             <!-- A / B / C 選項展示區 (大字體與清晰分層) -->
@@ -224,7 +224,7 @@
             </div>
 
             <!-- 角色數值歸零死亡全屏警告遮罩 (顯示客製化回溯心理崩潰故事) -->
-            <div id="student-death-overlay" class="hidden absolute inset-0 min-h-[360px] bg-dark-950/96 backdrop-blur-md z-30 rounded-2xl flex flex-col items-center justify-center p-5 sm:p-8 text-center space-y-4 border-2 border-neon-rose overflow-y-auto">
+            <div id="student-death-overlay" class="hidden absolute inset-0 min-h-[380px] bg-dark-950/96 backdrop-blur-md z-30 rounded-2xl flex flex-col items-center justify-center p-5 sm:p-8 text-center space-y-4 border-2 border-neon-rose overflow-y-auto">
                 <div class="text-5xl animate-bounce shrink-0">💀</div>
                 <h3 class="text-xl sm:text-2xl font-black text-neon-rose shrink-0">警告！你們的角色心理防線已全面崩潰</h3>
                 <div class="w-full max-w-2xl bg-neon-rose/10 border border-neon-rose/40 rounded-2xl p-4 sm:p-5 text-left space-y-2 shadow-xl">
@@ -325,7 +325,7 @@
                         <label for="student-solution-d-title" class="text-xs sm:text-sm font-black text-neon-purple block">
                             1️⃣ 為你們的破局行動取一個名字：
                         </label>
-                        <input type="text" id="student-solution-d-title" oninput="window.markSolDDirty()" placeholder="範例：溫柔的破冰船（或：圖書館的秘密邀請）" class="w-full bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl px-4 py-3 text-base font-black text-white placeholder-gray-500/65 outline-none transition-all">
+                        <input type="text" id="student-solution-d-title" oninput="window.markSolDDirty()" placeholder="範例：溫柔的破冰船（或：圖書館的秘密邀請）" class="w-full bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl px-4 py-3 text-base font-black text-white placeholder-gray-400/50 outline-none transition-all">
                     </div>
 
                     <!-- 大輸入格：具體行為與步驟 -->
@@ -333,7 +333,7 @@
                         <label for="student-solution-d-input" class="text-xs sm:text-sm font-black text-neon-purple block">
                             2️⃣ 寫出具體行為與執行步驟：
                         </label>
-                        <textarea id="student-solution-d-input" rows="5" oninput="window.markSolDDirty()" placeholder="範例步驟：&#10;1. 下課時不在教室大聲找阿光，避免引發阿健正面衝突。&#10;2. 趁去裝水時私下遞紙條或傳訊息，約阿光午休一起去圖書館。&#10;3. 邀請平時也覺得阿健太過分的同學加入，建立友善支持小圈圈。" class="w-full min-h-[145px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-sm sm:text-base text-white placeholder-gray-500/65 outline-none resize-y leading-relaxed transition-all"></textarea>
+                        <textarea id="student-solution-d-input" rows="5" oninput="window.markSolDDirty()" placeholder="範例步驟：&#10;1. 下課時不在教室大聲找阿光，避免引發阿健正面衝突。&#10;2. 趁去裝水時私下遞紙條或傳訊息，約阿光午休一起去圖書館。&#10;3. 邀請平時也覺得阿健太過分的同學加入，建立友善支持小圈圈。" class="w-full min-h-[145px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-sm sm:text-base text-white placeholder-gray-400/50 outline-none resize-y leading-relaxed transition-all"></textarea>
                     </div>
 
                     <button id="btn-submit-solution-d" onclick="window.submitSolutionD()" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-purple to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-black text-base shadow-lg transition-all shrink-0">
@@ -510,7 +510,7 @@
         import { getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // 啟用 QR Code UTF-8 編碼支援
-        if (typeof qrcode !== 'undefined' && qrcode.stringToBytesFuncs) {
+        if (typeof qrcode !== 'undefined' && qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
             qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
         }
 
@@ -791,10 +791,10 @@
             const renderClassChips = (classSet) => {
                 const arr = Array.from(classSet);
                 if (arr.length === 0) {
-                    listEl.innerHTML = `<span class="text-xs text-gray-500">目前尚無在線教室，請等待講台開啟或手動輸入班級代碼</span>`;
+                    listEl.innerHTML = '<span class="text-xs text-gray-500">目前尚無在線教室，請等待講台開啟或手動輸入班級代碼</span>';
                     return;
                 }
-                listEl.innerHTML = arr.map(c => `<button onclick="window.quickSelectLobbyClass('${escapeHtml(c)}')" class="px-3 py-1.5 rounded-lg bg-neon-green/15 border border-neon-green/50 text-neon-green text-xs font-black hover:bg-neon-green/25 transition-all">🟢 ${escapeHtml(c)} 班 (點擊直接連線)</button>`).join('');
+                listEl.innerHTML = arr.map(c => `<button data-class="${escapeHtml(c)}" onclick="window.quickSelectLobbyClass(this.dataset.class)" class="px-3 py-1.5 rounded-lg bg-neon-green/15 border border-neon-green/50 text-neon-green text-xs font-black hover:bg-neon-green/25 transition-all">🟢 ${escapeHtml(c)} 班 (點擊直接連線)</button>`).join('');
             };
 
             const localSet = new Set();
@@ -1318,14 +1318,14 @@
                     return `
                         <div class="p-3.5 rounded-2xl bg-dark-900/95 border border-gray-800 flex flex-col gap-1.5 shadow-sm">
                             <div class="flex flex-wrap justify-between items-center gap-1.5">
-                                <span class="text-base sm:text-lg xl:text-[19px] font-black ${keyColors[k]}">【方案 ${k}】${escapeHtml(opt.title)}</span>
+                                <span class="text-base sm:text-lg xl:text-[20px] font-black ${keyColors[k]}">【方案 ${k}】${escapeHtml(opt.title)}</span>
                                 <div class="flex gap-1.5 text-xs sm:text-sm font-mono font-black shrink-0">
                                     <span class="px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">安${fmt(opt.safety)}</span>
                                     <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800/50">尊${fmt(opt.esteem)}</span>
                                     <span class="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800/50">能${fmt(opt.energy)}</span>
                                 </div>
                             </div>
-                            <p class="text-sm sm:text-base text-gray-200 font-medium leading-snug">${escapeHtml(opt.desc)}</p>
+                            <p class="text-sm sm:text-base xl:text-[17px] text-gray-200 font-medium leading-snug">${escapeHtml(opt.desc)}</p>
                         </div>
                     `;
                 }).join('');
@@ -1357,18 +1357,18 @@
                 let stageStatusTag = '';
                 if (currentStage.isBreakthrough) {
                     stageStatusTag = (solD && solD.submitted)
-                        ? `<span class="px-2 py-0.5 rounded-md bg-neon-purple/25 text-neon-purple text-xs font-black shrink-0">✅ 已提案</span>`
-                        : `<span class="px-2 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs font-bold shrink-0">⏳ 撰寫中</span>`;
+                        ? '<span class="px-2 py-0.5 rounded-md bg-neon-purple/25 text-neon-purple text-xs font-black shrink-0">✅ 已提案</span>'
+                        : '<span class="px-2 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs font-bold shrink-0">⏳ 撰寫中</span>';
                 } else {
                     stageStatusTag = stageRecord
-                        ? `<span class="px-2 py-0.5 rounded-md bg-neon-green/20 text-neon-green text-xs font-black shrink-0">✅ 選 ${stageRecord.choice}</span>`
-                        : `<span class="px-2 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs font-bold shrink-0">⏳ 討論中</span>`;
+                        ? `<span class="px-2 py-0.5 rounded-md bg-neon-green/20 text-neon-green text-xs font-black shrink-0">✅ 選 ${escapeHtml(stageRecord.choice)}</span>`
+                        : '<span class="px-2 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs font-bold shrink-0">⏳ 討論中</span>';
                 }
 
                 let badgesHtml = '';
                 currentScenario.stages.forEach((st, sIdx) => {
                     if (!st.isBreakthrough && scHist[st.id]) {
-                        badgesHtml += `<span class="px-2 py-0.5 rounded bg-dark-800 border border-gray-700 text-xs font-mono font-black text-neon-cyan">階${sIdx + 1}:${scHist[st.id].choice}</span>`;
+                        badgesHtml += `<span class="px-2 py-0.5 rounded bg-dark-800 border border-gray-700 text-xs font-mono font-black text-neon-cyan">階${sIdx + 1}:${escapeHtml(scHist[st.id].choice)}</span>`;
                     }
                 });
 
@@ -1383,7 +1383,7 @@
                             </div>
                         `;
                     } else {
-                        solDHtml = `<div class="mt-1.5 p-2.5 rounded-xl bg-dark-950/80 border border-dashed border-gray-700 text-xs sm:text-sm text-gray-400 text-center font-bold">🔒 等待平板提交方案 D...</div>`;
+                        solDHtml = '<div class="mt-1.5 p-2.5 rounded-xl bg-dark-950/80 border border-dashed border-gray-700 text-xs sm:text-sm text-gray-400 text-center font-bold">🔒 等待平板提交方案 D...</div>';
                     }
                 }
 
@@ -1455,7 +1455,7 @@
                         <div class="flex items-center justify-between gap-1.5 border-b border-gray-800/80 pb-2">
                             <div class="flex items-center gap-1.5 truncate">
                                 <span class="px-2 py-0.5 rounded-md ${isJoined ? 'bg-neon-green/20 text-neon-green' : 'bg-dark-800 text-gray-400'} text-xs sm:text-sm font-mono font-black">#${i}</span>
-                                <h3 class="text-base sm:text-lg xl:text-xl font-black text-white truncate">${escapeHtml(team.name)}</h3>
+                                <h3 class="text-base sm:text-lg xl:text-[21px] font-black text-white truncate">${escapeHtml(team.name)}</h3>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
                                 ${stageStatusTag}
@@ -1502,8 +1502,12 @@
         window.approveTeamRevive = async function(teamId) {
             const t = window.teamsData[teamId];
             if (!t) return;
-            t.safety = 20; t.esteem = 20; t.energy = 20;
-            t.isDead = false; t.deathReason = ''; t.reviveRequested = false;
+            t.safety = 20;
+            t.esteem = 20;
+            t.energy = 20;
+            t.isDead = false;
+            t.deathReason = '';
+            t.reviveRequested = false;
             window.renderAllUI();
             await window.syncSingleTeamToCloud(teamId);
             window.showToast(`✨ 已核准【${t.name}】救援復活，三項數值重置為 20 點！`);
@@ -1669,13 +1673,13 @@
 
             let painText = '';
             if (conformCount > 0 && confrontCount > 0) {
-                painText = `在這段期間，小宇一直被撕裂在「想被群體接納」與「不想違背良心」的夾縫中——時而戴上面具附和大家，時而又忍不住想守住底線。反覆的搖擺與自我懷疑，讓他既得不到小圈圈的真正信任，也無法原諒妥協過的自己，內心承受著巨大的拉扯與孤獨。`;
+                painText = '在這段期間，小宇一直被撕裂在「想被群體接納」與「不想違背良心」的夾縫中——時而戴上面具附和大家，時而又忍不住想守住底線。反覆的搖擺與自我懷疑，讓他既得不到小圈圈的真正信任，也無法原諒妥協過的自己，內心承受著巨大的拉扯與孤獨。';
             } else if (conformCount >= confrontCount && conformCount >= avoidCount) {
-                painText = `一路走來，為了不被班上排擠，小宇一次又一次把真實的感受吞進肚子裡，用笑臉和順從換取表面的安全。但每次轉過身，看著無助的阿光與鏡子裡越來越陌生的自己，那種「明明知道不對卻不敢發聲」的愧疚感與自我厭惡，就像針一樣日夜刺痛著他的內心。`;
+                painText = '一路走來，為了不被班上排擠，小宇一次又一次把真實的感受吞進肚子裡，用笑臉和順從換取表面的安全。但每次轉過身，看著無助的阿光與鏡子裡越來越陌生的自己，那種「明明知道不對卻不敢發聲」的愧疚感與自我厭惡，就像針一樣日夜刺痛著他的內心。';
             } else if (confrontCount >= conformCount && confrontCount >= avoidCount) {
-                painText = `一路走來，小宇始終不願向不公低頭，每一次挺身而出都像是在與整個班級的潛規則為敵。雖然守住了原則，但下課時周圍刻意壓低的竊竊私語、分組時無人願意靠近的冷漠眼神，那種被全班孤立、彷彿獨自站在暴風雪中的窒息感，早已讓他遍體鱗傷。`;
+                painText = '一路走來，小宇始終不願向不公低頭，每一次挺身而出都像是在與整個班級的潛規則為敵。雖然守住了原則，但下課時周圍刻意壓低的竊竊私語、分組時無人願意靠近的冷漠眼神，那種被全班孤立、彷彿獨自站在暴風雪中的窒息感，早已讓他遍體鱗傷。';
             } else {
-                painText = `在這段風暴裡，小宇總是選擇把情緒鎖進心底、獨自消化每一場衝突。他小心翼翼地閃躲每一個眼神與質問，深怕說錯一句話就引爆危機；長期的過度警覺與壓抑，讓他的心像一條繃到極限的橡皮筋，在無人看見的角落裡默默耗盡了所有力氣。`;
+                painText = '在這段風暴裡，小宇總是選擇把情緒鎖進心底、獨自消化每一場衝突。他小心翼翼地閃躲每一個眼神與質問，深怕說錯一句話就引爆危機；長期的過度警覺與壓抑，讓他的心像一條繃到極限的橡皮筋，在無人看見的角落裡默默耗盡了所有力氣。';
             }
 
             let collapseText = '';
@@ -1686,14 +1690,10 @@
             } else if (team.energy <= 0) {
                 collapseText = `當「${finalOpt.title}」成為最後一根稻草，小宇的【社交能量】徹底耗竭——長期內耗與情緒過載讓他陷入深深的無力感，再也無法承受任何一點風吹草動。`;
             } else {
-                collapseText = `最終某項核心心理籌碼耗盡，小宇的心理防線在重壓下徹底崩潰。`;
+                collapseText = '最終某項核心心理籌碼耗盡，小宇的心理防線在重壓下徹底崩潰。';
             }
 
-            return `${journeyText}
-
-${painText}
-
-${collapseText}`;
+            return journeyText + '\n\n' + painText + '\n\n' + collapseText;
         }
 
         window.confirmAndSubmitChoice = async function() {
@@ -1855,7 +1855,6 @@ ${collapseText}`;
                     inputEl.value = (solD && solD.text) ? solD.text : '';
                 }
 
-                // 保持永遠可編輯、可反覆送出修改
                 titleEl.disabled = false;
                 inputEl.disabled = false;
                 subBtn.disabled = false;
@@ -1933,12 +1932,14 @@ ${collapseText}`;
             if (tab === 'scenarios') {
                 sTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-neon-cyan text-dark-950 transition-all";
                 rTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all";
-                sContent.classList.remove('hidden'); rContent.classList.add('hidden');
+                sContent.classList.remove('hidden');
+                rContent.classList.add('hidden');
                 window.renderAdminScenariosEditor();
             } else {
                 rTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-neon-amber text-dark-950 transition-all";
                 sTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all";
-                rContent.classList.remove('hidden'); sContent.classList.add('hidden');
+                rContent.classList.remove('hidden');
+                sContent.classList.add('hidden');
                 window.loadAllClassRecords();
             }
         };
@@ -2112,7 +2113,7 @@ ${collapseText}`;
                                     `;
                                 }).join('')}
                             </div>
-                        ` : `<p class="text-xs text-neon-purple font-bold">💡 此階段為獨立「破局階段」，學生平板將顯示行動命名與具體步驟雙輸入框（可反覆修改）。</p>`}
+                        ` : '<p class="text-xs text-neon-purple font-bold">💡 此階段為獨立「破局階段」，學生平板將顯示行動命名與具體步驟雙輸入框（可反覆修改）。</p>'}
                     </div>
                 `).join('') : `<p class="text-xs text-gray-400">（點擊此卡片任意處即可展開編輯此情境的 ${sc.stages.length} 個階段）</p>`;
 
@@ -2120,7 +2121,7 @@ ${collapseText}`;
                     <div onclick="window.selectAdminScenario(${scIdx})" class="p-4 rounded-2xl transition-all cursor-pointer space-y-3 ${cardBorder}">
                         <div class="flex flex-wrap justify-between items-center gap-2">
                             <div class="flex items-center gap-2.5 flex-1">
-                                ${isEditing ? `<span class="px-2.5 py-1 rounded-lg bg-neon-cyan text-dark-950 text-xs font-black animate-pulse">✏️ 正在編輯此情境</span>` : `<span class="px-2 py-0.5 rounded bg-dark-800 text-gray-400 text-xs font-bold">情境 #${scIdx + 1}</span>`}
+                                ${isEditing ? '<span class="px-2.5 py-1 rounded-lg bg-neon-cyan text-dark-950 text-xs font-black animate-pulse">✏️ 正在編輯此情境</span>' : `<span class="px-2 py-0.5 rounded bg-dark-800 text-gray-400 text-xs font-bold">情境 #${scIdx + 1}</span>`}
                                 <input type="text" value="${escapeHtml(sc.title)}" onclick="event.stopPropagation()" onchange="window.scenarioLines[${scIdx}].title = this.value" class="bg-dark-950 border border-gray-700 rounded-xl px-3 py-1.5 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
                             </div>
                             <button onclick="window.deleteScenarioLine(${scIdx}, event)" class="px-3 py-1.5 rounded-xl bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-black transition-all">
@@ -2172,18 +2173,18 @@ ${collapseText}`;
             classMap.forEach((updatedAt, cName) => {
                 const dateStr = updatedAt ? new Date(updatedAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
                 html += `
-                    <div onclick="window.viewClassRecordDetail('${escapeHtml(cName)}')" class="p-3 rounded-xl bg-dark-950 border border-gray-800 hover:border-neon-cyan cursor-pointer flex justify-between items-center transition-all">
+                    <div data-class="${escapeHtml(cName)}" onclick="window.viewClassRecordDetail(this.dataset.class)" class="p-3 rounded-xl bg-dark-950 border border-gray-800 hover:border-neon-cyan cursor-pointer flex justify-between items-center transition-all">
                         <div>
                             <span class="text-sm font-black text-white block">🏫 ${escapeHtml(cName)} 班</span>
                             <span class="text-[10px] text-gray-500">最後更新：${dateStr}</span>
                         </div>
-                        <button onclick="window.deleteClassRecord('${escapeHtml(cName)}', event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">
+                        <button data-class="${escapeHtml(cName)}" onclick="window.deleteClassRecord(this.dataset.class, event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">
                             🗑️ 刪除
                         </button>
                     </div>
                 `;
             });
-            listEl.innerHTML = html || `<p class="text-xs text-gray-500 text-center py-8">目前尚無任何班級存檔紀錄</p>`;
+            listEl.innerHTML = html || '<p class="text-xs text-gray-500 text-center py-8">目前尚無任何班級存檔紀錄</p>';
         };
 
         window.viewClassRecordDetail = async function(className) {
@@ -2266,7 +2267,7 @@ ${collapseText}`;
                 <div class="space-y-4">
                     <div class="flex justify-between items-center border-b border-gray-800 pb-3">
                         <h3 class="text-lg font-black text-white">📊 【${escapeHtml(className)} 班】課堂全組歷程與提案總覽</h3>
-                        <button onclick="window.deleteClassRecord('${escapeHtml(className)}', event)" class="px-3 py-1.5 rounded-xl bg-neon-rose text-white text-xs font-black hover:bg-rose-500">
+                        <button data-class="${escapeHtml(className)}" onclick="window.deleteClassRecord(this.dataset.class, event)" class="px-3 py-1.5 rounded-xl bg-neon-rose text-white text-xs font-black hover:bg-rose-500">
                             🗑️ 永久刪除此班存檔
                         </button>
                     </div>
@@ -2291,11 +2292,11 @@ ${collapseText}`;
                 } catch (e) {}
             }
             window.showToast(`🗑️ 已刪除【${className}】班級存檔紀錄！`);
-            document.getElementById('admin-class-record-detail').innerHTML = `<p class="text-xs text-gray-500 text-center py-10">該班級紀錄已移除</p>`;
+            document.getElementById('admin-class-record-detail').innerHTML = '<p class="text-xs text-gray-500 text-center py-10">該班級紀錄已移除</p>';
             window.loadAllClassRecords();
         };
 
-        window.onload = async function() {
+        async function initApp() {
             await ensureAuth();
             window.renderAllUI();
             const params = new URLSearchParams(window.location.search);
@@ -2313,7 +2314,13 @@ ${collapseText}`;
             } else {
                 window.listenLobbyActiveClasses();
             }
-        };
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
