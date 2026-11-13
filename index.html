@@ -18,25 +18,35 @@
                     }
                 }
             }
-        }
+        };
     </script>
     <style>
         body {
             background-color: #070b14;
             color: #e2e8f0;
             font-family: 'Noto Sans TC', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             user-select: none;
+            -webkit-user-select: none;
+        }
+        input, textarea, select {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            touch-action: manipulation;
+        }
+        button {
+            touch-action: manipulation;
         }
         .glass-panel {
-            background: rgba(13, 20, 36, 0.88);
+            background: rgba(13, 20, 36, 0.92);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(7, 11, 20, 0.5); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.3); border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 243, 255, 0.6); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.35); border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 243, 255, 0.65); }
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(255, 51, 102, 0.35); }
             50% { box-shadow: 0 0 28px rgba(255, 51, 102, 0.75); }
@@ -46,23 +56,17 @@
     <!-- 引入高穩定輕量級 qrcode-generator 純 JS 引擎 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 </head>
-<body class="h-screen w-screen flex flex-col justify-between overflow-hidden bg-dark-950">
+<body class="min-h-screen w-screen flex flex-col justify-between overflow-x-hidden overflow-y-auto bg-dark-950">
 
     <!-- ==================== 1. 課堂連線啟動大廳 (進站班級驗證門檻) ==================== -->
-    <div id="lobby-overlay" class="fixed inset-0 bg-dark-950 z-50 flex items-center justify-center p-4">
-        <div class="glass-panel max-w-xl w-full p-6 sm:p-8 rounded-3xl border border-neon-cyan/40 shadow-[0_0_50px_rgba(0,243,255,0.18)] space-y-5">
+    <div id="lobby-overlay" class="fixed inset-0 bg-dark-950 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-panel max-w-xl w-full p-6 sm:p-8 rounded-3xl border border-neon-cyan/40 shadow-[0_0_50px_rgba(0,243,255,0.18)] space-y-6 my-auto">
             <div class="text-center space-y-2">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan text-xs font-black tracking-widest">
-                    ⚡ 跨裝置雲端即時連線系統（Kahoot! 同步架構）
+                    ⚡ 跨裝置雲端即時課堂連線系統
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">人際風暴生存戰</h1>
-                <p class="text-xs text-gray-400">請選擇身分並輸入班級代碼，確保各組數值跨裝置即時同步、數據獨立留存</p>
-            </div>
-
-            <!-- 雲端連線即時診斷列 -->
-            <div class="px-3.5 py-2 rounded-xl bg-dark-900 border border-gray-800 flex items-center justify-between text-xs">
-                <span id="lobby-cloud-status" class="text-neon-cyan font-bold">🔄 正在建立雲端即時連線...</span>
-                <span class="text-[11px] text-gray-500 font-mono">Cloud Sync Ready</span>
+                <p class="text-xs sm:text-sm text-gray-400">請選擇操作身分並設定班級代碼，確保各班數據獨立留存、平板即時同步</p>
             </div>
 
             <!-- 身分切換頁籤 -->
@@ -78,126 +82,123 @@
             <!-- 教師開局設定區 -->
             <div id="lobby-panel-teacher" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1.5">設定本次上課班級（例：901、九年一班）：</label>
+                    <label class="block text-xs sm:text-sm font-bold text-gray-300 mb-1.5">設定本次上課班級（例：901、九年一班）：</label>
                     <input type="text" id="lobby-input-teacher-class" placeholder="請輸入班級代碼，例如：901" class="w-full bg-dark-900 border border-gray-700 focus:border-neon-cyan rounded-xl px-4 py-3 text-base font-black text-white outline-none transition-all" onkeydown="if(event.key==='Enter') window.enterAsTeacher()">
                 </div>
-                <button id="btn-lobby-teacher-start" onclick="window.enterAsTeacher()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-cyan to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-dark-950 font-black text-base shadow-[0_0_25px_rgba(0,243,255,0.4)] transition-all">
+                <button onclick="window.enterAsTeacher()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-cyan to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-dark-950 font-black text-base shadow-[0_0_25px_rgba(0,243,255,0.4)] transition-all">
                     🚀 啟動此班級主控台並進入大螢幕
                 </button>
                 <div class="flex justify-between items-center pt-2 border-t border-gray-800">
-                    <span class="text-[11px] text-gray-500">管理題庫或調閱各班歷史存檔：</span>
-                    <button onclick="window.openAdminModal()" class="text-xs font-bold text-neon-amber hover:underline">🔐 進入教師後台</button>
+                    <span class="text-xs text-gray-500">管理題庫或調閱各班歷史存檔：</span>
+                    <button onclick="window.openAdminModal()" class="text-xs sm:text-sm font-bold text-neon-amber hover:underline">🔐 進入教師後台</button>
                 </div>
             </div>
 
             <!-- 學生平板連線區 -->
             <div id="lobby-panel-student" class="hidden space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1.5">請輸入講台大螢幕顯示的班級代碼：</label>
+                    <label class="block text-xs sm:text-sm font-bold text-gray-300 mb-1.5">請輸入講台大螢幕顯示的班級代碼：</label>
                     <input type="text" id="lobby-input-student-class" placeholder="例如：901" class="w-full bg-dark-900 border border-gray-700 focus:border-neon-green rounded-xl px-4 py-3 text-base font-black text-white outline-none transition-all" onkeydown="if(event.key==='Enter') window.enterAsStudent()">
                 </div>
                 <div class="space-y-1.5">
-                    <span class="text-[11px] font-bold text-gray-400 block">📡 雲端在線教室（點擊可直接連入，免手動輸入）：</span>
+                    <span class="text-xs font-bold text-gray-400 block">📡 偵測目前在線教室（可直接點擊進入）：</span>
                     <div id="lobby-active-classes-list" class="flex flex-wrap gap-2 min-h-[32px]">
-                        <span class="text-xs text-gray-500">搜尋雲端在線班級中...</span>
+                        <span class="text-xs text-gray-500 italic">搜尋雲端講台訊號中...</span>
                     </div>
                 </div>
-                <button id="btn-lobby-student-join" onclick="window.enterAsStudent()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-green to-emerald-500 hover:from-green-300 hover:to-emerald-400 text-dark-950 font-black text-base shadow-[0_0_25px_rgba(0,255,102,0.4)] transition-all">
+                <button onclick="window.enterAsStudent()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-green to-emerald-500 hover:from-green-300 hover:to-emerald-400 text-dark-950 font-black text-base shadow-[0_0_25px_rgba(0,255,102,0.4)] transition-all">
                     🔗 驗證班級並連線至平板端
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ==================== 2. 頂部全域導覽列 (4:3 緊湊高對比設計) ==================== -->
-    <header class="w-full px-4 py-2 bg-dark-900/95 border-b border-gray-800 flex flex-wrap justify-between items-center gap-2 shrink-0 z-30">
+    <!-- ==================== 2. 頂部全域導覽列 ==================== -->
+    <header class="w-full px-3 sm:px-5 py-2.5 bg-dark-900/95 border-b border-gray-800 flex flex-wrap justify-between items-center gap-2 shrink-0 z-30">
         <div class="flex items-center gap-2.5">
-            <span class="text-lg">⚡</span>
-            <h1 class="text-sm sm:text-base font-black text-white tracking-wide">人際風暴生存戰</h1>
-            <span id="header-class-badge" class="px-2.5 py-0.5 rounded-full bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan text-xs font-black">
+            <span class="text-2xl">🌪️</span>
+            <h1 class="text-lg sm:text-xl font-black text-white tracking-wide">人際風暴生存戰</h1>
+            <span id="header-class-badge" class="px-3.5 py-1 rounded-full bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan text-sm sm:text-base font-black">
                 班級：未連線
             </span>
-            <span id="sync-status-indicator" class="px-2 py-0.5 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-[10px] font-black">
-                🟢 雲端即時連線中
+            <span id="sync-status-indicator" class="px-3 py-1 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-xs sm:text-sm font-black">
+                🟢 雲端連線就緒
             </span>
         </div>
 
         <div class="flex items-center gap-2">
-            <!-- QR Code 掃描與分享按鈕 -->
-            <button id="btn-show-qrcode" onclick="window.openQrCodeModal()" class="px-3 py-1 rounded-lg bg-neon-green text-dark-950 hover:bg-green-300 text-xs font-black shadow-[0_0_15px_rgba(0,255,102,0.4)] transition-all flex items-center gap-1">
-                📱 顯示平板掃描 QR Code
+            <button id="btn-show-qrcode" onclick="window.openQrCodeModal()" class="px-4 py-1.5 rounded-lg bg-neon-green text-dark-950 hover:bg-green-300 text-sm sm:text-base font-black shadow-[0_0_15px_rgba(0,255,102,0.4)] transition-all flex items-center gap-1.5">
+                📱 平板掃描 QR Code
             </button>
-            <button onclick="window.manualForceSync(false)" class="px-2.5 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-neon-cyan border border-neon-cyan/30 text-xs font-bold transition-all" title="立即從雲端同步最新資料">
-                🔄 同步
+            <button onclick="window.manualForceSync(false)" class="px-3.5 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-neon-cyan border border-neon-cyan/30 text-sm sm:text-base font-bold transition-all" title="立即強制同步">
+                ⚡ 同步
             </button>
-            <div class="flex bg-dark-950 p-0.5 rounded-lg border border-gray-800">
-                <button id="nav-teacher-btn" onclick="window.switchView('teacher')" class="px-2.5 py-1 rounded-md text-xs font-black bg-neon-cyan text-dark-950 transition-all">
+            <div class="hidden md:flex bg-dark-950 p-0.5 rounded-lg border border-gray-800">
+                <button id="nav-teacher-btn" onclick="window.switchView('teacher')" class="px-3.5 py-1 rounded-md text-sm sm:text-base font-black bg-neon-cyan text-dark-950 transition-all">
                     🖥️ 大螢幕
                 </button>
-                <button id="nav-student-btn" onclick="window.switchView('student')" class="px-2.5 py-1 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all">
+                <button id="nav-student-btn" onclick="window.switchView('student')" class="px-3.5 py-1 rounded-md text-sm sm:text-base font-bold text-gray-400 hover:text-white transition-all">
                     📱 平板端
                 </button>
             </div>
-            <button onclick="window.openAdminModal()" class="px-2.5 py-1 rounded-lg bg-neon-amber/20 hover:bg-neon-amber/30 text-neon-amber border border-neon-amber/40 text-xs font-black transition-all">
+            <button onclick="window.openAdminModal()" class="px-3.5 py-1.5 rounded-lg bg-neon-amber/20 hover:bg-neon-amber/30 text-neon-amber border border-neon-amber/40 text-sm sm:text-base font-black transition-all">
                 ⚙️ 教師後台
             </button>
-            <button onclick="window.returnToLobby()" class="px-2.5 py-1 rounded-lg bg-dark-800 hover:bg-neon-rose/20 text-gray-400 hover:text-neon-rose text-xs font-bold transition-all">
+            <button onclick="window.returnToLobby()" class="px-3.5 py-1.5 rounded-lg bg-dark-800 hover:bg-neon-rose/20 text-gray-400 hover:text-neon-rose text-sm sm:text-base font-bold transition-all">
                 🚪 換班
             </button>
         </div>
     </header>
 
-    <!-- ==================== 3. 講台大螢幕主控台 (4:3 免滾動全覽佈局) ==================== -->
-    <main id="view-teacher" class="flex-1 w-full max-w-[1440px] mx-auto p-3 grid grid-cols-12 gap-3 overflow-hidden">
-        <!-- 左側 5 欄：情境翻頁選單、階段切換與放大故事選項區 -->
-        <section class="col-span-12 lg:col-span-5 glass-panel rounded-2xl p-3.5 flex flex-col justify-between overflow-hidden border border-gray-800">
-            <div class="space-y-2 shrink-0">
-                <!-- 多情境切換按鈕列 -->
+    <!-- ==================== 3. 講台大螢幕主控台 (左右 1:1 滿版大字體佈局) ==================== -->
+    <main id="view-teacher" class="flex-1 w-full max-w-full mx-auto p-2.5 sm:p-3.5 grid grid-cols-12 gap-3.5 overflow-y-auto lg:overflow-hidden">
+        <!-- 左半邊 (6 欄 = 50% 畫面寬度)：情境翻頁選單、階段切換與特大號故事選項區 -->
+        <section class="col-span-12 lg:col-span-6 glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden border border-gray-800">
+            <div class="space-y-2.5 shrink-0">
                 <div class="flex items-center justify-between gap-2">
-                    <div id="scenario-tabs-container" class="flex flex-wrap gap-1.5"></div>
+                    <div id="scenario-tabs-container" class="flex flex-wrap gap-2"></div>
                 </div>
-                <!-- 階段切換按鈕列 -->
-                <div class="flex items-center justify-between gap-2 pt-1 border-t border-gray-800/80">
-                    <div id="stage-tabs-container" class="flex flex-wrap gap-1"></div>
-                    <div class="flex items-center gap-1 shrink-0">
-                        <button onclick="window.prevStage()" class="px-2 py-1 rounded bg-dark-800 hover:bg-dark-700 text-xs font-bold text-gray-300">◀</button>
-                        <span id="stage-progress-text" class="text-xs font-mono font-black text-neon-cyan px-1">1 / 6</span>
-                        <button onclick="window.nextStage()" class="px-2 py-1 rounded bg-dark-800 hover:bg-dark-700 text-xs font-bold text-gray-300">▶</button>
+                <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/80">
+                    <div id="stage-tabs-container" class="flex flex-wrap gap-1.5"></div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="window.prevStage()" class="px-3 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-base sm:text-lg font-black text-gray-200">◀</button>
+                        <span id="stage-progress-text" class="text-base sm:text-lg xl:text-xl font-mono font-black text-neon-cyan px-1.5">1 / 6</span>
+                        <button onclick="window.nextStage()" class="px-3 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-base sm:text-lg font-black text-gray-200">▶</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 故事標題與敘述（字級放大） -->
-            <div class="my-2 p-3.5 rounded-xl bg-dark-950/90 border border-gray-800 space-y-1.5 shrink-0">
-                <div class="flex items-center justify-between gap-2">
-                    <h2 id="stage-title" class="text-lg sm:text-xl font-black text-white leading-tight">載入中...</h2>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <span id="history-mode-badge" class="hidden px-2 py-0.5 rounded bg-neon-amber/20 text-neon-amber border border-neon-amber/40 text-[10px] font-black">
-                            ⏪ 歷史回溯中
-                        </span>
-                        <span id="stage-type-badge" class="px-2.5 py-1 rounded text-xs font-black bg-blue-500/20 text-blue-300">
+            <!-- 故事標題與敘述 (特大高對比字體) -->
+            <div class="my-2.5 p-4 sm:p-5 rounded-2xl bg-dark-950/95 border border-gray-700/80 space-y-2.5 shrink-0 shadow-inner">
+                <div class="flex items-start justify-between gap-2.5">
+                    <h2 id="stage-title" class="text-2xl sm:text-3xl xl:text-[34px] font-black text-white leading-tight">載入中...</h2>
+                    <div class="flex flex-col items-end gap-1.5 shrink-0">
+                        <span id="stage-type-badge" class="px-3.5 py-1.5 rounded-xl text-sm sm:text-base font-black bg-blue-500/20 text-blue-300 border border-blue-500/30">
                             🎯 抉擇階段
                         </span>
+                        <span id="history-mode-badge" class="hidden px-3 py-1 rounded-lg bg-neon-amber/20 text-neon-amber border border-neon-amber/40 text-xs sm:text-sm font-black">
+                            ⏪ 歷史回溯中
+                        </span>
                     </div>
                 </div>
-                <p id="stage-story" class="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">正在載入情境內容...</p>
+                <p id="stage-story" class="text-lg sm:text-xl xl:text-[23px] text-gray-100 leading-relaxed font-bold">正在載入情境內容...</p>
             </div>
 
-            <!-- A / B / C 選項展示區（字級放大） -->
-            <div id="teacher-options-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-2 pr-1"></div>
+            <!-- A / B / C 選項展示區 (自動延展填滿左半邊剩餘高度，含超大數值加減徽章) -->
+            <div id="teacher-options-list" class="flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar gap-2.5 pr-1"></div>
         </section>
 
-        <!-- 右側 7 欄：6 組智囊團即時生存儀表板 (2x3 網格免滾動) -->
-        <section id="teams-grid" class="col-span-12 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 grid-rows-3 sm:grid-rows-2 gap-2.5 overflow-hidden"></section>
+        <!-- 右半邊 (6 欄 = 50% 畫面寬度)：6 組智囊團即時生存儀表板 (放大字體與數值加減顯示) -->
+        <section id="teams-grid" class="col-span-12 lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:grid-rows-2 gap-3 overflow-visible lg:overflow-hidden"></section>
     </main>
 
-    <!-- ==================== 4. 學生平板全螢幕操作端 (免滑動雙欄平板佈局) ==================== -->
-    <main id="view-student" class="hidden flex-1 w-full max-w-[1440px] mx-auto p-3 flex flex-col gap-3 overflow-hidden relative">
+    <!-- ==================== 4. 學生平板全螢幕操作端 (支援自由上下滑動，確保按鈕不被遮擋) ==================== -->
+    <main id="view-student" class="hidden flex-1 w-full max-w-[1440px] mx-auto p-3 pb-24 flex flex-col gap-3 overflow-y-auto relative">
         <!-- 頂部：組別認證與隊名鎖定列 -->
         <div class="glass-panel rounded-2xl p-3 border border-gray-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div class="flex flex-wrap items-center gap-2.5">
-                <span class="text-xs font-black text-neon-cyan">🛡️ 智囊團身分認證：</span>
-                <select id="student-team-select" onchange="window.onStudentSelectTeamChange()" class="bg-dark-900 border border-gray-700 rounded-xl px-3 py-1.5 text-sm font-black text-white outline-none focus:border-neon-cyan">
+                <span class="text-xs sm:text-sm font-black text-neon-cyan">🛡️ 智囊團身分認證：</span>
+                <select id="student-team-select" onchange="window.onStudentSelectTeamChange()" class="bg-dark-900 border border-gray-700 rounded-xl px-3 py-2 text-sm font-black text-white outline-none focus:border-neon-cyan">
                     <option value="1">第 1 組</option>
                     <option value="2">第 2 組</option>
                     <option value="3">第 3 組</option>
@@ -205,11 +206,11 @@
                     <option value="5">第 5 組</option>
                     <option value="6">第 6 組</option>
                 </select>
-                <input type="text" id="student-team-name-input" placeholder="請輸入你們的隊名（例：無敵智囊團）" class="bg-dark-900 border border-gray-700 rounded-xl px-3.5 py-1.5 text-sm font-black text-white w-56 outline-none focus:border-neon-cyan" onkeydown="if(event.key==='Enter') window.lockStudentTeam()">
-                <button id="btn-lock-team" onclick="window.lockStudentTeam()" class="px-4 py-1.5 rounded-xl bg-neon-green text-dark-950 font-black text-xs hover:bg-green-300 shadow-md transition-all">
+                <input type="text" id="student-team-name-input" placeholder="請輸入你們的隊名（例：破風智囊團）" class="bg-dark-900 border border-gray-700 rounded-xl px-3.5 py-2 text-sm font-black text-white w-52 sm:w-64 outline-none focus:border-neon-cyan">
+                <button id="btn-lock-team" onclick="window.lockStudentTeam()" class="px-4 py-2 rounded-xl bg-neon-green text-dark-950 font-black text-xs sm:text-sm hover:bg-green-300 shadow-md transition-all">
                     🔒 確定鎖定並作答
                 </button>
-                <button id="btn-unlock-team" onclick="window.unlockStudentTeam()" class="hidden px-3 py-1.5 rounded-xl bg-dark-800 text-gray-300 font-bold text-xs hover:bg-dark-700">
+                <button id="btn-unlock-team" onclick="window.unlockStudentTeam()" class="hidden px-3 py-2 rounded-xl bg-dark-800 text-gray-300 font-bold text-xs hover:bg-dark-700">
                     🔓 切換組別
                 </button>
             </div>
@@ -219,43 +220,46 @@
         </div>
 
         <!-- 平板雙欄主操作區 -->
-        <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 overflow-hidden relative">
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 overflow-visible lg:overflow-hidden relative">
             <!-- 未鎖定組別遮罩 -->
-            <div id="student-unauthenticated-mask" class="absolute inset-0 bg-dark-950/85 backdrop-blur-sm z-20 rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-2 border border-gray-800">
+            <div id="student-unauthenticated-mask" class="absolute inset-0 min-h-[260px] bg-dark-950/88 backdrop-blur-sm z-20 rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-2 border border-gray-800">
                 <div class="text-4xl">🔐</div>
                 <h3 class="text-lg font-black text-white">尚未鎖定智囊團組別</h3>
-                <p class="text-xs text-gray-400 max-w-md">請先在上方選擇「第 1～6 組」並輸入隊名，按下「確定鎖定並作答」即可解鎖並同步至講台大螢幕！</p>
+                <p class="text-xs sm:text-sm text-gray-400 max-w-md">請先在上方選擇「第 1～6 組」並輸入隊名，按下 <span class="text-neon-green font-bold">「🔒 確定鎖定並作答」</span> 即可解鎖！</p>
             </div>
 
-            <!-- 角色數值歸零死亡全屏警告遮罩 -->
-            <div id="student-death-overlay" class="hidden absolute inset-0 bg-dark-950/95 backdrop-blur-md z-30 rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-4 border-2 border-neon-rose">
-                <div class="text-5xl animate-bounce">💀</div>
-                <h3 class="text-2xl font-black text-neon-rose">警告！你們的角色心理防線已全面崩潰</h3>
-                <p id="student-death-reason-text" class="text-sm sm:text-base text-rose-200 max-w-xl font-bold leading-relaxed bg-neon-rose/15 p-4 rounded-2xl border border-neon-rose/40">
-                    某項生存數值歸零，角色已淘汰。
-                </p>
-                <button id="btn-request-revive" onclick="window.requestTeamRevive()" class="px-6 py-3 rounded-xl bg-neon-amber text-dark-950 font-black text-sm hover:bg-amber-300 shadow-lg transition-all">
+            <!-- 角色數值歸零死亡全屏警告遮罩 (顯示完整心路歷程與心理崩潰故事) -->
+            <div id="student-death-overlay" class="hidden absolute inset-0 min-h-[420px] bg-dark-950/96 backdrop-blur-md z-30 rounded-2xl flex flex-col items-center justify-start sm:justify-center p-5 sm:p-8 text-center space-y-4 border-2 border-neon-rose overflow-y-auto">
+                <div class="text-5xl animate-bounce shrink-0">💀</div>
+                <h3 class="text-xl sm:text-2xl font-black text-neon-rose shrink-0">警告！你們的角色心理防線已全面崩潰</h3>
+                <div class="w-full max-w-3xl bg-neon-rose/10 border border-neon-rose/40 rounded-2xl p-4 sm:p-6 text-left space-y-2.5 shadow-xl max-h-[55vh] overflow-y-auto custom-scrollbar">
+                    <span class="text-xs sm:text-sm font-black text-neon-rose tracking-wider block">📖 【角色心路歷程回溯・心理崩潰報告】</span>
+                    <p id="student-death-reason-text" class="text-sm sm:text-base text-rose-100 font-medium leading-relaxed whitespace-pre-line">
+                        某項生存數值歸零，角色已淘汰。
+                    </p>
+                </div>
+                <button id="btn-request-revive" onclick="window.requestTeamRevive()" class="px-6 py-3 rounded-xl bg-neon-amber text-dark-950 font-black text-sm sm:text-base hover:bg-amber-300 shadow-lg transition-all shrink-0">
                     🆘 向講台老師發送救援復活請求
                 </button>
-                <p id="student-revive-pending-msg" class="hidden text-xs font-black text-neon-amber animate-pulse">
+                <p id="student-revive-pending-msg" class="hidden text-xs sm:text-sm font-black text-neon-amber animate-pulse shrink-0">
                     ⏳ 已發送救援請求，請等待講台老師在大螢幕核准復活...
                 </p>
             </div>
 
             <!-- 左側 5 欄：目前數值儀表板與本階段故事 -->
-            <div class="lg:col-span-5 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-hidden border border-gray-800">
+            <div class="lg:col-span-5 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-visible lg:overflow-hidden border border-gray-800">
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <span id="student-team-badge" class="px-3 py-1 rounded-lg bg-neon-cyan/15 text-neon-cyan text-xs font-black">第 1 組</span>
+                        <span id="student-team-badge" class="px-3 py-1 rounded-lg bg-neon-cyan/15 text-neon-cyan text-xs sm:text-sm font-black">第 1 組</span>
                         <div class="text-xs text-gray-400 font-bold">
                             <span id="student-current-scenario-label">情境 1</span>・<span id="student-current-stage-label" class="text-white">階段 1</span>
                         </div>
                     </div>
 
                     <!-- 三大生存數值即時條 -->
-                    <div class="p-3 rounded-xl bg-dark-950 border border-gray-800 space-y-2">
+                    <div class="p-3 rounded-xl bg-dark-950 border border-gray-800 space-y-2.5">
                         <div>
-                            <div class="flex justify-between text-xs font-black text-cyan-300 mb-0.5">
+                            <div class="flex justify-between text-xs sm:text-sm font-black text-cyan-300 mb-0.5">
                                 <span>🛡️ 同儕安全感</span>
                                 <span id="stu-val-safety" class="font-mono">50</span>
                             </div>
@@ -264,7 +268,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-xs font-black text-amber-300 mb-0.5">
+                            <div class="flex justify-between text-xs sm:text-sm font-black text-amber-300 mb-0.5">
                                 <span>👑 道德自尊</span>
                                 <span id="stu-val-esteem" class="font-mono">50</span>
                             </div>
@@ -273,7 +277,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-xs font-black text-emerald-300 mb-0.5">
+                            <div class="flex justify-between text-xs sm:text-sm font-black text-emerald-300 mb-0.5">
                                 <span>⚡ 社交能量</span>
                                 <span id="stu-val-energy" class="font-mono">50</span>
                             </div>
@@ -285,40 +289,65 @@
                 </div>
 
                 <!-- 故事卡片 -->
-                <div class="flex-1 mt-3 p-4 rounded-xl bg-dark-950/90 border border-gray-800 flex flex-col justify-center space-y-2 overflow-y-auto custom-scrollbar">
-                    <h3 id="student-stage-title" class="text-lg font-black text-white">階段標題</h3>
-                    <p id="student-stage-story" class="text-sm text-gray-200 leading-relaxed">故事內容...</p>
+                <div class="mt-3 p-4 rounded-xl bg-dark-950/90 border border-gray-800 flex flex-col justify-center space-y-2 lg:flex-1 lg:overflow-y-auto custom-scrollbar">
+                    <h3 id="student-stage-title" class="text-lg sm:text-xl font-black text-white">階段標題</h3>
+                    <p id="student-stage-story" class="text-sm sm:text-base text-gray-200 leading-relaxed">故事內容...</p>
                 </div>
             </div>
 
-            <!-- 右側 7 欄：平板大型觸控選項區 或 破局階段方案 D 輸入區 -->
-            <div class="lg:col-span-7 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-hidden border border-gray-800">
+            <!-- 右側 7 欄：平板大型觸控選項區 或 破局階段方案 D 雙輸入區 -->
+            <div class="lg:col-span-7 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-visible lg:overflow-hidden border border-gray-800">
                 <!-- 一般選擇題模式 -->
                 <div id="student-choice-mode" class="flex-1 flex flex-col justify-between space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm font-black text-white">🎯 請全組討論後點選一個行動方案：</span>
+                        <span class="text-sm sm:text-base font-black text-white">🎯 請全組討論後點選一個行動方案：</span>
                         <span id="student-submitted-badge" class="hidden px-3 py-1 rounded-full bg-neon-green/20 text-neon-green border border-neon-green/40 text-xs font-black">
                             🔒 本階段選擇已鎖定提交
                         </span>
                     </div>
 
-                    <div id="student-options-container" class="flex-1 grid grid-cols-1 gap-2.5 overflow-y-auto custom-scrollbar"></div>
+                    <div id="student-options-container" class="grid grid-cols-1 gap-2.5 lg:flex-1 lg:overflow-y-auto custom-scrollbar"></div>
 
-                    <button id="btn-confirm-submit-choice" onclick="window.confirmAndSubmitChoice()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-cyan to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-dark-950 font-black text-base shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                    <button id="btn-confirm-submit-choice" onclick="window.confirmAndSubmitChoice()" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-cyan to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-dark-950 font-black text-base shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0">
                         🔒 確定選擇並提交（送出後不可修改）
                     </button>
                 </div>
 
-                <!-- 破局階段 (方案 D) 填寫模式 -->
+                <!-- 破局階段 (方案 D) 雙格填寫模式（送出後可無限次反覆修改） -->
                 <div id="student-solution-d-mode" class="hidden flex-1 flex flex-col justify-between space-y-3">
-                    <div class="space-y-1">
-                        <span class="px-2.5 py-0.5 rounded bg-neon-purple/20 text-neon-purple border border-neon-purple/40 text-xs font-black">💡 系統破局階段・方案 D 提案</span>
-                        <h3 class="text-lg font-black text-white">設計不硬碰硬、也不犧牲底線的「微小行動」</h3>
-                        <p class="text-xs text-gray-400">請全組共同撰寫具體做法，按下送出後才會解鎖顯示於講台大螢幕！</p>
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <div class="space-y-0.5">
+                            <span class="px-2.5 py-0.5 rounded bg-neon-purple/20 text-neon-purple border border-neon-purple/40 text-xs font-black">💡 系統破局階段・方案 D 提案（支援隨時修改）</span>
+                            <h3 class="text-base sm:text-lg font-black text-white">設計不硬碰硬、也不犧牲底線的「微小行動」</h3>
+                        </div>
+                        <span id="student-sol-d-status-badge" class="hidden px-3 py-1 rounded-full bg-neon-green/20 text-neon-green border border-neon-green/40 text-xs font-black">
+                            ✅ 已公開至大螢幕（可直接修改後再按更新）
+                        </span>
                     </div>
-                    <textarea id="student-solution-d-input" rows="5" placeholder="請輸入你們的方案 D 破局行動..." class="w-full flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-base text-white outline-none resize-none"></textarea>
-                    <button id="btn-submit-solution-d" onclick="window.submitSolutionD()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-purple to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-black text-base shadow-lg transition-all">
-                        🚀 確定送出方案 D（送出後大螢幕立即公開）
+
+                    <!-- 若先前階段曾淘汰，顯示友善提示但不阻擋破局提案 -->
+                    <div id="student-sol-d-dead-notice" class="hidden px-3.5 py-2 rounded-xl bg-neon-rose/15 border border-neon-rose/40 text-xs sm:text-sm text-rose-200 font-bold">
+                        💀 你們在前面階段曾因心理防線崩潰而淘汰，現在請透過設計「方案 D」來打破系統困境！
+                    </div>
+
+                    <!-- 小輸入格：行動命名 -->
+                    <div class="space-y-1 shrink-0">
+                        <label for="student-solution-d-title" class="text-xs sm:text-sm font-black text-neon-purple block">
+                            1️⃣ 為你們的破局行動取一個名字：
+                        </label>
+                        <input type="text" id="student-solution-d-title" oninput="window.onSolDInputChange()" placeholder="範例：溫柔的破冰船（或：圖書館的秘密邀請）" class="w-full bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl px-4 py-3 text-base font-black text-white placeholder-gray-400/50 outline-none transition-all">
+                    </div>
+
+                    <!-- 大輸入格：具體行為與步驟 -->
+                    <div class="space-y-1 flex-1 flex flex-col">
+                        <label for="student-solution-d-input" class="text-xs sm:text-sm font-black text-neon-purple block">
+                            2️⃣ 寫出具體行為與執行步驟：
+                        </label>
+                        <textarea id="student-solution-d-input" rows="5" oninput="window.onSolDInputChange()" placeholder="範例步驟：&#10;1. 下課時不在教室大聲找阿光，避免引發阿健正面衝突。&#10;2. 趁去裝水時私下遞紙條或傳訊息，約阿光午休一起去圖書館。&#10;3. 邀請平時也覺得阿健太過分的同學加入，建立友善支持小圈圈。" class="w-full min-h-[145px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-sm sm:text-base text-white placeholder-gray-400/50 outline-none resize-y leading-relaxed transition-all"></textarea>
+                    </div>
+
+                    <button id="btn-submit-solution-d" onclick="window.submitSolutionD()" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-purple to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-black text-base shadow-lg transition-all shrink-0">
+                        🚀 確定送出方案 D（送出後大螢幕立即公開，仍可反覆修改）
                     </button>
                 </div>
             </div>
@@ -330,7 +359,7 @@
         <div class="glass-panel max-w-sm w-full p-6 rounded-2xl border border-neon-amber/50 shadow-2xl space-y-4 text-center">
             <div class="text-3xl">🔐</div>
             <h3 class="text-lg font-black text-white">教師後台權限驗證</h3>
-            <p class="text-xs text-gray-400">請輸入教師管理密碼以編輯情境題庫或檢視各班雲端存檔</p>
+            <p class="text-xs text-gray-400">請輸入教師管理密碼以編輯情境題庫或檢視各班存檔</p>
             <input type="password" id="admin-password-input" placeholder="請輸入管理密碼" class="w-full bg-dark-900 border border-gray-700 focus:border-neon-amber rounded-xl px-4 py-2.5 text-center text-lg font-black text-white tracking-widest outline-none" onkeydown="if(event.key==='Enter') window.verifyAdminPassword()">
             <p id="admin-auth-error" class="hidden text-xs font-bold text-neon-rose">❌ 密碼錯誤，請重新輸入！</p>
             <div class="grid grid-cols-2 gap-2 pt-2">
@@ -352,7 +381,7 @@
                             📝 情境與階段腳本編輯
                         </button>
                         <button id="admin-tab-records" onclick="window.switchAdminTab('records')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all">
-                            📊 各班雲端數據存檔與刪除
+                            📊 各班課堂數據存檔與刪除
                         </button>
                     </div>
                 </div>
@@ -370,14 +399,14 @@
             <div id="admin-content-scenarios" class="flex-1 flex flex-col overflow-hidden p-4 space-y-3">
                 <div class="flex flex-wrap justify-between items-center gap-2 bg-dark-900/90 p-3 rounded-2xl border border-gray-800 shrink-0">
                     <div class="text-xs text-gray-300">
-                        💡 <span class="text-neon-cyan font-bold">操作提示：</span>點擊任一情境卡片範圍即可切換編輯目標（青色發光框）。
+                        💡 <span class="text-neon-cyan font-bold">操作提示：</span>點擊任一情境卡片範圍即可切換為目前編輯目標（亮起青色發光外框）。
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="window.addNewStageToCurrentScenario()" class="px-3.5 py-2 rounded-xl bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan/30 text-xs font-black transition-all">
-                            ➕ 新增階段
+                            ➕ 新增階段（追加於目前情境）
                         </button>
                         <button onclick="window.addNewScenarioLine()" class="px-3.5 py-2 rounded-xl bg-neon-purple/20 text-neon-purple border border-neon-purple/50 hover:bg-neon-purple/30 text-xs font-black transition-all">
-                            ➕ 新增情境
+                            ➕ 新增情境（開啟新翻頁情境線）
                         </button>
                     </div>
                 </div>
@@ -392,7 +421,7 @@
                         <button onclick="window.loadAllClassRecords()" class="text-xs text-neon-cyan hover:underline font-bold">🔄 重新整理</button>
                     </div>
                     <div id="admin-class-records-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-2">
-                        <p class="text-xs text-gray-500 text-center py-8">載入雲端班級紀錄中...</p>
+                        <p class="text-xs text-gray-500 text-center py-8">載入班級紀錄中...</p>
                     </div>
                 </div>
                 <div class="col-span-12 md:col-span-8 bg-dark-900/90 rounded-2xl border border-gray-800 p-4 flex flex-col overflow-hidden">
@@ -411,7 +440,7 @@
     <div id="modal-rename-team" class="hidden fixed inset-0 bg-dark-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="glass-panel max-w-sm w-full p-5 rounded-2xl border border-neon-cyan/50 shadow-2xl space-y-4">
             <h3 class="text-base font-black text-white">✏️ 教師強制修改組別名稱</h3>
-            <p class="text-xs text-gray-400">正在修改 <span id="rename-team-target-label" class="text-neon-cyan font-black">第 1 組</span> 的顯示名稱（修改後立即雲端同步）：</p>
+            <p class="text-xs text-gray-400">正在修改 <span id="rename-team-target-label" class="text-neon-cyan font-black">第 1 組</span> 的顯示名稱（修改後將立即同步至平板）：</p>
             <input type="text" id="rename-team-input" class="w-full bg-dark-900 border border-gray-700 focus:border-neon-cyan rounded-xl px-3.5 py-2.5 text-sm font-black text-white outline-none" onkeydown="if(event.key==='Enter') window.confirmRenameTeam()">
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="window.closeRenameModal()" class="py-2 rounded-xl bg-dark-800 text-gray-300 text-xs font-bold">取消</button>
@@ -420,81 +449,58 @@
         </div>
     </div>
 
-    <!-- ==================== 8. 方案 D 全螢幕放大檢視視窗 ==================== -->
-    <div id="modal-solution-d-viewer" class="hidden fixed inset-0 bg-dark-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="window.closeSolutionDViewer()">
-        <div class="glass-panel max-w-2xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-purple shadow-2xl space-y-4" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
-                <span id="viewer-sol-d-team" class="text-lg font-black text-neon-purple">智囊團破局提案</span>
-                <button onclick="window.closeSolutionDViewer()" class="px-3 py-1 bg-dark-800 rounded-lg text-xs font-bold text-gray-300">✕ 關閉</button>
+    <!-- ==================== 8. 方案 D 與死亡故事全螢幕放大檢視視窗 ==================== -->
+    <div id="modal-solution-d-viewer" class="hidden fixed inset-0 bg-dark-950/92 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="window.closeSolutionDViewer()">
+        <div id="viewer-modal-card" class="glass-panel max-w-4xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-purple shadow-2xl space-y-4 max-h-[88vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3 shrink-0">
+                <span id="viewer-sol-d-team" class="text-xl sm:text-2xl font-black text-neon-purple">智囊團破局提案</span>
+                <button onclick="window.closeSolutionDViewer()" class="px-4 py-1.5 bg-dark-800 hover:bg-dark-700 rounded-xl text-sm font-black text-gray-200">✕ 關閉</button>
             </div>
-            <p id="viewer-sol-d-content" class="text-lg sm:text-xl text-white font-bold leading-relaxed whitespace-pre-wrap py-4"></p>
+            <div id="viewer-sol-d-action-title-box" class="hidden px-4 py-3 rounded-2xl bg-neon-purple/15 border border-neon-purple/40 shrink-0">
+                <span class="text-xs font-bold text-neon-purple block">🎯 行動代號：</span>
+                <h4 id="viewer-sol-d-action-title" class="text-xl sm:text-2xl font-black text-white mt-0.5"></h4>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar pr-1">
+                <p id="viewer-sol-d-content" class="text-lg sm:text-xl text-gray-100 font-semibold leading-relaxed whitespace-pre-wrap py-2"></p>
+            </div>
         </div>
     </div>
 
-    <!-- ==================== 9. Kahoot! 風格：QR Code 掃描與跨裝置直連視窗 ==================== -->
-    <div id="modal-qrcode" class="hidden fixed inset-0 bg-dark-950/92 backdrop-blur-md z-50 p-4 flex items-center justify-center" onclick="window.closeQrCodeModal()">
-        <div class="glass-panel max-w-3xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-green shadow-[0_0_50px_rgba(0,255,102,0.3)] space-y-5 max-h-[95vh] overflow-y-auto custom-scrollbar" onclick="event.stopPropagation()">
+    <!-- ==================== 9. Kahoot! 風格：QR Code 掃描直連視窗 ==================== -->
+    <div id="modal-qrcode" class="hidden fixed inset-0 bg-dark-950/92 backdrop-blur-md z-50 p-4 flex items-center justify-center overflow-y-auto" onclick="window.closeQrCodeModal()">
+        <div class="glass-panel max-w-2xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-green shadow-[0_0_50px_rgba(0,255,102,0.3)] space-y-5 my-auto" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-gray-800 pb-3">
                 <div class="flex items-center gap-2.5">
                     <span class="text-2xl">📱</span>
                     <div>
                         <h3 class="text-lg sm:text-xl font-black text-white">平板掃描 QR Code 直接加入課堂</h3>
-                        <p class="text-xs text-neon-green font-bold">掃描後自動進入學生平板端並綁定本班，即時雲端同步！</p>
+                        <p class="text-xs text-neon-green font-bold">掃描後自動進入學生平板端並綁定本班，無需手動輸入班級！</p>
                     </div>
                 </div>
                 <button onclick="window.closeQrCodeModal()" class="px-3.5 py-1.5 bg-dark-800 hover:bg-dark-700 text-gray-200 rounded-xl text-xs font-black">✕ 關閉</button>
             </div>
 
-            <!-- 網址環境偵測提示框（若於本機/預覽框開啟時提示貼入公開網址） -->
-            <div id="qr-env-notice" class="hidden p-3.5 rounded-2xl bg-neon-amber/15 border border-neon-amber/50 text-xs text-amber-100 space-y-1">
-                <div class="font-black text-neon-amber">⚠️ 目前偵測到本機或預覽框架環境</div>
-                <p class="text-gray-200 leading-relaxed">
-                    為了讓學生平板掃描 QR Code 後能直接開啟網站，請在下方輸入框貼上您發布的公開網址（例如 <span class="font-mono text-neon-cyan">https://navigating-social-minefields.web.app</span> 或分享連結），條碼將會立即轉換為可掃描的跨裝置網址！
-                </p>
-            </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
-                <!-- 左側：高對比大型向量 QR Code -->
                 <div class="sm:col-span-5 flex flex-col items-center justify-center bg-white p-4 rounded-2xl shadow-xl space-y-2">
-                    <div id="qrcode-container" class="w-52 h-52 flex items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50"></div>
-                    <span id="qr-scan-caption" class="text-xs font-black text-gray-800 tracking-wider text-center">請用平板相機掃描條碼</span>
-                    <a id="qr-test-open-link" href="#" target="_blank" rel="noopener noreferrer" class="hidden w-full text-center py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition-all">
-                        🔗 新分頁測試學生平板端
-                    </a>
+                    <div id="qrcode-container" class="w-48 h-48 flex items-center justify-center overflow-hidden"></div>
+                    <span class="text-xs font-black text-gray-800 tracking-wider">請用平板相機掃描條碼</span>
                 </div>
-
-                <!-- 右側：班級 PIN 碼、直連網址與 6 組即時加入狀態 -->
-                <div class="sm:col-span-7 space-y-3.5">
-                    <div class="bg-dark-950 p-3.5 rounded-2xl border border-neon-cyan/40 flex flex-wrap justify-between items-center gap-2">
+                <div class="sm:col-span-7 space-y-4">
+                    <div class="bg-dark-950 p-3.5 rounded-2xl border border-neon-cyan/40 flex justify-between items-center">
                         <div>
                             <span class="text-[11px] text-gray-400 block">目前班級代碼 (PIN)：</span>
                             <span id="qr-class-pin" class="text-2xl sm:text-3xl font-black text-neon-cyan tracking-widest font-mono">--</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="window.copyStudentDirectUrl()" class="px-3.5 py-2 bg-neon-cyan text-dark-950 rounded-xl text-xs font-black hover:bg-cyan-300 transition-all">
-                                📋 複製直連網址
-                            </button>
-                            <button onclick="window.copyClassJoinInfo()" class="px-3 py-2 bg-dark-800 text-neon-green border border-neon-green/50 rounded-xl text-xs font-black hover:bg-neon-green/15 transition-all">
-                                💬 複製邀請訊息
-                            </button>
-                        </div>
+                        <button onclick="window.copyClassJoinInfo()" class="px-3 py-2 bg-neon-cyan text-dark-950 rounded-xl text-xs font-black hover:bg-cyan-300 transition-all">
+                            📋 複製直連網址
+                        </button>
                     </div>
-
-                    <!-- 網站網址與自動生成參數預覽 -->
-                    <div class="bg-dark-950 p-3 rounded-2xl border border-gray-800 space-y-1.5">
-                        <div class="flex justify-between items-center">
-                            <label for="qr-base-url-input" class="text-[11px] font-bold text-gray-300">🌐 網站公開網址（可自動偵測或手動貼上）：</label>
-                            <button onclick="window.pasteQrBaseUrl()" class="text-[11px] font-black text-neon-amber hover:underline">📥 貼上網址</button>
-                        </div>
-                        <input type="text" id="qr-base-url-input" oninput="window.onQrBaseUrlChange(this.value)" placeholder="https://..." class="w-full bg-dark-900 border border-gray-700 focus:border-neon-green rounded-xl px-3 py-1.5 text-xs font-mono text-neon-green outline-none">
-                        <p id="qr-full-url-preview" class="text-[10px] text-gray-400 font-mono truncate"></p>
+                    <div class="bg-dark-950/80 p-2.5 rounded-xl border border-gray-800">
+                        <span class="text-[10px] text-gray-400 block mb-1">🔗 學生平板直連網址：</span>
+                        <input type="text" id="qr-direct-url-display" readonly class="w-full bg-dark-900 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] font-mono text-neon-green outline-none">
                     </div>
-
-                    <div class="space-y-1.5">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-gray-300">📡 各組平板連線狀態（鎖定隊名後即時亮燈）：</span>
-                            <span id="qr-joined-count-badge" class="text-[11px] font-black text-neon-green">已加入：0 / 6 組</span>
-                        </div>
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-gray-300 block">📡 各組平板連線狀態（鎖定隊名後即時亮燈）：</span>
                         <div id="qr-teams-status-grid" class="grid grid-cols-2 gap-2"></div>
                     </div>
                 </div>
@@ -503,15 +509,29 @@
     </div>
 
     <!-- 通用提示條 -->
-    <div id="toast-notification" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] bg-dark-900 border border-neon-cyan text-white px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,243,255,0.4)] text-xs font-bold flex items-center gap-2 transition-all">
+    <div id="toast-notification" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] bg-dark-900 border border-neon-cyan text-white px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,243,255,0.4)] text-xs sm:text-sm font-bold flex items-center gap-2 transition-all">
         <span id="toast-message">訊息提示</span>
     </div>
 
-    <!-- ==================== 10. 雲端即時同步核心引擎 (Firestore + 離線容錯雙模) ==================== -->
+    <!-- ==================== 10. 跨裝置雲端即時同步引擎 ==================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 啟用 QR Code UTF-8 編碼支援
+        if (typeof qrcode !== 'undefined' && qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+            qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
         let db = null;
         let auth = null;
@@ -521,9 +541,8 @@
         let unsubscribeLobbyClasses = null;
         let pollIntervalId = null;
 
-        const appId = typeof __app_id !== 'undefined' && __app_id ? __app_id : 'interpersonal-storm-battle';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'interpersonal-storm-battle';
 
-        // 您的專屬雲端資料庫組態（所有裝置皆連向同一雲端專案以實現跨裝置同步）
         const firebaseConfig = {
             apiKey: "AIzaSyCNDL8HPoTklyrWXfPcg_-VaHfxs8-63Iw",
             authDomain: "navigating-social-minefields.firebaseapp.com",
@@ -539,13 +558,24 @@
             auth = getAuth(app);
             db = getFirestore(app);
         } catch (e) {
-            console.warn("Firebase init warning:", e);
+            console.warn("Firebase init error:", e);
             db = null;
         }
 
-        // 驗證登入（支援 Custom Token 與匿名登入，若規則為公開讀寫亦不中斷 db）
+        function updateSyncBadge(isCloudOk, reason = '') {
+            const badge = document.getElementById('sync-status-indicator');
+            if (!badge) return;
+            if (isCloudOk) {
+                badge.innerText = '🟢 雲端即時連線中';
+                badge.className = 'px-3 py-1 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-xs sm:text-sm font-black';
+            } else {
+                badge.innerText = `🟠 雲端受阻${reason ? ` (${reason})` : ''}`;
+                badge.className = 'px-3 py-1 rounded-full bg-neon-amber/15 border border-neon-amber/40 text-neon-amber text-xs sm:text-sm font-black';
+            }
+        }
+
         async function ensureAuth() {
-            if (!auth || !db) return null;
+            if (!auth) return null;
             if (auth.currentUser) {
                 currentUser = auth.currentUser;
                 return currentUser;
@@ -559,41 +589,12 @@
                     currentUser = res.user;
                 }
             } catch (e) {
-                console.warn("Auth fallback (proceeding with public Firestore rules):", e.code || e.message);
+                console.warn("Auth skipped, continuing with Firestore:", e.code || e.message);
             }
             return currentUser;
         }
 
-        function setCloudIndicator(status, text) {
-            const headerEl = document.getElementById('sync-status-indicator');
-            const lobbyEl = document.getElementById('lobby-cloud-status');
-            if (status === 'connected') {
-                if (headerEl) {
-                    headerEl.innerText = text || '🟢 雲端即時連線中';
-                    headerEl.className = 'px-2 py-0.5 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-[10px] font-black';
-                }
-                if (lobbyEl) {
-                    lobbyEl.innerText = '🟢 雲端伺服器連線成功（講台與 6 台平板可跨裝置即時同步）';
-                    lobbyEl.className = 'text-neon-green font-bold';
-                }
-            } else if (status === 'syncing') {
-                if (headerEl) {
-                    headerEl.innerText = text || '🟡 雲端同步中...';
-                    headerEl.className = 'px-2 py-0.5 rounded-full bg-neon-amber/15 border border-neon-amber/40 text-neon-amber text-[10px] font-black';
-                }
-            } else {
-                if (headerEl) {
-                    headerEl.innerText = text || '🟠 離線本機備援中';
-                    headerEl.className = 'px-2 py-0.5 rounded-full bg-neon-amber/15 border border-neon-amber/40 text-neon-amber text-[10px] font-black';
-                }
-                if (lobbyEl) {
-                    lobbyEl.innerText = text || '🟠 目前為離線模式，請確認網路連線以啟用跨裝置同步';
-                    lobbyEl.className = 'text-neon-amber font-bold';
-                }
-            }
-        }
-
-        // 預設題庫與組別資料結構
+        // 預設題庫與組別資料
         function getDefaultScenarios() {
             return [
                 {
@@ -694,29 +695,18 @@
         window.currentStageIndex = 0;
         window.teamsData = getDefaultTeamsData();
         window.scenarioSnapshots = {};
-        window.teamLocalWriteTs = {};
 
         window.studentSelectedTeamId = 1;
         window.studentIsTeamLocked = false;
         window.studentTempChoice = null;
+        window.studentSolDDirty = false;
+        window.studentLoadedSolDKey = '';
+        window.studentLocalSolDUpdatedAt = 0;
         window.renameTargetTeamId = null;
         window.adminActiveScenarioIdx = 0;
-        window.customPublishedBaseUrl = localStorage.getItem('storm_published_base_url') || '';
 
         function normalizeClassName(raw) {
             return String(raw || '').trim().replace(/\s+/g, '').toUpperCase();
-        }
-
-        function getTeamDocId(className, teamId) {
-            return `${encodeURIComponent(className)}__team_${teamId}`;
-        }
-
-        function escapeHtmlAttr(str) {
-            return String(str || '')
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
         }
 
         window.showToast = function(msg) {
@@ -728,10 +718,14 @@
             clearTimeout(window._toastTimer);
             window._toastTimer = setTimeout(() => {
                 toast.classList.add('hidden');
-            }, 3400);
+            }, 3200);
         };
 
-        // 切換大廳身分
+        window.onSolDInputChange = function() {
+            window.studentSolDDirty = true;
+            window.studentLocalSolDUpdatedAt = Date.now();
+        };
+
         window.setLobbyRole = function(role) {
             window.userRole = role;
             const tTab = document.getElementById('lobby-tab-teacher');
@@ -753,118 +747,84 @@
             }
         };
 
-        // 從雲端與本機讀取指定班級的 6 組完整資料
-        async function fetchClassTeams(className) {
-            const teams = getDefaultTeamsData();
-            for (let i = 1; i <= 6; i++) {
-                try {
-                    const cached = localStorage.getItem(`team_${className}_${i}`);
-                    if (cached) teams[i] = { ...teams[i], ...JSON.parse(cached) };
-                } catch (e) {}
-            }
+        // 合併遠端組別資料時保護學生端正在編輯或剛送出的方案 D 不被舊輪詢覆蓋
+        function mergeIncomingTeamData(tData) {
+            if (!tData || !tData.id) return;
+            const tid = Number(tData.id);
+            const existing = window.teamsData[tid];
 
-            if (!db) return teams;
-            await ensureAuth();
-            try {
-                // 1. 讀取教室主文件上的 team_1..6 摘要欄位
-                const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className);
-                const roomSnap = await getDoc(roomRef);
-                if (roomSnap.exists()) {
-                    const rData = roomSnap.data();
-                    for (let i = 1; i <= 6; i++) {
-                        if (rData[`team_${i}`]) {
-                            const parsed = JSON.parse(rData[`team_${i}`]);
-                            if ((parsed.updatedAt || 0) >= (teams[i].updatedAt || 0)) {
-                                teams[i] = { ...teams[i], ...parsed };
-                            }
-                        }
-                    }
+            if (
+                existing &&
+                window.userRole === 'student' &&
+                window.studentIsTeamLocked &&
+                tid === Number(window.studentSelectedTeamId)
+            ) {
+                const currentScenario = window.scenarioLines[window.currentScenarioIndex] || window.scenarioLines[0];
+                const scId = currentScenario ? currentScenario.id : null;
+                const localSol = scId && existing.solutionsD ? existing.solutionsD[scId] : null;
+                const remoteSol = scId && tData.solutionsD ? tData.solutionsD[scId] : null;
+                const localTs = Math.max(window.studentLocalSolDUpdatedAt || 0, (localSol && localSol.updatedAt) || 0);
+                const remoteTs = (remoteSol && remoteSol.updatedAt) || 0;
+
+                if (window.studentSolDDirty || localTs > remoteTs) {
+                    const mergedSolD = { ...(tData.solutionsD || {}), ...(existing.solutionsD || {}) };
+                    tData = { ...tData, solutionsD: mergedSolD };
                 }
-
-                // 2. 讀取 classroom_teams 獨立文件集合（以較新時間戳為準）
-                const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classroom_teams');
-                const teamsSnap = await getDocs(teamsCol);
-                teamsSnap.forEach(dSnap => {
-                    const d = dSnap.data();
-                    if (d && d.className === className && d.id >= 1 && d.id <= 6) {
-                        if ((d.updatedAt || 0) >= (teams[d.id].updatedAt || 0)) {
-                            teams[d.id] = { ...teams[d.id], ...d };
-                        }
-                    }
-                });
-            } catch (e) {
-                console.warn("Fetch cloud teams error:", e);
             }
-            return teams;
+
+            window.teamsData[tid] = tData;
         }
 
-        // 雲端雙軌同步：教室進度與題庫
+        // 雲端 + 本機雙模儲存引擎
         window.syncRoomStateToCloud = async function() {
-            if (!window.activeClassName) return false;
-            const now = Date.now();
+            if (!window.activeClassName) return;
             const payload = {
                 className: window.activeClassName,
                 scenarioLines: JSON.stringify(window.scenarioLines),
                 currentScenarioIndex: window.currentScenarioIndex,
                 currentStageIndex: window.currentStageIndex,
-                updatedAt: now
+                updatedAt: Date.now()
             };
             localStorage.setItem(`room_${window.activeClassName}`, JSON.stringify(payload));
 
-            if (!db) return false;
-            await ensureAuth();
-            try {
-                setCloudIndicator('syncing', '🟡 同步進度至雲端...');
-                const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', window.activeClassName);
-                await setDoc(roomRef, payload, { merge: true });
-                setCloudIndicator('connected', '🟢 雲端即時連線中');
-                return true;
-            } catch (e) {
-                console.warn("Cloud room sync error:", e);
-                setCloudIndicator('offline', '🟠 雲端寫入受阻（檢查網路/權限）');
-                return false;
+            if (db) {
+                await ensureAuth();
+                try {
+                    const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', window.activeClassName);
+                    await setDoc(roomRef, payload, { merge: true });
+                    updateSyncBadge(true);
+                } catch (e) {
+                    console.warn("Cloud room write error:", e);
+                    updateSyncBadge(false, e.code || '權限拒絕');
+                    window.showToast('⚠️ 雲端傳送受阻：請確認 Firebase Firestore 規則已設為 allow read, write: if true;');
+                }
             }
         };
 
-        // 雲端雙軌同步：單一組別資料（獨立文件 + 主文件欄位合併，零碰撞）
         window.syncSingleTeamToCloud = async function(teamId) {
-            if (!window.activeClassName || !window.teamsData[teamId]) return false;
+            if (!window.activeClassName) return;
             const now = Date.now();
-            window.teamLocalWriteTs[teamId] = now;
-            const teamPayload = {
-                ...window.teamsData[teamId],
-                className: window.activeClassName,
-                updatedAt: now
-            };
-            window.teamsData[teamId] = teamPayload;
+            window.teamsData[teamId].updatedAt = now;
+            const teamPayload = JSON.parse(JSON.stringify(window.teamsData[teamId]));
             localStorage.setItem(`team_${window.activeClassName}_${teamId}`, JSON.stringify(teamPayload));
 
-            if (!db) return false;
-            await ensureAuth();
-            try {
-                setCloudIndicator('syncing', '🟡 傳送至講台雲端...');
-                const docId = getTeamDocId(window.activeClassName, teamId);
-                const teamRef = doc(db, 'artifacts', appId, 'public', 'data', 'classroom_teams', docId);
-                const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', window.activeClassName);
-
-                await Promise.all([
-                    setDoc(teamRef, teamPayload),
-                    setDoc(roomRef, {
-                        [`team_${teamId}`]: JSON.stringify(teamPayload),
-                        lastTeamPulse: now
-                    }, { merge: true })
-                ]);
-
-                setCloudIndicator('connected', '🟢 雲端即時連線中');
-                return true;
-            } catch (e) {
-                console.warn(`Cloud team ${teamId} sync error:`, e);
-                setCloudIndicator('offline', '🟠 雲端傳送受阻');
-                return false;
+            if (db) {
+                await ensureAuth();
+                try {
+                    const teamRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', window.activeClassName, 'teams', `team_${teamId}`);
+                    await setDoc(teamRef, teamPayload);
+                    const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', window.activeClassName);
+                    await setDoc(roomRef, { lastTeamPulse: now }, { merge: true });
+                    updateSyncBadge(true);
+                } catch (e) {
+                    console.warn("Cloud team write error:", e);
+                    updateSyncBadge(false, e.code || '權限拒絕');
+                    window.showToast('⚠️ 雲端傳送受阻，資料暫存於本機！');
+                }
             }
         };
 
-        // 監聽雲端目前已開啟的在線教室（大廳快選按鈕）
+        // 監聽雲端與本機目前在線班級
         window.listenLobbyActiveClasses = async function() {
             const listEl = document.getElementById('lobby-active-classes-list');
             if (!listEl) return;
@@ -872,38 +832,34 @@
             const renderClassChips = (classSet) => {
                 const arr = Array.from(classSet);
                 if (arr.length === 0) {
-                    listEl.innerHTML = `<span class="text-xs text-gray-500">目前尚無開啟的教室，請輸入講台班級代碼</span>`;
+                    listEl.innerHTML = '<span class="text-xs text-gray-500">目前尚無在線教室，請等待講台開啟或手動輸入班級代碼</span>';
                     return;
                 }
-                listEl.innerHTML = arr.map(c =>
-                    `<button onclick="window.quickSelectLobbyClass('${escapeHtmlAttr(c)}')" class="px-3 py-1.5 rounded-lg bg-neon-green/15 border border-neon-green/50 text-neon-green text-xs font-black hover:bg-neon-green/25 transition-all">🟢 ${escapeHtmlAttr(c)} 班 (點擊直接連入)</button>`
-                ).join('');
+                listEl.innerHTML = arr.map(c => `<button data-class="${escapeHtml(c)}" onclick="window.quickSelectLobbyClass(this.dataset.class)" class="px-3 py-1.5 rounded-lg bg-neon-green/15 border border-neon-green/50 text-neon-green text-xs font-black hover:bg-neon-green/25 transition-all">🟢 ${escapeHtml(c)} 班 (點擊直接連線)</button>`).join('');
             };
 
-            const localClasses = new Set();
+            const localSet = new Set();
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key && key.startsWith('room_')) {
-                    localClasses.add(key.replace('room_', ''));
-                }
+                if (key && key.startsWith('room_')) localSet.add(key.replace('room_', ''));
             }
-            renderClassChips(localClasses);
+            renderClassChips(localSet);
 
-            if (!db) return;
-            await ensureAuth();
-            if (unsubscribeLobbyClasses) unsubscribeLobbyClasses();
-            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms');
-            unsubscribeLobbyClasses = onSnapshot(colRef, (snap) => {
-                const merged = new Set(localClasses);
-                snap.forEach(dSnap => {
-                    const d = dSnap.data();
-                    if (d && d.className) merged.add(d.className);
+            if (db) {
+                await ensureAuth();
+                if (unsubscribeLobbyClasses) unsubscribeLobbyClasses();
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms');
+                unsubscribeLobbyClasses = onSnapshot(colRef, (snap) => {
+                    const merged = new Set(localSet);
+                    snap.forEach(d => {
+                        const data = d.data();
+                        if (data && data.className) merged.add(data.className);
+                    });
+                    renderClassChips(merged);
+                }, (err) => {
+                    console.warn("Lobby listen error:", err);
                 });
-                setCloudIndicator('connected');
-                renderClassChips(merged);
-            }, (err) => {
-                console.warn("Lobby classes snapshot error:", err);
-            });
+            }
         };
 
         window.quickSelectLobbyClass = function(className) {
@@ -911,20 +867,13 @@
             window.enterAsStudent();
         };
 
-        // 教師開局進入主控台
         window.enterAsTeacher = async function() {
             const raw = document.getElementById('lobby-input-teacher-class').value;
             const className = normalizeClassName(raw);
             if (!className) {
-                window.showToast('⚠️ 請輸入班級代碼（例如：901）！');
+                window.showToast('⚠️ 請先輸入本次上課的班級代碼（例如：901）！');
                 return;
             }
-            const btn = document.getElementById('btn-lobby-teacher-start');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = '🔄 正在雲端建立教室...';
-            }
-
             window.activeClassName = className;
             window.userRole = 'teacher';
 
@@ -939,12 +888,19 @@
                         if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
                         window.currentScenarioIndex = data.currentScenarioIndex || 0;
                         window.currentStageIndex = data.currentStageIndex || 0;
-                        window.teamsData = await fetchClassTeams(className);
+                        window.teamsData = getDefaultTeamsData();
+                        const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms', className, 'teams');
+                        const teamsSnap = await getDocs(teamsCol);
+                        teamsSnap.forEach(tDoc => {
+                            const tData = tDoc.data();
+                            if (tData && tData.id) window.teamsData[tData.id] = tData;
+                        });
                         loadedFromCloud = true;
+                        updateSyncBadge(true);
                     }
-                    setCloudIndicator('connected');
                 } catch (e) {
                     console.warn("Teacher cloud load error:", e);
+                    updateSyncBadge(false, e.code || '讀取受阻');
                 }
             }
 
@@ -955,7 +911,11 @@
                     if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
                     window.currentScenarioIndex = data.currentScenarioIndex || 0;
                     window.currentStageIndex = data.currentStageIndex || 0;
-                    window.teamsData = await fetchClassTeams(className);
+                    window.teamsData = getDefaultTeamsData();
+                    for (let i = 1; i <= 6; i++) {
+                        const tData = localStorage.getItem(`team_${className}_${i}`);
+                        if (tData) window.teamsData[i] = JSON.parse(tData);
+                    }
                 } else {
                     window.scenarioLines = getDefaultScenarios();
                     window.currentScenarioIndex = 0;
@@ -968,20 +928,14 @@
                 }
             }
 
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = '🚀 啟動此班級主控台並進入大螢幕';
-            }
-
             document.getElementById('lobby-overlay').classList.add('hidden');
             document.getElementById('header-class-badge').innerText = `班級：${className}`;
             window.switchView('teacher');
             window.renderAllUI();
             window.subscribeToClassRoom(className);
-            window.showToast(`🚀 已啟動【${className}】雲端主控台！點擊「📱 顯示平板掃描 QR Code」讓學生加入`);
+            window.showToast(`🚀 已啟動【${className}】主控台！點擊右上角 QR Code 可讓平板掃描加入`);
         };
 
-        // 學生平板驗證班級並進入（支援雲端 Firestore + 本機雙模驗證）
         window.enterAsStudent = async function() {
             const raw = document.getElementById('lobby-input-student-class').value;
             const className = normalizeClassName(raw);
@@ -990,13 +944,7 @@
                 return;
             }
 
-            const btn = document.getElementById('btn-lobby-student-join');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = `🔄 正在連線至【${className}】雲端教室...`;
-            }
-
-            let foundRoom = false;
+            let found = false;
             if (db) {
                 await ensureAuth();
                 try {
@@ -1007,45 +955,52 @@
                         if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
                         window.currentScenarioIndex = data.currentScenarioIndex || 0;
                         window.currentStageIndex = data.currentStageIndex || 0;
-                        window.teamsData = await fetchClassTeams(className);
-                        foundRoom = true;
-                        setCloudIndicator('connected');
+                        window.teamsData = getDefaultTeamsData();
+                        const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms', className, 'teams');
+                        const teamsSnap = await getDocs(teamsCol);
+                        teamsSnap.forEach(tDoc => {
+                            const tData = tDoc.data();
+                            if (tData && tData.id) window.teamsData[tData.id] = tData;
+                        });
+                        found = true;
+                        updateSyncBadge(true);
                     }
                 } catch (e) {
-                    console.warn("Student cloud room check error:", e);
+                    console.warn("Student cloud check error:", e);
+                    updateSyncBadge(false, e.code || '連線受阻');
                 }
             }
 
-            if (!foundRoom) {
+            if (!found) {
                 const localRoom = localStorage.getItem(`room_${className}`);
                 if (localRoom) {
                     const data = JSON.parse(localRoom);
                     if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
                     window.currentScenarioIndex = data.currentScenarioIndex || 0;
                     window.currentStageIndex = data.currentStageIndex || 0;
-                    window.teamsData = await fetchClassTeams(className);
-                    foundRoom = true;
+                    window.teamsData = getDefaultTeamsData();
+                    for (let i = 1; i <= 6; i++) {
+                        const tData = localStorage.getItem(`team_${className}_${i}`);
+                        if (tData) window.teamsData[i] = JSON.parse(tData);
+                    }
+                    found = true;
                 }
             }
 
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = '🔗 驗證班級並連線至平板端';
-            }
-
-            if (!foundRoom) {
-                window.showToast(`❌ 雲端找不到【${className}】教室！請確認講台老師已按下啟動主控台。`);
+            if (!found) {
+                window.showToast(`❌ 找不到【${className}】班級，請確認講台老師是否已開局！`);
                 return;
             }
 
             window.activeClassName = className;
             window.userRole = 'student';
+            window.studentLoadedSolDKey = '';
             document.getElementById('lobby-overlay').classList.add('hidden');
             document.getElementById('header-class-badge').innerText = `班級：${className}`;
             window.switchView('student');
             window.renderAllUI();
             window.subscribeToClassRoom(className);
-            window.showToast(`🔗 已成功連線至【${className}】雲端教室！請先鎖定組別與隊名`);
+            window.showToast(`🔗 已成功連線至【${className}】班！請先選擇組別並鎖定隊名`);
         };
 
         window.returnToLobby = function() {
@@ -1053,82 +1008,52 @@
             if (unsubscribeTeamsCol) unsubscribeTeamsCol();
             if (pollIntervalId) clearInterval(pollIntervalId);
             window.activeClassName = '';
+            window.studentLoadedSolDKey = '';
             document.getElementById('header-class-badge').innerText = '班級：未連線';
             document.getElementById('lobby-overlay').classList.remove('hidden');
             window.listenLobbyActiveClasses();
         };
 
-        // 應用從雲端收到的單組資料（帶時間戳防覆蓋保護）
-        function applyIncomingTeamUpdate(tData) {
-            if (!tData || tData.id < 1 || tData.id > 6) return false;
-            const tid = tData.id;
-            const now = Date.now();
-            const lastLocalWrite = window.teamLocalWriteTs[tid] || 0;
-            const currentTs = window.teamsData[tid]?.updatedAt || 0;
-            const incomingTs = tData.updatedAt || 0;
-
-            if (now - lastLocalWrite < 1400 && incomingTs < lastLocalWrite) {
-                return false;
-            }
-            if (incomingTs >= currentTs || currentTs === 0) {
-                window.teamsData[tid] = { ...window.teamsData[tid], ...tData };
-                localStorage.setItem(`team_${window.activeClassName}_${tid}`, JSON.stringify(window.teamsData[tid]));
-                return true;
-            }
-            return false;
-        }
-
-        // 即時雙向監聽（Firestore onSnapshot 主通道 + 3秒定期校準）
-        window.subscribeToClassRoom = async function(className) {
+        // 雲端即時監聽 + 備援輪詢
+        window.subscribeToClassRoom = function(className) {
             if (unsubscribeRoom) unsubscribeRoom();
             if (unsubscribeTeamsCol) unsubscribeTeamsCol();
             if (pollIntervalId) clearInterval(pollIntervalId);
 
             if (db) {
-                await ensureAuth();
-                // 1. 即時監聽教室主文件（階段切換 + 6組即時狀態摘要）
                 const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className);
                 unsubscribeRoom = onSnapshot(roomRef, (snap) => {
-                    if (!snap.exists()) return;
-                    const data = snap.data();
-                    if (data.scenarioLines) {
-                        window.scenarioLines = JSON.parse(data.scenarioLines);
-                    }
-                    const stageChanged = (
-                        window.currentScenarioIndex !== data.currentScenarioIndex ||
-                        window.currentStageIndex !== data.currentStageIndex
-                    );
-                    window.currentScenarioIndex = data.currentScenarioIndex ?? 0;
-                    window.currentStageIndex = data.currentStageIndex ?? 0;
-                    if (stageChanged) {
-                        window.studentTempChoice = null;
-                    }
-
-                    for (let i = 1; i <= 6; i++) {
-                        if (data[`team_${i}`]) {
-                            try {
-                                applyIncomingTeamUpdate(JSON.parse(data[`team_${i}`]));
-                            } catch (e) {}
+                    if (snap.exists()) {
+                        updateSyncBadge(true);
+                        const data = snap.data();
+                        if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
+                        const stageChanged = (window.currentScenarioIndex !== data.currentScenarioIndex || window.currentStageIndex !== data.currentStageIndex);
+                        window.currentScenarioIndex = data.currentScenarioIndex ?? 0;
+                        window.currentStageIndex = data.currentStageIndex ?? 0;
+                        if (stageChanged) {
+                            window.studentTempChoice = null;
+                            window.studentSolDDirty = false;
+                            window.studentLoadedSolDKey = '';
                         }
+                        window.renderAllUI();
                     }
-
-                    setCloudIndicator('connected');
-                    window.renderAllUI();
                 }, (err) => {
                     console.warn("Room snapshot error:", err);
+                    updateSyncBadge(false, err.code || '同步中斷');
                 });
 
-                // 2. 即時監聽 classroom_teams 獨立集合（過濾本班組別）
-                const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classroom_teams');
-                unsubscribeTeamsCol = onSnapshot(teamsCol, (qSnap) => {
-                    let changed = false;
-                    qSnap.forEach(dSnap => {
-                        const d = dSnap.data();
-                        if (d && d.className === className) {
-                            if (applyIncomingTeamUpdate(d)) changed = true;
+                const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms', className, 'teams');
+                unsubscribeTeamsCol = onSnapshot(teamsCol, (querySnap) => {
+                    let updated = false;
+                    querySnap.forEach(docSnap => {
+                        const tData = docSnap.data();
+                        if (tData && tData.id) {
+                            mergeIncomingTeamData(tData);
+                            updated = true;
                         }
                     });
-                    if (changed) {
+                    if (updated) {
+                        updateSyncBadge(true);
                         window.renderTeams();
                         window.updateStudentUI();
                         window.updateQrTeamsStatus();
@@ -1138,7 +1063,6 @@
                 });
             }
 
-            // 3. 備援定時同步（確保學校 Wi-Fi 波動後自動補齊狀態）
             pollIntervalId = setInterval(() => {
                 window.manualForceSync(true);
             }, 3000);
@@ -1149,225 +1073,112 @@
             const className = window.activeClassName;
 
             if (db) {
-                await ensureAuth();
                 try {
                     const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className);
                     const snap = await getDoc(roomRef);
                     if (snap.exists()) {
                         const data = snap.data();
                         if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
+                        const stageChanged = (window.currentScenarioIndex !== (data.currentScenarioIndex ?? 0) || window.currentStageIndex !== (data.currentStageIndex ?? 0));
                         window.currentScenarioIndex = data.currentScenarioIndex ?? 0;
                         window.currentStageIndex = data.currentStageIndex ?? 0;
-                        for (let i = 1; i <= 6; i++) {
-                            if (data[`team_${i}`]) {
-                                applyIncomingTeamUpdate(JSON.parse(data[`team_${i}`]));
-                            }
+                        if (stageChanged) {
+                            window.studentTempChoice = null;
+                            window.studentSolDDirty = false;
+                            window.studentLoadedSolDKey = '';
                         }
                     }
-                    const latestTeams = await fetchClassTeams(className);
-                    for (let i = 1; i <= 6; i++) {
-                        applyIncomingTeamUpdate(latestTeams[i]);
-                    }
-                    setCloudIndicator('connected');
+                    const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms', className, 'teams');
+                    const teamsSnap = await getDocs(teamsCol);
+                    teamsSnap.forEach(tDoc => {
+                        const tData = tDoc.data();
+                        if (tData && tData.id) mergeIncomingTeamData(tData);
+                    });
+                    updateSyncBadge(true);
+                    window.renderAllUI();
+                    if (!silent) window.showToast('⚡ 已完成雲端最新資料同步！');
+                    return;
                 } catch (e) {
-                    console.warn("Manual sync error:", e);
-                }
-            } else {
-                const localRoom = localStorage.getItem(`room_${className}`);
-                if (localRoom) {
-                    const data = JSON.parse(localRoom);
-                    if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
-                    window.currentScenarioIndex = data.currentScenarioIndex ?? 0;
-                    window.currentStageIndex = data.currentStageIndex ?? 0;
-                    for (let i = 1; i <= 6; i++) {
-                        const tData = localStorage.getItem(`team_${className}_${i}`);
-                        if (tData) window.teamsData[i] = JSON.parse(tData);
-                    }
+                    updateSyncBadge(false, e.code || '離線');
                 }
             }
 
+            const localRoom = localStorage.getItem(`room_${className}`);
+            if (localRoom) {
+                const data = JSON.parse(localRoom);
+                if (data.scenarioLines) window.scenarioLines = JSON.parse(data.scenarioLines);
+                window.currentScenarioIndex = data.currentScenarioIndex ?? 0;
+                window.currentStageIndex = data.currentStageIndex ?? 0;
+                for (let i = 1; i <= 6; i++) {
+                    const tData = localStorage.getItem(`team_${className}_${i}`);
+                    if (tData) mergeIncomingTeamData(JSON.parse(tData));
+                }
+            }
             window.renderAllUI();
-            if (!silent) window.showToast('⚡ 已完成雲端最新資料同步！');
+            if (!silent) window.showToast('⚡ 本機資料同步完成！');
         };
 
-        // ==================== Kahoot! 風格 QR Code 與跨裝置連結引擎 ====================
-        function getDetectedBaseUrl() {
-            if (window.customPublishedBaseUrl && /^https?:\/\//i.test(window.customPublishedBaseUrl)) {
-                return { url: window.customPublishedBaseUrl, isHosted: true };
-            }
-            const candidates = [window.location.href];
-            try {
-                if (window.parent && window.parent !== window && window.parent.location?.href) {
-                    candidates.unshift(window.parent.location.href);
-                }
-            } catch (e) {}
-            try {
-                if (window.top && window.top !== window && window.top.location?.href) {
-                    candidates.unshift(window.top.location.href);
-                }
-            } catch (e) {}
-
-            for (const raw of candidates) {
-                if (!raw || typeof raw !== 'string') continue;
-                if (!/^https?:\/\//i.test(raw)) continue;
-                if (raw.includes('about:srcdoc') || raw.startsWith('blob:') || raw.startsWith('data:')) continue;
-                try {
-                    const u = new URL(raw);
-                    if (u.hostname === 'gemini.google.com' && (u.pathname === '/' || u.pathname === '/app')) continue;
-                    return { url: u.origin + u.pathname, isHosted: true };
-                } catch (e) {}
-            }
-            return { url: '', isHosted: false };
-        }
-
-        window.buildStudentDirectUrl = function(className, overrideBaseUrl) {
-            const base = overrideBaseUrl !== undefined ? overrideBaseUrl : getDetectedBaseUrl().url;
-            if (!base || !/^https?:\/\//i.test(base)) return '';
-            try {
-                const urlObj = new URL(base);
-                urlObj.searchParams.set('class', className);
-                urlObj.searchParams.set('role', 'student');
-                return urlObj.toString();
-            } catch (e) {
-                return '';
-            }
-        };
-
-        function renderQrSvg(directUrl) {
-            const container = document.getElementById('qrcode-container');
-            const captionEl = document.getElementById('qr-scan-caption');
-            const testLink = document.getElementById('qr-test-open-link');
-            const previewEl = document.getElementById('qr-full-url-preview');
-            if (!container) return;
-
-            if (!directUrl) {
-                container.innerHTML = `
-                    <div class="p-3 text-center space-y-1.5">
-                        <div class="text-3xl">🔗</div>
-                        <p class="text-xs font-black text-gray-800">尚未設定公開網址</p>
-                        <p class="text-[11px] text-gray-500 leading-snug">請在右側「🌐 網站公開網址」貼入網址，條碼將立即顯示</p>
-                    </div>
-                `;
-                if (captionEl) captionEl.innerText = '貼上公開網址後自動生成 QR Code';
-                if (testLink) testLink.classList.add('hidden');
-                if (previewEl) previewEl.innerText = '';
-                return;
-            }
-
-            try {
-                if (typeof qrcode !== 'undefined' && qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
-                    qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
-                }
-                const qr = qrcode(0, 'L');
-                qr.addData(directUrl);
-                qr.make();
-                container.innerHTML = qr.createSvgTag({ scalable: true, margin: 2 });
-                const svg = container.querySelector('svg');
-                if (svg) {
-                    svg.setAttribute('width', '196px');
-                    svg.setAttribute('height', '196px');
-                    svg.style.display = 'block';
-                }
-                if (captionEl) captionEl.innerText = '平板相機掃描條碼立即入班';
-                if (testLink) {
-                    testLink.href = directUrl;
-                    testLink.classList.remove('hidden');
-                }
-                if (previewEl) previewEl.innerText = `直連網址：${directUrl}`;
-            } catch (e) {
-                container.innerHTML = `<span class="text-base font-black text-black p-2 text-center">${escapeHtmlAttr(window.activeClassName)}</span>`;
-            }
-        }
-
-        window.onQrBaseUrlChange = function(val) {
-            const trimmed = String(val || '').trim();
-            const noticeEl = document.getElementById('qr-env-notice');
-            if (/^https?:\/\//i.test(trimmed)) {
-                window.customPublishedBaseUrl = trimmed;
-                localStorage.setItem('storm_published_base_url', trimmed);
-                const fullUrl = window.buildStudentDirectUrl(window.activeClassName, trimmed);
-                renderQrSvg(fullUrl);
-                if (noticeEl) noticeEl.classList.add('hidden');
-            } else {
-                window.customPublishedBaseUrl = '';
-                renderQrSvg('');
-                if (noticeEl) noticeEl.classList.remove('hidden');
-            }
-        };
-
-        window.pasteQrBaseUrl = async function() {
-            const inputEl = document.getElementById('qr-base-url-input');
-            try {
-                if (navigator.clipboard && navigator.clipboard.readText) {
-                    const text = await navigator.clipboard.readText();
-                    if (text && inputEl) {
-                        inputEl.value = text.trim();
-                        window.onQrBaseUrlChange(text.trim());
-                        window.showToast('📥 已貼上網址並立即產生 QR Code！');
-                        return;
-                    }
-                }
-            } catch (e) {}
-            if (inputEl) {
-                inputEl.focus();
-                window.showToast('請在網址欄內按 Ctrl+V（或長按貼上）！');
-            }
-        };
-
-        function copyTextFallback(text, successMsg) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            try {
-                document.execCommand('copy');
-                window.showToast(successMsg);
-            } catch (e) {
-                window.showToast(`📢 班級代碼：【${window.activeClassName}】`);
-            }
-            document.body.removeChild(ta);
-        }
-
-        window.copyStudentDirectUrl = function() {
-            if (!window.activeClassName) return;
-            const inputVal = document.getElementById('qr-base-url-input')?.value?.trim() || '';
-            const directUrl = window.buildStudentDirectUrl(window.activeClassName, inputVal);
-            if (!directUrl) {
-                window.showToast('⚠️ 請先在「🌐 網站公開網址」貼上您的網站網址！');
-                return;
-            }
-            copyTextFallback(directUrl, `📋 已複製【${window.activeClassName}】平板直連網址，可傳給學生直接點擊進入！`);
+        // Kahoot! 風格 QR Code 與直連網址生成
+        window.buildStudentDirectUrl = function(className) {
+            const urlObj = new URL(window.location.href);
+            urlObj.searchParams.set('class', className);
+            urlObj.searchParams.set('role', 'student');
+            return urlObj.toString();
         };
 
         window.copyClassJoinInfo = function() {
-            if (!window.activeClassName) return;
-            const inputVal = document.getElementById('qr-base-url-input')?.value?.trim() || '';
-            const directUrl = window.buildStudentDirectUrl(window.activeClassName, inputVal);
-            const msg = directUrl
-                ? `【人際風暴生存戰】請點擊網址加入【${window.activeClassName}】班級課堂：${directUrl}`
-                : `【人際風暴生存戰】請開啟課堂網站，選擇「學生平板連線」並輸入班級代碼：【${window.activeClassName}】`;
-            copyTextFallback(msg, `💬 已複製【${window.activeClassName}】課堂邀請訊息！`);
+            if (!window.activeClassName) {
+                window.showToast('⚠️ 請先進入一個班級主控台！');
+                return;
+            }
+            const joinUrl = window.buildStudentDirectUrl(window.activeClassName);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(joinUrl).then(() => {
+                    window.showToast(`📋 已複製【${window.activeClassName}】平板直連網址！`);
+                }).catch(() => {
+                    fallbackCopyText(joinUrl);
+                });
+            } else {
+                fallbackCopyText(joinUrl);
+            }
         };
+
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            window.showToast(`📋 已複製【${window.activeClassName}】平板直連網址！`);
+        }
 
         window.openQrCodeModal = function() {
             if (!window.activeClassName) {
                 window.showToast('⚠️ 請先輸入班級並啟動主控台！');
                 return;
             }
-            const detected = getDetectedBaseUrl();
-            const inputEl = document.getElementById('qr-base-url-input');
-            const noticeEl = document.getElementById('qr-env-notice');
+            const directUrl = window.buildStudentDirectUrl(window.activeClassName);
+            const urlDisplay = document.getElementById('qr-direct-url-display');
+            if (urlDisplay) urlDisplay.value = directUrl;
 
-            if (inputEl) inputEl.value = detected.url;
-            if (detected.isHosted && detected.url) {
-                if (noticeEl) noticeEl.classList.add('hidden');
-                const fullUrl = window.buildStudentDirectUrl(window.activeClassName, detected.url);
-                renderQrSvg(fullUrl);
-            } else {
-                if (noticeEl) noticeEl.classList.remove('hidden');
-                renderQrSvg('');
+            const container = document.getElementById('qrcode-container');
+            if (container) {
+                container.innerHTML = '';
+                try {
+                    const qr = qrcode(0, 'M');
+                    qr.addData(directUrl);
+                    qr.make();
+                    container.innerHTML = qr.createSvgTag({ scalable: true, margin: 2 });
+                    const svgEl = container.querySelector('svg');
+                    if (svgEl) {
+                        svgEl.setAttribute('width', '184px');
+                        svgEl.setAttribute('height', '184px');
+                    }
+                } catch (e) {
+                    container.innerHTML = `<span class="text-xl font-black text-black">${escapeHtml(window.activeClassName)}</span>`;
+                }
             }
-
             document.getElementById('qr-class-pin').innerText = window.activeClassName;
             window.updateQrTeamsStatus();
             document.getElementById('modal-qrcode').classList.remove('hidden');
@@ -1379,26 +1190,24 @@
 
         window.updateQrTeamsStatus = function() {
             const grid = document.getElementById('qr-teams-status-grid');
-            const badge = document.getElementById('qr-joined-count-badge');
             if (!grid) return;
-            let joinedCount = 0;
             let html = '';
             for (let i = 1; i <= 6; i++) {
                 const t = window.teamsData[i];
                 const isJoined = t && t.name && t.name !== `智囊團 ${i}`;
-                if (isJoined) joinedCount++;
                 html += `
                     <div class="px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-between ${isJoined ? 'bg-neon-green/15 border-neon-green text-white' : 'bg-dark-950/70 border-gray-800 text-gray-500'}">
-                        <span class="truncate">${isJoined ? `🟢 ${escapeHtmlAttr(t.name)}` : `⚪ 第 ${i} 組 (等待加入)`}</span>
+                        <span class="truncate">${isJoined ? `🟢 ${escapeHtml(t.name)}` : `⚪ 第 ${i} 組 (等待加入)`}</span>
                         <span class="text-[10px] font-mono shrink-0 ml-1">#${i}</span>
                     </div>
                 `;
             }
             grid.innerHTML = html;
-            if (badge) badge.innerText = `已加入：${joinedCount} / 6 組`;
         };
 
+        // 視角切換
         window.switchView = function(view) {
+            window.userRole = view;
             const tView = document.getElementById('view-teacher');
             const sView = document.getElementById('view-student');
             const tBtn = document.getElementById('nav-teacher-btn');
@@ -1406,17 +1215,19 @@
             const qrBtn = document.getElementById('btn-show-qrcode');
 
             if (view === 'teacher') {
+                document.body.classList.add('lg:h-screen', 'lg:overflow-hidden');
                 tView.classList.remove('hidden');
                 sView.classList.add('hidden');
                 if (qrBtn) qrBtn.classList.remove('hidden');
-                if (tBtn) tBtn.className = "px-2.5 py-1 rounded-md text-xs font-black bg-neon-cyan text-dark-950 transition-all";
-                if (sBtn) sBtn.className = "px-2.5 py-1 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all";
+                if (tBtn) tBtn.className = "px-3.5 py-1 rounded-md text-sm sm:text-base font-black bg-neon-cyan text-dark-950 transition-all";
+                if (sBtn) sBtn.className = "px-3.5 py-1 rounded-md text-sm sm:text-base font-bold text-gray-400 hover:text-white transition-all";
             } else {
+                document.body.classList.remove('lg:h-screen', 'lg:overflow-hidden');
                 sView.classList.remove('hidden');
                 tView.classList.add('hidden');
                 if (qrBtn) qrBtn.classList.add('hidden');
-                if (sBtn) sBtn.className = "px-2.5 py-1 rounded-md text-xs font-black bg-neon-green text-dark-950 transition-all";
-                if (tBtn) tBtn.className = "px-2.5 py-1 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all";
+                if (sBtn) sBtn.className = "px-3.5 py-1 rounded-md text-sm sm:text-base font-black bg-neon-green text-dark-950 transition-all";
+                if (tBtn) tBtn.className = "px-3.5 py-1 rounded-md text-sm sm:text-base font-bold text-gray-400 hover:text-white transition-all";
                 window.updateStudentUI();
             }
         };
@@ -1430,17 +1241,20 @@
 
         window.switchScenario = async function(newIdx) {
             if (newIdx === window.currentScenarioIndex) return;
-            const oldSc = window.scenarioLines[window.currentScenarioIndex];
-            if (oldSc) {
-                window.scenarioSnapshots[oldSc.id] = JSON.parse(JSON.stringify(window.teamsData));
+            const oldScenario = window.scenarioLines[window.currentScenarioIndex];
+            if (oldScenario) {
+                window.scenarioSnapshots[oldScenario.id] = JSON.parse(JSON.stringify(window.teamsData));
             }
+
             window.currentScenarioIndex = newIdx;
             window.currentStageIndex = 0;
             window.studentTempChoice = null;
+            window.studentSolDDirty = false;
+            window.studentLoadedSolDKey = '';
 
-            const newSc = window.scenarioLines[newIdx];
-            if (newSc && window.scenarioSnapshots[newSc.id]) {
-                window.teamsData = JSON.parse(JSON.stringify(window.scenarioSnapshots[newSc.id]));
+            const newScenario = window.scenarioLines[newIdx];
+            if (newScenario && window.scenarioSnapshots[newScenario.id]) {
+                window.teamsData = JSON.parse(JSON.stringify(window.scenarioSnapshots[newScenario.id]));
             } else {
                 for (let i = 1; i <= 6; i++) {
                     window.teamsData[i].safety = 50;
@@ -1457,12 +1271,14 @@
             for (let i = 1; i <= 6; i++) {
                 await window.syncSingleTeamToCloud(i);
             }
-            window.showToast(`🔄 已切換至【${newSc.title}】，各組數值已重置為 50 點！`);
+            window.showToast(`🔄 已切換至【${newScenario.title}】，各組生存數值已重置為 50 點！`);
         };
 
         window.switchStage = async function(stageIdx) {
             window.currentStageIndex = stageIdx;
             window.studentTempChoice = null;
+            window.studentSolDDirty = false;
+            window.studentLoadedSolDKey = '';
             window.renderAllUI();
             await window.syncRoomStateToCloud();
         };
@@ -1476,16 +1292,23 @@
             if (scenario && window.currentStageIndex < scenario.stages.length - 1) {
                 window.switchStage(window.currentStageIndex + 1);
             } else {
-                window.showToast('🎉 已到達本情境最後階段！');
+                window.showToast('🎉 已到達本情境最後一個階段！');
             }
         };
 
+        // 格式化數值加減顯示 (大字體清晰正負號)
+        function formatSignedDelta(val) {
+            const num = Number(val) || 0;
+            return num > 0 ? `+${num}` : `${num}`;
+        }
+
+        // 更新講台大螢幕左半邊情境與選項 (特大字體填滿左半邊)
         window.updateStageUI = function() {
             const scenarioContainer = document.getElementById('scenario-tabs-container');
             const stageContainer = document.getElementById('stage-tabs-container');
             if (!scenarioContainer || !stageContainer) return;
 
-            const scColors = [
+            const scenarioColors = [
                 'bg-neon-cyan text-dark-950 border-neon-cyan',
                 'bg-neon-green text-dark-950 border-neon-green',
                 'bg-neon-purple text-white border-neon-purple',
@@ -1494,7 +1317,8 @@
 
             scenarioContainer.innerHTML = window.scenarioLines.map((sc, idx) => {
                 const isActive = idx === window.currentScenarioIndex;
-                return `<button onclick="window.switchScenario(${idx})" class="px-2.5 py-1 rounded-lg text-xs font-black border transition-all ${isActive ? scColors[idx % scColors.length] + ' shadow-md' : 'bg-dark-900 text-gray-400 border-gray-700 hover:text-white'}">${escapeHtmlAttr(sc.title)}</button>`;
+                const activeStyle = scenarioColors[idx % scenarioColors.length];
+                return `<button onclick="window.switchScenario(${idx})" class="px-3.5 py-2 rounded-xl text-sm sm:text-base xl:text-lg font-black border transition-all ${isActive ? activeStyle + ' shadow-md' : 'bg-dark-900 text-gray-400 border-gray-700 hover:text-white'}">${escapeHtml(sc.title)}</button>`;
             }).join('');
 
             const currentScenario = window.scenarioLines[window.currentScenarioIndex] || window.scenarioLines[0];
@@ -1503,13 +1327,13 @@
             stageContainer.innerHTML = currentScenario.stages.map((st, idx) => {
                 const isActive = idx === window.currentStageIndex;
                 const label = st.isBreakthrough ? '💡 破局階段' : `階段 ${idx + 1}`;
-                let cls = 'bg-dark-900 text-gray-400 border-gray-700 hover:text-white';
+                let btnClass = 'bg-dark-900 text-gray-400 border-gray-700 hover:text-white';
                 if (isActive) {
-                    cls = st.isBreakthrough
+                    btnClass = st.isBreakthrough
                         ? 'bg-neon-purple text-white border-neon-purple shadow-md'
                         : 'bg-blue-500 text-white border-blue-400 shadow-md';
                 }
-                return `<button onclick="window.switchStage(${idx})" class="px-2.5 py-1 rounded-lg text-xs font-black border transition-all ${cls}">${label}</button>`;
+                return `<button onclick="window.switchStage(${idx})" class="px-3 py-1.5 rounded-xl text-sm sm:text-base xl:text-lg font-black border transition-all ${btnClass}">${label}</button>`;
             }).join('');
 
             const currentStage = currentScenario.stages[window.currentStageIndex] || currentScenario.stages[0];
@@ -1522,10 +1346,10 @@
             const typeBadge = document.getElementById('stage-type-badge');
             if (currentStage.isBreakthrough) {
                 typeBadge.innerText = '💡 系統破局階段';
-                typeBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-neon-purple/20 text-neon-purple border border-neon-purple/40';
+                typeBadge.className = 'px-3.5 py-1.5 rounded-xl text-sm sm:text-base font-black bg-neon-purple/20 text-neon-purple border border-neon-purple/40 shrink-0';
             } else {
-                typeBadge.innerText = '🎯 抉擇階段';
-                typeBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-blue-500/20 text-blue-300';
+                typeBadge.innerText = '🎯 抉擇扣血階段';
+                typeBadge.className = 'px-3.5 py-1.5 rounded-xl text-sm sm:text-base font-black bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0';
             }
 
             const histBadge = document.getElementById('history-mode-badge');
@@ -1537,18 +1361,36 @@
 
             const optListEl = document.getElementById('teacher-options-list');
             if (currentStage.isBreakthrough) {
-                optListEl.innerHTML = `<div class="p-4 rounded-xl bg-neon-purple/10 border border-neon-purple/40 text-center space-y-2"><div class="text-3xl">💡</div><h4 class="text-base font-black text-neon-purple">目前進入「方案 D 破局提案」階段</h4><p class="text-xs sm:text-sm text-gray-200">各組在平板輸入並按下「確定送出」後，右側各組卡片將自動解鎖顯示該組破局行動！</p></div>`;
+                optListEl.innerHTML = `
+                    <div class="flex-1 flex flex-col items-center justify-center p-6 rounded-2xl bg-neon-purple/15 border border-neon-purple/50 text-center space-y-3">
+                        <div class="text-5xl">💡</div>
+                        <h4 class="text-2xl sm:text-3xl font-black text-neon-purple">目前進入「方案 D 破局提案」階段</h4>
+                        <p class="text-base sm:text-xl text-gray-100 leading-relaxed font-semibold max-w-2xl">各組在平板輸入「行動代號」與「具體步驟」送出後，右側卡片將即時公開（學生可隨時修改更新，點擊卡片可全螢幕放大檢視）！</p>
+                    </div>
+                `;
             } else {
                 const keyColors = { A: 'text-neon-cyan', B: 'text-neon-amber', C: 'text-neon-green' };
                 optListEl.innerHTML = ['A', 'B', 'C'].map(k => {
                     const opt = currentStage.options[k];
                     if (!opt) return '';
-                    const fmt = (v) => (v > 0 ? `+${v}` : `${v}`);
-                    return `<div class="p-3 rounded-xl bg-dark-900/90 border border-gray-800 flex flex-col gap-1.5"><div class="flex justify-between items-center"><span class="text-sm font-black ${keyColors[k]}">【方案 ${k}】${escapeHtmlAttr(opt.title)}</span><div class="flex gap-1.5 text-xs font-mono font-black"><span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300">安${fmt(opt.safety)}</span><span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300">尊${fmt(opt.esteem)}</span><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300">能${fmt(opt.energy)}</span></div></div><p class="text-xs sm:text-sm text-gray-300">${escapeHtmlAttr(opt.desc)}</p></div>`;
+                    return `
+                        <div class="flex-1 flex flex-col justify-center p-3.5 sm:p-4 rounded-2xl bg-dark-900/95 border border-gray-800 gap-2 shadow-sm">
+                            <div class="flex flex-wrap justify-between items-center gap-2">
+                                <span class="text-lg sm:text-xl xl:text-[25px] font-black ${keyColors[k]} leading-snug">【方案 ${k}】${escapeHtml(opt.title)}</span>
+                                <div class="flex flex-wrap gap-1.5 text-sm sm:text-base xl:text-[21px] font-mono font-black shrink-0">
+                                    <span class="px-2.5 py-1 rounded-lg bg-cyan-950/90 text-cyan-200 border border-cyan-500/50">安全 ${formatSignedDelta(opt.safety)}</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-amber-950/90 text-amber-200 border border-amber-500/50">自尊 ${formatSignedDelta(opt.esteem)}</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-emerald-950/90 text-emerald-200 border border-emerald-500/50">能量 ${formatSignedDelta(opt.energy)}</span>
+                                </div>
+                            </div>
+                            <p class="text-base sm:text-lg xl:text-[20px] text-gray-200 font-semibold leading-snug">${escapeHtml(opt.desc)}</p>
+                        </div>
+                    `;
                 }).join('');
             }
         };
 
+        // 渲染講台大螢幕右半邊 6 組智囊團卡片 (放大所有字體與數值加減顯示)
         window.renderTeams = function() {
             const grid = document.getElementById('teams-grid');
             if (!grid) return;
@@ -1561,7 +1403,7 @@
                 const team = window.teamsData[i];
                 const scHist = (team.history && team.history[currentScenario.id]) || {};
                 const stageRecord = scHist[currentStage.id];
-                const solD = team.solutionsD && team.solutionsD[currentScenario.id];
+                const isJoined = team.name && team.name !== `智囊團 ${i}`;
 
                 const displaySafety = stageRecord ? stageRecord.safety : team.safety;
                 const displayEsteem = stageRecord ? stageRecord.esteem : team.esteem;
@@ -1569,46 +1411,157 @@
                 const displayIsDead = stageRecord ? stageRecord.isDead : team.isDead;
                 const displayDeathReason = stageRecord ? stageRecord.deathReason : team.deathReason;
 
-                const isTeamNamed = team.name && team.name !== `智囊團 ${i}`;
-                let statusPill = '';
+                // 若該組在本階段已作答，取出該選項的數值加減變化量以放大顯示
+                let deltaSafety = null;
+                let deltaEsteem = null;
+                let deltaEnergy = null;
+                if (stageRecord && !currentStage.isBreakthrough) {
+                    if (typeof stageRecord.deltaSafety === 'number') {
+                        deltaSafety = stageRecord.deltaSafety;
+                        deltaEsteem = stageRecord.deltaEsteem;
+                        deltaEnergy = stageRecord.deltaEnergy;
+                    } else if (currentStage.options && currentStage.options[stageRecord.choice]) {
+                        const chosenOpt = currentStage.options[stageRecord.choice];
+                        deltaSafety = chosenOpt.safety || 0;
+                        deltaEsteem = chosenOpt.esteem || 0;
+                        deltaEnergy = chosenOpt.energy || 0;
+                    }
+                }
+
+                const renderDeltaTag = (d) => {
+                    if (d === null || d === undefined) return '';
+                    const colorCls = d > 0
+                        ? 'text-neon-green bg-neon-green/15 border-neon-green/40'
+                        : (d < 0 ? 'text-neon-rose bg-neon-rose/15 border-neon-rose/40' : 'text-gray-300 bg-dark-800 border-gray-700');
+                    return `<span class="ml-1.5 px-1.5 py-0.2 rounded border text-xs sm:text-sm xl:text-base font-mono font-black ${colorCls}">${formatSignedDelta(d)}</span>`;
+                };
+
+                const solD = team.solutionsD && team.solutionsD[currentScenario.id];
+                let stageStatusTag = '';
                 if (currentStage.isBreakthrough) {
-                    statusPill = (solD && solD.submitted)
-                        ? `<span class="px-1.5 py-0.5 rounded bg-neon-purple/20 text-neon-purple text-[10px] font-black shrink-0">✅ 已交D</span>`
-                        : `<span class="px-1.5 py-0.5 rounded bg-dark-800 text-gray-500 text-[10px] font-bold shrink-0">⏳ 撰寫中</span>`;
-                } else if (stageRecord) {
-                    statusPill = `<span class="px-1.5 py-0.5 rounded bg-neon-green/20 text-neon-green text-[10px] font-black shrink-0">✅ 選${stageRecord.choice}</span>`;
-                } else if (isTeamNamed) {
-                    statusPill = `<span class="px-1.5 py-0.5 rounded bg-neon-amber/15 text-neon-amber text-[10px] font-bold shrink-0">⏳ 討論中</span>`;
+                    stageStatusTag = (solD && solD.submitted)
+                        ? '<span class="px-2.5 py-0.5 rounded-md bg-neon-purple/25 text-neon-purple text-xs sm:text-sm font-black shrink-0">✅ 已提案</span>'
+                        : '<span class="px-2.5 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs sm:text-sm font-bold shrink-0">⏳ 撰寫中</span>';
+                } else {
+                    stageStatusTag = stageRecord
+                        ? `<span class="px-2.5 py-0.5 rounded-md bg-neon-green/20 text-neon-green text-xs sm:text-sm xl:text-base font-black shrink-0">✅ 選 ${escapeHtml(stageRecord.choice)}</span>`
+                        : '<span class="px-2.5 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs sm:text-sm font-bold shrink-0">⏳ 討論中</span>';
                 }
 
                 let badgesHtml = '';
                 currentScenario.stages.forEach((st, sIdx) => {
                     if (!st.isBreakthrough && scHist[st.id]) {
-                        badgesHtml += `<span class="px-1.5 py-0.5 rounded bg-dark-800 border border-gray-700 text-[10px] font-mono font-bold text-neon-cyan">階${sIdx + 1}:${scHist[st.id].choice}</span>`;
+                        badgesHtml += `<span class="px-2 py-0.5 rounded bg-dark-800 border border-gray-700 text-xs sm:text-sm xl:text-[15px] font-mono font-black text-neon-cyan">階${sIdx + 1}:${escapeHtml(scHist[st.id].choice)}</span>`;
                     }
                 });
 
                 let solDHtml = '';
                 if (currentStage.isBreakthrough) {
-                    if (solD && solD.submitted && solD.text) {
-                        solDHtml = `<div onclick="window.openSolutionDViewerById(${i})" class="mt-1.5 p-2 rounded-lg bg-neon-purple/20 border border-neon-purple text-xs text-white font-bold cursor-pointer hover:bg-neon-purple/30 transition-all line-clamp-2" title="點擊全螢幕放大">💡 方案D：${escapeHtmlAttr(solD.text)}</div>`;
+                    if (solD && solD.submitted && (solD.text || solD.title)) {
+                        const titleLabel = solD.title ? `【${escapeHtml(solD.title)}】` : '';
+                        solDHtml = `
+                            <div onclick="window.openSolutionDViewerById(${i})" class="mt-1.5 p-2.5 rounded-xl bg-neon-purple/20 border border-neon-purple text-sm sm:text-base xl:text-[17px] text-white font-bold cursor-pointer hover:bg-neon-purple/30 transition-all space-y-0.5" title="點擊全螢幕放大檢視">
+                                ${titleLabel ? `<div class="text-neon-purple font-black truncate">💡 ${titleLabel}</div>` : ''}
+                                <div class="line-clamp-2 text-gray-100 leading-snug">${escapeHtml(solD.text)}</div>
+                            </div>
+                        `;
                     } else {
-                        solDHtml = `<div class="mt-1.5 p-2 rounded-lg bg-dark-950/80 border border-dashed border-gray-700 text-[11px] text-gray-500 text-center">🔒 等待平板提交方案 D...</div>`;
+                        solDHtml = '<div class="mt-1.5 p-2.5 rounded-xl bg-dark-950/80 border border-dashed border-gray-700 text-sm sm:text-base text-gray-400 text-center font-bold">🔒 等待平板提交方案 D...</div>';
                     }
                 }
 
                 let bodyContent = '';
                 if (displayIsDead) {
-                    bodyContent = `<div class="flex-1 flex flex-col justify-between bg-neon-rose/10 border border-neon-rose/50 rounded-xl p-2 mt-1"><div><span class="text-xs font-black text-neon-rose">💀 防線崩潰 (已淘汰)</span><p class="text-[11px] text-rose-200 mt-1 leading-snug line-clamp-3">${escapeHtmlAttr(displayDeathReason)}</p></div><button onclick="window.approveTeamRevive(${i})" class="w-full mt-1.5 py-1 rounded-lg bg-neon-amber text-dark-950 font-black text-xs ${team.reviveRequested ? 'animate-bounce' : ''}">${team.reviveRequested ? '✨ 學生求救中・核准復活' : '🔄 教師核准復活'}</button></div>`;
+                    bodyContent = `
+                        <div class="flex-1 flex flex-col justify-between bg-neon-rose/12 border border-neon-rose/50 rounded-xl p-2.5 mt-1">
+                            <div class="space-y-1">
+                                <span class="text-base sm:text-lg xl:text-xl font-black text-neon-rose block">💀 角色防線崩潰 (已淘汰)</span>
+                                <p class="text-xs sm:text-sm xl:text-[15px] text-rose-100 leading-snug line-clamp-3">${escapeHtml(displayDeathReason || '某項生存數值歸零，無法承受人際壓力。')}</p>
+                            </div>
+                            <div class="space-y-1.5 mt-2">
+                                <button onclick="window.openDeathStoryViewerById(${i})" class="w-full py-1.5 rounded-lg bg-neon-rose/25 hover:bg-neon-rose/40 text-rose-100 border border-neon-rose/50 font-black text-xs sm:text-sm xl:text-base transition-all">
+                                    📖 查看心路歷程與崩潰原因
+                                </button>
+                                ${team.reviveRequested ? `
+                                    <button onclick="window.approveTeamRevive(${i})" class="w-full py-1.5 rounded-lg bg-neon-amber text-dark-950 font-black text-xs sm:text-sm xl:text-base animate-bounce">
+                                        ✨ 核准救援復活 (重置 20 點)
+                                    </button>
+                                ` : `
+                                    <button onclick="window.approveTeamRevive(${i})" class="w-full py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-gray-300 font-bold text-xs sm:text-sm">
+                                        🔄 教師手動復活
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    `;
                 } else {
-                    bodyContent = `<div class="space-y-1.5 my-1"><div><div class="flex justify-between text-[11px] font-bold"><span class="text-cyan-300">🛡️ 安全感</span><span class="font-mono font-black text-cyan-300">${displaySafety}</span></div><div class="w-full h-2 bg-dark-950 rounded-full overflow-hidden"><div class="h-full bg-neon-cyan transition-all duration-500" style="width: ${displaySafety}%"></div></div></div><div><div class="flex justify-between text-[11px] font-bold"><span class="text-amber-300">👑 自尊</span><span class="font-mono font-black text-amber-300">${displayEsteem}</span></div><div class="w-full h-2 bg-dark-950 rounded-full overflow-hidden"><div class="h-full bg-neon-amber transition-all duration-500" style="width: ${displayEsteem}%"></div></div></div><div><div class="flex justify-between text-[11px] font-bold"><span class="text-emerald-300">⚡ 能量</span><span class="font-mono font-black text-emerald-300">${displayEnergy}</span></div><div class="w-full h-2 bg-dark-950 rounded-full overflow-hidden"><div class="h-full bg-neon-green transition-all duration-500" style="width: ${displayEnergy}%"></div></div></div></div>${solDHtml}`;
+                    bodyContent = `
+                        <div class="space-y-2 my-1">
+                            <div>
+                                <div class="flex justify-between items-center text-sm sm:text-base xl:text-[18px] font-black">
+                                    <span class="text-cyan-300">🛡️ 安全感</span>
+                                    <div class="flex items-center">
+                                        <span class="font-mono text-cyan-300 text-base sm:text-lg xl:text-[22px]">${displaySafety}</span>
+                                        ${renderDeltaTag(deltaSafety)}
+                                    </div>
+                                </div>
+                                <div class="w-full h-3 sm:h-3.5 bg-dark-950 rounded-full overflow-hidden mt-0.5">
+                                    <div class="h-full bg-neon-cyan transition-all duration-500" style="width: ${Math.max(0, Math.min(100, displaySafety))}%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center text-sm sm:text-base xl:text-[18px] font-black">
+                                    <span class="text-amber-300">👑 道德自尊</span>
+                                    <div class="flex items-center">
+                                        <span class="font-mono text-amber-300 text-base sm:text-lg xl:text-[22px]">${displayEsteem}</span>
+                                        ${renderDeltaTag(deltaEsteem)}
+                                    </div>
+                                </div>
+                                <div class="w-full h-3 sm:h-3.5 bg-dark-950 rounded-full overflow-hidden mt-0.5">
+                                    <div class="h-full bg-neon-amber transition-all duration-500" style="width: ${Math.max(0, Math.min(100, displayEsteem))}%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center text-sm sm:text-base xl:text-[18px] font-black">
+                                    <span class="text-emerald-300">⚡ 社交能量</span>
+                                    <div class="flex items-center">
+                                        <span class="font-mono text-emerald-300 text-base sm:text-lg xl:text-[22px]">${displayEnergy}</span>
+                                        ${renderDeltaTag(deltaEnergy)}
+                                    </div>
+                                </div>
+                                <div class="w-full h-3 sm:h-3.5 bg-dark-950 rounded-full overflow-hidden mt-0.5">
+                                    <div class="h-full bg-neon-green transition-all duration-500" style="width: ${Math.max(0, Math.min(100, displayEnergy))}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        ${solDHtml}
+                    `;
                 }
 
-                const borderCls = displayIsDead
+                const cardBorder = displayIsDead
                     ? 'border-neon-rose death-card-glow'
-                    : (isTeamNamed ? 'border-neon-cyan/40' : 'border-gray-800');
+                    : (isJoined ? 'border-neon-cyan/50 shadow-[0_0_15px_rgba(0,243,255,0.12)]' : 'border-gray-800');
 
-                html += `<div class="glass-panel rounded-2xl p-2.5 flex flex-col justify-between border ${borderCls} overflow-hidden"><div class="flex items-center justify-between gap-1 border-b border-gray-800/80 pb-1.5"><div class="flex items-center gap-1.5 truncate"><span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-black ${isTeamNamed ? 'bg-neon-green/20 text-neon-green' : 'bg-dark-800 text-gray-400'}">#${i}</span><h3 class="text-xs sm:text-sm font-black text-white truncate">${escapeHtmlAttr(team.name)}</h3></div><div class="flex items-center gap-1 shrink-0">${statusPill}<button onclick="window.openRenameModal(${i}, event)" class="px-1.5 py-0.5 rounded bg-dark-800 hover:bg-neon-cyan hover:text-dark-950 text-gray-300 text-[10px] font-bold" title="修改隊名">✏️</button></div></div>${bodyContent}<div class="flex flex-wrap gap-1 pt-1 border-t border-gray-800/60 min-h-[20px]">${badgesHtml || '<span class="text-[10px] text-gray-600">尚無選擇紀錄</span>'}</div></div>`;
+                html += `
+                    <div class="glass-panel rounded-2xl p-3.5 flex flex-col justify-between border ${cardBorder} overflow-hidden">
+                        <div class="flex items-center justify-between gap-1.5 border-b border-gray-800/80 pb-2">
+                            <div class="flex items-center gap-1.5 truncate">
+                                <span class="px-2.5 py-0.5 rounded-md ${isJoined ? 'bg-neon-green/20 text-neon-green' : 'bg-dark-800 text-gray-400'} text-sm sm:text-base xl:text-lg font-mono font-black">#${i}</span>
+                                <h3 class="text-lg sm:text-xl xl:text-[23px] font-black text-white truncate">${escapeHtml(team.name)}</h3>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                ${stageStatusTag}
+                                <button onclick="window.openRenameModal(${i}, event)" class="px-2 py-1 rounded-md bg-dark-800 hover:bg-neon-cyan hover:text-dark-950 text-gray-300 text-xs sm:text-sm font-bold transition-all" title="強制修改隊名">
+                                    ✏️
+                                </button>
+                            </div>
+                        </div>
+                        ${bodyContent}
+                        <div class="flex flex-wrap gap-1.5 pt-1.5 border-t border-gray-800/60 min-h-[28px]">
+                            ${badgesHtml || '<span class="text-xs sm:text-sm text-gray-500">尚無選擇紀錄</span>'}
+                        </div>
+                    </div>
+                `;
             }
             grid.innerHTML = html;
         };
@@ -1616,7 +1569,7 @@
         window.openRenameModal = function(teamId, event) {
             if (event) event.stopPropagation();
             window.renameTargetTeamId = teamId;
-            document.getElementById('rename-team-target-label').innerText = `第 ${teamId} 組`;
+            document.getElementById('rename-team-target-label').innerText = `第 ${teamId} 組 (${window.teamsData[teamId].name})`;
             const input = document.getElementById('rename-team-input');
             input.value = window.teamsData[teamId].name;
             document.getElementById('modal-rename-team').classList.remove('hidden');
@@ -1635,31 +1588,60 @@
             window.closeRenameModal();
             window.renderAllUI();
             await window.syncSingleTeamToCloud(id);
-            window.showToast(`✅ 已更名為【${newName}】並同步至平板！`);
+            window.showToast(`✅ 已強制將第 ${id} 組更名為【${newName}】！`);
         };
 
         window.approveTeamRevive = async function(teamId) {
             const t = window.teamsData[teamId];
             if (!t) return;
-            t.safety = 20; t.esteem = 20; t.energy = 20;
-            t.isDead = false; t.deathReason = ''; t.reviveRequested = false;
+            t.safety = 20;
+            t.esteem = 20;
+            t.energy = 20;
+            t.isDead = false;
+            t.deathReason = '';
+            t.reviveRequested = false;
             window.renderAllUI();
             await window.syncSingleTeamToCloud(teamId);
-            window.showToast(`✨ 已核准第 ${teamId} 組復活（數值重置為 20 點）！`);
+            window.showToast(`✨ 已核准【${t.name}】救援復活，三項數值重置為 20 點！`);
         };
 
         window.openSolutionDViewerById = function(teamId) {
             const team = window.teamsData[teamId];
-            const currentScenario = window.scenarioLines[window.currentScenarioIndex] || window.scenarioLines[0];
-            if (!team || !currentScenario) return;
-            const solD = team.solutionsD && team.solutionsD[currentScenario.id];
-            if (!solD || !solD.text) return;
-            window.openSolutionDViewer(team.name, solD.text);
+            const currentScenario = window.scenarioLines[window.currentScenarioIndex];
+            const solD = team && team.solutionsD && currentScenario ? team.solutionsD[currentScenario.id] : null;
+            if (!solD || (!solD.text && !solD.title)) return;
+
+            const card = document.getElementById('viewer-modal-card');
+            card.className = 'glass-panel max-w-4xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-purple shadow-2xl space-y-4 max-h-[88vh] flex flex-col';
+            const headerEl = document.getElementById('viewer-sol-d-team');
+            headerEl.innerText = `💡 【${team.name}】的系統破局方案 D`;
+            headerEl.className = 'text-xl sm:text-2xl font-black text-neon-purple';
+
+            const titleBox = document.getElementById('viewer-sol-d-action-title-box');
+            const titleEl = document.getElementById('viewer-sol-d-action-title');
+            if (solD.title) {
+                titleBox.classList.remove('hidden');
+                titleEl.innerText = solD.title;
+            } else {
+                titleBox.classList.add('hidden');
+            }
+
+            document.getElementById('viewer-sol-d-content').innerText = solD.text || '';
+            document.getElementById('modal-solution-d-viewer').classList.remove('hidden');
         };
 
-        window.openSolutionDViewer = function(teamName, content) {
-            document.getElementById('viewer-sol-d-team').innerText = `💡 【${teamName}】的破局方案 D`;
-            document.getElementById('viewer-sol-d-content').innerText = content;
+        window.openDeathStoryViewerById = function(teamId) {
+            const team = window.teamsData[teamId];
+            if (!team) return;
+
+            const card = document.getElementById('viewer-modal-card');
+            card.className = 'glass-panel max-w-4xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-rose shadow-2xl space-y-4 max-h-[88vh] flex flex-col';
+            const headerEl = document.getElementById('viewer-sol-d-team');
+            headerEl.innerText = `💀 【${team.name}】角色心路歷程回溯與崩潰原因`;
+            headerEl.className = 'text-xl sm:text-2xl font-black text-neon-rose';
+
+            document.getElementById('viewer-sol-d-action-title-box').classList.add('hidden');
+            document.getElementById('viewer-sol-d-content').innerText = team.deathReason || '某項核心心理籌碼耗盡，角色心理防線崩潰。';
             document.getElementById('modal-solution-d-viewer').classList.remove('hidden');
         };
 
@@ -1667,13 +1649,17 @@
             document.getElementById('modal-solution-d-viewer').classList.add('hidden');
         };
 
-        // 學生端操作
+        // 學生平板端操作
         window.onStudentSelectTeamChange = function() {
             const sel = document.getElementById('student-team-select');
             window.studentSelectedTeamId = parseInt(sel.value, 10) || 1;
             const t = window.teamsData[window.studentSelectedTeamId];
             const nameInput = document.getElementById('student-team-name-input');
-            if (nameInput && t) nameInput.value = t.name === `智囊團 ${t.id}` ? '' : t.name;
+            if (nameInput && t) {
+                nameInput.value = t.name === `智囊團 ${t.id}` ? '' : t.name;
+            }
+            window.studentSolDDirty = false;
+            window.studentLoadedSolDKey = '';
         };
 
         window.lockStudentTeam = async function() {
@@ -1682,12 +1668,14 @@
             const teamId = parseInt(sel.value, 10) || 1;
             const customName = nameInput.value.trim();
             if (!customName) {
-                window.showToast('⚠️ 請輸入你們的隊名！');
+                window.showToast('⚠️ 請先輸入你們的智囊團隊名再鎖定！');
                 nameInput.focus();
                 return;
             }
             window.studentSelectedTeamId = teamId;
             window.studentIsTeamLocked = true;
+            window.studentSolDDirty = false;
+            window.studentLoadedSolDKey = '';
             window.teamsData[teamId].name = customName;
 
             sel.disabled = true;
@@ -1696,17 +1684,19 @@
             document.getElementById('btn-unlock-team').classList.remove('hidden');
             document.getElementById('student-unauthenticated-mask').classList.add('hidden');
 
+            const statusBadge = document.getElementById('student-lock-status');
+            statusBadge.innerText = `✅ 已鎖定：第 ${teamId} 組【${customName}】`;
+            statusBadge.className = 'px-3 py-1 rounded-full text-xs font-black bg-neon-green/20 text-neon-green border border-neon-green/40';
+
             window.renderAllUI();
-            const synced = await window.syncSingleTeamToCloud(teamId);
-            if (synced) {
-                window.showToast(`🔒 已鎖定第 ${teamId} 組【${customName}】，講台大螢幕已同步亮燈！`);
-            } else {
-                window.showToast(`🔒 已鎖定第 ${teamId} 組【${customName}】（離線本機儲存）`);
-            }
+            await window.syncSingleTeamToCloud(teamId);
+            window.showToast(`🔒 已鎖定第 ${teamId} 組【${customName}】，開始討論作答吧！`);
         };
 
         window.unlockStudentTeam = function() {
             window.studentIsTeamLocked = false;
+            window.studentSolDDirty = false;
+            window.studentLoadedSolDKey = '';
             document.getElementById('student-team-select').disabled = false;
             document.getElementById('student-team-name-input').disabled = false;
             document.getElementById('btn-lock-team').classList.remove('hidden');
@@ -1729,29 +1719,130 @@
             window.updateStudentUI();
         };
 
+        // 根據每一階段實際行動與心理變化，生成具備完整心路歷程的死亡故事報告
+        function generateCustomDeathStory(team, currentScenario, currentStage, finalChoiceKey, finalOpt) {
+            const scHist = (team.history && team.history[currentScenario.id]) || {};
+            const steps = [];
+            let conformCount = 0;
+            let confrontCount = 0;
+            let avoidCount = 0;
+
+            currentScenario.stages.forEach((st, idx) => {
+                if (st.isBreakthrough) return;
+                let rec = null;
+                let optObj = null;
+                if (st.id === currentStage.id) {
+                    rec = {
+                        choice: finalChoiceKey,
+                        choiceTitle: finalOpt.title,
+                        safety: team.safety,
+                        esteem: team.esteem,
+                        energy: team.energy
+                    };
+                    optObj = finalOpt;
+                } else if (scHist[st.id]) {
+                    rec = scHist[st.id];
+                    optObj = st.options ? st.options[rec.choice] : null;
+                }
+                if (rec) {
+                    const cleanStageTitle = st.name.replace(/^階段\s*\d+[：:]\s*/, '');
+                    const sDelta = optObj ? (optObj.safety || 0) : 0;
+                    const eDelta = optObj ? (optObj.esteem || 0) : 0;
+                    const enDelta = optObj ? (optObj.energy || 0) : 0;
+                    const optDesc = optObj && optObj.desc ? optObj.desc.replace(/[。.]$/, '') : '';
+
+                    // 為每一步生成具體行動與內心感受描述
+                    let innerFeeling = '';
+                    if (sDelta >= 10 && eDelta < 0) {
+                        conformCount++;
+                        innerFeeling = '雖然表面上換來了小圈圈的暫時接納，但夜深人靜想起自己違背良心的模樣，內心的愧疚與自我厭惡又深了一層。';
+                    } else if (sDelta < 0 && eDelta >= 10) {
+                        confrontCount++;
+                        innerFeeling = '雖然守住了做人的底線，但隨之而來的冷眼、孤立與無聲排擠，讓小宇在教室裡每分每秒都感到如坐針氈。';
+                    } else {
+                        avoidCount++;
+                        innerFeeling = '選擇把情緒吞進肚子裡獨自承受，看似避開了眼前的風暴，卻讓焦慮與無力感在心底不斷累積、無處宣洩。';
+                    }
+
+                    const deltaSummary = `安全感 ${formatSignedDelta(sDelta)}、道德自尊 ${formatSignedDelta(eDelta)}、社交能量 ${formatSignedDelta(enDelta)}`;
+                    steps.push(
+                        `▸ 第 ${idx + 1} 步【${cleanStageTitle}】：\n` +
+                        `   你們選擇了「${rec.choiceTitle || (optObj ? optObj.title : `方案 ${rec.choice}`)}」（方案 ${rec.choice}）${optDesc ? `——${optDesc}` : ''}（${deltaSummary}）。${innerFeeling}`
+                    );
+                }
+            });
+
+            // 整體心理歷程總結
+            let overallPsychology = '';
+            if (conformCount > 0 && confrontCount > 0) {
+                overallPsychology = '【內心撕裂的掙扎歷程】\n一路走來，小宇在「渴望被群體接納」與「不想違背良心」之間反覆拉扯——時而為了自保戴上面具順從多數，時而又忍不住想守住底線。這種搖擺與自我懷疑，讓他既得不到小圈圈的真正信任，也無法原諒曾經妥協的自己。';
+            } else if (conformCount >= confrontCount && conformCount >= avoidCount) {
+                overallPsychology = '【不斷退讓的自我否定歷程】\n為了不被班上排擠，你們一次次選擇用順從與沉默換取表面的安全。但每一次低頭，都像親手把真實的自己推得更遠；看著無助的阿光與鏡子裡越來越陌生的自己，那種「明明知道不對卻不敢發聲」的羞愧感逐漸吞噬了整個內心。';
+            } else if (confrontCount >= conformCount && confrontCount >= avoidCount) {
+                overallPsychology = '【孤軍奮戰的孤立消耗歷程】\n面對不公，你們始終選擇正面迎戰、絕不低頭。然而在缺乏同盟與支持系統的情況下，每一次硬碰硬都讓小宇成為眾矢之的——下課時刻意壓低的竊竊私語、分組時無人靠近的冷漠，讓他在全班孤立的寒風中耗盡了所有心理防護。';
+            } else {
+                overallPsychology = '【長期壓抑的獨自內耗歷程】\n在這場人際風暴中，你們習慣把所有壓力與委屈鎖進心底、獨自消化。小宇小心翼翼地閃躲每一個眼神與質問，深怕說錯一句話就引爆危機；長期的過度警覺與孤立無援，讓他的心理能量在無人看見的角落裡一點一滴徹底枯竭。';
+            }
+
+            // 判斷哪些數值歸零（支援同時多個歸零）
+            const zeroReasons = [];
+            if (team.safety <= 0) {
+                zeroReasons.push('【同儕安全感歸零】在鋪天蓋地的排擠、孤立與敵意包圍下，小宇感覺自己在班上再也沒有任何容身之處。');
+            }
+            if (team.esteem <= 0) {
+                zeroReasons.push('【道德自尊歸零】在無止盡的妥協、表忠與自我背叛中，小宇再也無法認同自己，自我價值感徹底崩塌。');
+            }
+            if (team.energy <= 0) {
+                zeroReasons.push('【社交能量歸零】長期處於高壓警覺與情緒過載之中，小宇的身心已達極限，再也無力回應任何一句話或一個眼神。');
+            }
+
+            const collapseSection =
+                `【最終崩潰的臨界點】\n` +
+                `當在「${currentStage.name.replace(/^階段\s*\d+[：:]\s*/, '')}」做出「${finalOpt.title}」的決定後，壓垮心理防線的最後一根稻草終於落下：\n` +
+                (zeroReasons.length > 0 ? zeroReasons.map(r => `• ${r}`).join('\n') : '• 核心心理籌碼耗盡，心理防線在重壓下全面潰堤。') +
+                `\n\n💡 思考提示：回頭看看上面的每一步選擇，在「順從同流」與「正面硬碰硬」之外，哪一個時間點其實還有機會用不傷害自己、也不犧牲他人的方式破局？`;
+
+            return `【你們的決策軌跡與心路歷程】\n${steps.join('\n\n')}\n\n${overallPsychology}\n\n${collapseSection}`;
+        }
+
         window.confirmAndSubmitChoice = async function() {
             if (!window.studentIsTeamLocked) return;
             const choiceKey = window.studentTempChoice;
-            if (!choiceKey) return;
+            if (!choiceKey) {
+                window.showToast('⚠️ 請先點選 A、B 或 C 其中一個行動方案！');
+                return;
+            }
             const team = window.teamsData[window.studentSelectedTeamId];
             const currentScenario = window.scenarioLines[window.currentScenarioIndex];
             const currentStage = currentScenario.stages[window.currentStageIndex];
             if (!team.history) team.history = {};
             if (!team.history[currentScenario.id]) team.history[currentScenario.id] = {};
-            if (team.history[currentScenario.id][currentStage.id]) return;
+
+            if (team.history[currentScenario.id][currentStage.id]) {
+                window.showToast('🔒 本階段已經提交過答案，無法重複修改！');
+                return;
+            }
 
             const opt = currentStage.options[choiceKey];
-            team.safety = Math.max(0, Math.min(100, team.safety + (opt.safety || 0)));
-            team.esteem = Math.max(0, Math.min(100, team.esteem + (opt.esteem || 0)));
-            team.energy = Math.max(0, Math.min(100, team.energy + (opt.energy || 0)));
+            const deltaSafety = opt.safety || 0;
+            const deltaEsteem = opt.esteem || 0;
+            const deltaEnergy = opt.energy || 0;
+
+            team.safety = Math.max(0, Math.min(100, team.safety + deltaSafety));
+            team.esteem = Math.max(0, Math.min(100, team.esteem + deltaEsteem));
+            team.energy = Math.max(0, Math.min(100, team.energy + deltaEnergy));
 
             if (team.safety <= 0 || team.esteem <= 0 || team.energy <= 0) {
                 team.isDead = true;
-                team.deathReason = `因選擇「${opt.title}」導致生存數值歸零，心理防線全面崩潰。`;
+                team.deathReason = generateCustomDeathStory(team, currentScenario, currentStage, choiceKey, opt);
             }
 
             team.history[currentScenario.id][currentStage.id] = {
                 choice: choiceKey,
+                choiceTitle: opt.title,
+                deltaSafety: deltaSafety,
+                deltaEsteem: deltaEsteem,
+                deltaEnergy: deltaEnergy,
                 safety: team.safety,
                 esteem: team.esteem,
                 energy: team.energy,
@@ -1761,7 +1852,7 @@
 
             window.renderAllUI();
             await window.syncSingleTeamToCloud(team.id);
-            window.showToast(`✅ 已鎖定提交【方案 ${choiceKey}】，講台大螢幕已同步更新！`);
+            window.showToast(`✅ 已鎖定並提交【方案 ${choiceKey}】，講台大螢幕已同步更新！`);
         };
 
         window.requestTeamRevive = async function() {
@@ -1770,34 +1861,63 @@
             team.reviveRequested = true;
             window.updateStudentUI();
             await window.syncSingleTeamToCloud(team.id);
-            window.showToast('🆘 已向講台老師發送復活請求！');
+            window.showToast('🆘 已向講台老師發送救援復活請求！');
         };
 
+        // 提交或修改破局階段方案 D（支援送出後無限次重複修改與覆蓋更新）
         window.submitSolutionD = async function() {
-            if (!window.studentIsTeamLocked) return;
-            const text = document.getElementById('student-solution-d-input').value.trim();
-            if (!text) {
-                window.showToast('⚠️ 請先輸入你們的方案 D 破局行動內容！');
+            if (!window.studentIsTeamLocked) {
+                window.showToast('⚠️ 請先在上方選擇組別並鎖定隊名！');
                 return;
             }
+            const titleEl = document.getElementById('student-solution-d-title');
+            const inputEl = document.getElementById('student-solution-d-input');
+            const actionTitle = titleEl ? titleEl.value.trim() : '';
+            const text = inputEl ? inputEl.value.trim() : '';
+
+            if (!actionTitle) {
+                window.showToast('⚠️ 請先為你們的破局行動取一個名字！');
+                if (titleEl) titleEl.focus();
+                return;
+            }
+            if (!text) {
+                window.showToast('⚠️ 請寫出具體行為與執行步驟！');
+                if (inputEl) inputEl.focus();
+                return;
+            }
+
             const team = window.teamsData[window.studentSelectedTeamId];
             const currentScenario = window.scenarioLines[window.currentScenarioIndex];
             if (!team.solutionsD) team.solutionsD = {};
-            team.solutionsD[currentScenario.id] = { text, submitted: true };
+            const isUpdate = !!(team.solutionsD[currentScenario.id] && team.solutionsD[currentScenario.id].submitted);
+            const now = Date.now();
+
+            team.solutionsD[currentScenario.id] = {
+                title: actionTitle,
+                text: text,
+                submitted: true,
+                updatedAt: now
+            };
+            window.studentLocalSolDUpdatedAt = now;
+            window.studentLoadedSolDKey = `${team.id}_${currentScenario.id}`;
+            window.studentSolDDirty = false;
+
             window.renderAllUI();
             await window.syncSingleTeamToCloud(team.id);
-            window.showToast('🚀 方案 D 已送出並同步公開至講台大螢幕！');
+            window.showToast(isUpdate ? '🔄 方案 D 修改已儲存並即時更新至大螢幕！' : '🚀 方案 D 已成功送出並公開至講台大螢幕！');
         };
 
         window.updateStudentUI = function() {
-            const selEl = document.getElementById('student-team-select');
-            if (selEl && !window.studentIsTeamLocked) {
-                Array.from(selEl.options).forEach(opt => {
-                    const tid = parseInt(opt.value, 10);
-                    const t = window.teamsData[tid];
-                    const isNamed = t && t.name && t.name !== `智囊團 ${tid}`;
-                    opt.text = isNamed ? `第 ${tid} 組 (已鎖定：${t.name})` : `第 ${tid} 組`;
-                });
+            const sel = document.getElementById('student-team-select');
+            if (sel && !window.studentIsTeamLocked) {
+                for (let i = 1; i <= 6; i++) {
+                    const tInfo = window.teamsData[i];
+                    const optEl = sel.querySelector(`option[value="${i}"]`);
+                    if (optEl && tInfo) {
+                        const occupied = tInfo.name && tInfo.name !== `智囊團 ${i}`;
+                        optEl.textContent = occupied ? `第 ${i} 組 (已鎖定：${tInfo.name})` : `第 ${i} 組`;
+                    }
+                }
             }
 
             const team = window.teamsData[window.studentSelectedTeamId];
@@ -1807,9 +1927,7 @@
 
             if (window.studentIsTeamLocked) {
                 document.getElementById('student-team-name-input').value = team.name;
-                const statusBadge = document.getElementById('student-lock-status');
-                statusBadge.innerText = `✅ 已鎖定：第 ${team.id} 組【${team.name}】`;
-                statusBadge.className = 'px-3 py-1 rounded-full text-xs font-black bg-neon-green/20 text-neon-green border border-neon-green/40';
+                document.getElementById('student-lock-status').innerText = `✅ 已鎖定：第 ${team.id} 組【${team.name}】`;
             }
 
             document.getElementById('student-current-scenario-label').innerText = currentScenario.title;
@@ -1825,10 +1943,11 @@
             document.getElementById('stu-val-energy').innerText = team.energy;
             document.getElementById('stu-bar-energy').style.width = `${team.energy}%`;
 
+            // 破局階段不以死亡遮罩阻擋提案，讓全班 6 組都能參與破局設計與反覆修改
             const deathOverlay = document.getElementById('student-death-overlay');
-            if (team.isDead && window.studentIsTeamLocked) {
+            if (team.isDead && window.studentIsTeamLocked && !currentStage.isBreakthrough) {
                 deathOverlay.classList.remove('hidden');
-                document.getElementById('student-death-reason-text').innerText = team.deathReason;
+                document.getElementById('student-death-reason-text').innerText = team.deathReason || '某項生存數值歸零，角色已淘汰。';
                 if (team.reviveRequested) {
                     document.getElementById('btn-request-revive').classList.add('hidden');
                     document.getElementById('student-revive-pending-msg').classList.remove('hidden');
@@ -1846,18 +1965,42 @@
             if (currentStage.isBreakthrough) {
                 choiceModeEl.classList.add('hidden');
                 solDModeEl.classList.remove('hidden');
+
+                const deadNotice = document.getElementById('student-sol-d-dead-notice');
+                if (deadNotice) {
+                    if (team.isDead) deadNotice.classList.remove('hidden');
+                    else deadNotice.classList.add('hidden');
+                }
+
                 const solD = team.solutionsD && team.solutionsD[currentScenario.id];
+                const titleEl = document.getElementById('student-solution-d-title');
                 const inputEl = document.getElementById('student-solution-d-input');
                 const subBtn = document.getElementById('btn-submit-solution-d');
+                const statusBadge = document.getElementById('student-sol-d-status-badge');
+
+                const solKey = `${team.id}_${currentScenario.id}`;
+                const isFocused = (document.activeElement === titleEl || document.activeElement === inputEl);
+
+                // 僅在初次進入該組/情境破局階段且未在輸入時載入遠端既有草稿，避免輪詢覆蓋學生正在編輯的文字
+                if (window.studentLoadedSolDKey !== solKey && !isFocused && !window.studentSolDDirty) {
+                    titleEl.value = (solD && solD.title) ? solD.title : '';
+                    inputEl.value = (solD && solD.text) ? solD.text : '';
+                    window.studentLoadedSolDKey = solKey;
+                }
+
+                // 永遠保持可編輯、可重複提交狀態
+                titleEl.readOnly = false;
+                titleEl.disabled = false;
+                inputEl.readOnly = false;
+                inputEl.disabled = false;
+                subBtn.disabled = false;
+
                 if (solD && solD.submitted) {
-                    inputEl.value = solD.text;
-                    inputEl.disabled = true;
-                    subBtn.disabled = true;
-                    subBtn.innerText = '✅ 方案 D 已送出並公開至大螢幕';
+                    if (statusBadge) statusBadge.classList.remove('hidden');
+                    subBtn.innerText = '🔄 更新並重新送出方案 D（已公開至大螢幕，可隨時修改）';
                 } else {
-                    inputEl.disabled = false;
-                    subBtn.disabled = false;
-                    subBtn.innerText = '🚀 確定送出方案 D（送出後大螢幕立即公開）';
+                    if (statusBadge) statusBadge.classList.add('hidden');
+                    subBtn.innerText = '🚀 確定送出方案 D（送出後大螢幕立即公開，仍可反覆修改）';
                 }
             } else {
                 choiceModeEl.classList.remove('hidden');
@@ -1865,8 +2008,8 @@
 
                 const scHist = (team.history && team.history[currentScenario.id]) || {};
                 const submittedRec = scHist[currentStage.id];
-                const submitBtn = document.getElementById('btn-confirm-submit-choice');
                 const submittedBadge = document.getElementById('student-submitted-badge');
+                const submitBtn = document.getElementById('btn-confirm-submit-choice');
 
                 if (submittedRec) {
                     submittedBadge.classList.remove('hidden');
@@ -1875,7 +2018,9 @@
                 } else {
                     submittedBadge.classList.add('hidden');
                     submitBtn.disabled = !window.studentTempChoice;
-                    submitBtn.innerText = window.studentTempChoice ? `🔒 確定選擇【方案 ${window.studentTempChoice}】並提交` : '🔒 請先點選上方任一方案';
+                    submitBtn.innerText = window.studentTempChoice
+                        ? `🔒 確定選擇【方案 ${window.studentTempChoice}】並提交（送出後不可修改）`
+                        : '🔒 請先點選上方任一方案後再提交';
                 }
 
                 const optContainer = document.getElementById('student-options-container');
@@ -1883,12 +2028,12 @@
                     const opt = currentStage.options[k];
                     if (!opt) return '';
                     const isSelected = submittedRec ? submittedRec.choice === k : window.studentTempChoice === k;
-                    return `<button onclick="window.selectStudentOption('${k}')" ${submittedRec ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-2xl transition-all flex items-center justify-between gap-3 ${isSelected ? 'border-2 border-neon-cyan bg-neon-cyan/15' : 'border border-gray-800 bg-dark-950/80'}"><div class="space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-md text-xs font-black ${isSelected ? 'bg-neon-cyan text-dark-950' : 'bg-dark-800 text-gray-300'}">方案 ${k}</span><span class="text-sm sm:text-base font-black text-white">${escapeHtmlAttr(opt.title)}</span></div><p class="text-xs text-gray-400">${escapeHtmlAttr(opt.desc)}</p></div><span class="text-xl shrink-0">${isSelected ? '🔘' : '⚪'}</span></button>`;
+                    return `<button onclick="window.selectStudentOption('${k}')" ${submittedRec ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-2xl transition-all flex items-center justify-between gap-3 ${isSelected ? 'border-2 border-neon-cyan bg-neon-cyan/15 shadow-[0_0_20px_rgba(0,243,255,0.2)]' : 'border border-gray-800 bg-dark-950/80 hover:border-gray-600'}"><div class="space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-md text-xs font-black ${isSelected ? 'bg-neon-cyan text-dark-950' : 'bg-dark-800 text-gray-300'}">方案 ${k}</span><span class="text-sm sm:text-base font-black text-white">${escapeHtml(opt.title)}</span></div><p class="text-xs text-gray-400">${escapeHtml(opt.desc)}</p></div><span class="text-xl shrink-0">${isSelected ? '🔘' : '⚪'}</span></button>`;
                 }).join('');
             }
         };
 
-        // ==================== 教師後台（密碼 0914） ====================
+        // 教師後台（密碼 0914 驗證、完整腳本編輯器、各班數據存檔與刪除）
         window.openAdminModal = function() {
             document.getElementById('admin-password-input').value = '';
             document.getElementById('admin-auth-error').classList.add('hidden');
@@ -1922,13 +2067,15 @@
             const rContent = document.getElementById('admin-content-records');
             if (tab === 'scenarios') {
                 sTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-neon-cyan text-dark-950 transition-all";
-                rTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 transition-all";
-                sContent.classList.remove('hidden'); rContent.classList.add('hidden');
+                rTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all";
+                sContent.classList.remove('hidden');
+                rContent.classList.add('hidden');
                 window.renderAdminScenariosEditor();
             } else {
                 rTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-black bg-neon-amber text-dark-950 transition-all";
-                sTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 transition-all";
-                rContent.classList.remove('hidden'); sContent.classList.add('hidden');
+                sTab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all";
+                rContent.classList.remove('hidden');
+                sContent.classList.add('hidden');
                 window.loadAllClassRecords();
             }
         };
@@ -1967,20 +2114,25 @@
             });
             window.adminActiveScenarioIdx = window.scenarioLines.length - 1;
             window.renderAdminScenariosEditor();
-            window.showToast(`✨ 已新增【情境 ${newNum}】！`);
+            window.showToast(`✨ 已新增【情境 ${newNum}】翻頁選單！`);
         };
 
         window.deleteScenarioLine = function(idx, event) {
             if (event) event.stopPropagation();
             if (window.scenarioLines.length <= 1) {
-                window.showToast('⚠️ 至少需保留 1 個情境單元！');
+                window.showToast('⚠️ 系統至少需保留 1 個情境單元，無法全部刪除！');
                 return;
             }
             window.scenarioLines.splice(idx, 1);
             if (window.adminActiveScenarioIdx >= window.scenarioLines.length) {
                 window.adminActiveScenarioIdx = Math.max(0, window.scenarioLines.length - 1);
             }
+            if (window.currentScenarioIndex >= window.scenarioLines.length) {
+                window.currentScenarioIndex = 0;
+                window.currentStageIndex = 0;
+            }
             window.renderAdminScenariosEditor();
+            window.showToast('🗑️ 已成功刪除此情境單元！');
         };
 
         window.addNewStageToCurrentScenario = function() {
@@ -1999,32 +2151,39 @@
                 }
             });
             window.renderAdminScenariosEditor();
+            window.showToast(`➕ 已在【${sc.title}】追加新階段！`);
         };
 
-        window.moveAdminStage = function(scIdx, stIdx, dir, event) {
+        window.moveAdminStage = function(scIdx, stIdx, direction, event) {
             if (event) event.stopPropagation();
             const stages = window.scenarioLines[scIdx].stages;
-            const target = stIdx + dir;
-            if (target < 0 || target >= stages.length) return;
-            const tmp = stages[stIdx];
-            stages[stIdx] = stages[target];
-            stages[target] = tmp;
+            const targetIdx = stIdx + direction;
+            if (targetIdx < 0 || targetIdx >= stages.length) return;
+            const temp = stages[stIdx];
+            stages[stIdx] = stages[targetIdx];
+            stages[targetIdx] = temp;
             window.renderAdminScenariosEditor();
         };
 
         window.deleteAdminStage = function(scIdx, stIdx, event) {
             if (event) event.stopPropagation();
             const stages = window.scenarioLines[scIdx].stages;
-            if (stages.length <= 1) return;
+            if (stages.length <= 1) {
+                window.showToast('⚠️ 每個情境至少需保留 1 個階段！');
+                return;
+            }
             stages.splice(stIdx, 1);
             window.renderAdminScenariosEditor();
+            window.showToast('🗑️ 已刪除此階段！');
         };
 
         window.toggleStageBreakthrough = function(scIdx, stIdx, event) {
             if (event) event.stopPropagation();
             const st = window.scenarioLines[scIdx].stages[stIdx];
             st.isBreakthrough = !st.isBreakthrough;
-            if (!st.isBreakthrough && !st.options.A?.title) {
+            if (st.isBreakthrough && !st.options.A) {
+                st.options = { A: {}, B: {}, C: {} };
+            } else if (!st.isBreakthrough && !st.options.A?.title) {
                 st.options = {
                     A: { title: "選項 A", desc: "說明...", safety: 10, esteem: -10, energy: -5 },
                     B: { title: "選項 B", desc: "說明...", safety: -15, esteem: 15, energy: -10 },
@@ -2039,7 +2198,7 @@
             if (!container) return;
             container.innerHTML = window.scenarioLines.map((sc, scIdx) => {
                 const isEditing = scIdx === window.adminActiveScenarioIdx;
-                const borderCls = isEditing
+                const cardBorder = isEditing
                     ? 'border-2 border-neon-cyan shadow-[0_0_25px_rgba(0,243,255,0.28)] bg-dark-900'
                     : 'border border-gray-800 bg-dark-950/60 opacity-80 hover:opacity-100';
 
@@ -2048,18 +2207,21 @@
                         <div class="flex flex-wrap justify-between items-center gap-2 border-b border-gray-800 pb-2">
                             <div class="flex items-center gap-2 flex-1">
                                 <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-xs font-black">#${stIdx + 1}</span>
-                                <input type="text" value="${escapeHtmlAttr(st.name)}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].name = this.value" class="bg-dark-900 border border-gray-700 rounded-lg px-3 py-1 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
+                                <input type="text" value="${escapeHtml(st.name)}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].name = this.value" class="bg-dark-900 border border-gray-700 rounded-lg px-3 py-1 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
                             </div>
                             <div class="flex items-center gap-1.5">
                                 <button onclick="window.toggleStageBreakthrough(${scIdx}, ${stIdx}, event)" class="px-2.5 py-1 rounded-lg text-xs font-black border ${st.isBreakthrough ? 'bg-neon-purple text-white border-neon-purple' : 'bg-dark-800 text-gray-300 border-gray-700'}">
-                                    ${st.isBreakthrough ? '💡 破局階段' : '設為破局'}
+                                    ${st.isBreakthrough ? '💡 目前為獨立破局階段' : '設為破局階段'}
                                 </button>
-                                <button onclick="window.moveAdminStage(${scIdx}, ${stIdx}, -1, event)" class="px-2 py-1 rounded-lg bg-dark-800 text-xs text-gray-300">▲</button>
-                                <button onclick="window.moveAdminStage(${scIdx}, ${stIdx}, 1, event)" class="px-2 py-1 rounded-lg bg-dark-800 text-xs text-gray-300">▼</button>
-                                <button onclick="window.deleteAdminStage(${scIdx}, ${stIdx}, event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose text-xs font-bold">🗑️ 刪除</button>
+                                <button onclick="window.moveAdminStage(${scIdx}, ${stIdx}, -1, event)" class="px-2 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-xs font-bold text-gray-300" title="上移順序">▲</button>
+                                <button onclick="window.moveAdminStage(${scIdx}, ${stIdx}, 1, event)" class="px-2 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-xs font-bold text-gray-300" title="下移順序">▼</button>
+                                <button onclick="window.deleteAdminStage(${scIdx}, ${stIdx}, event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">🗑️ 刪除階段</button>
                             </div>
                         </div>
-                        <textarea rows="2" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].story = this.value" class="w-full bg-dark-900 border border-gray-700 rounded-xl p-2.5 text-xs text-gray-200 outline-none focus:border-neon-cyan">${escapeHtmlAttr(st.story)}</textarea>
+                        <div>
+                            <label class="text-[11px] font-bold text-gray-400 block mb-1">情境故事描述：</label>
+                            <textarea rows="2" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].story = this.value" class="w-full bg-dark-900 border border-gray-700 rounded-xl p-2.5 text-xs text-gray-200 outline-none focus:border-neon-cyan">${escapeHtml(st.story)}</textarea>
+                        </div>
                         ${!st.isBreakthrough ? `
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 ${['A', 'B', 'C'].map(k => {
@@ -2067,26 +2229,40 @@
                                     return `
                                         <div class="p-3 rounded-xl bg-dark-900 border border-gray-800 space-y-2">
                                             <span class="text-xs font-black text-neon-cyan">方案 ${k}</span>
-                                            <input type="text" value="${escapeHtmlAttr(opt.title)}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].title = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-xs font-bold text-white">
-                                            <input type="text" value="${escapeHtmlAttr(opt.desc)}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].desc = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-[11px] text-gray-300">
+                                            <input type="text" value="${escapeHtml(opt.title)}" placeholder="選項標題" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].title = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-xs font-bold text-white">
+                                            <input type="text" value="${escapeHtml(opt.desc)}" placeholder="選項說明" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].desc = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-[11px] text-gray-300">
                                             <div class="grid grid-cols-3 gap-1.5 text-[10px]">
-                                                <div><span class="text-cyan-300 block">安全感</span><input type="number" value="${opt.safety}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].safety = Number(this.value)" class="w-full bg-dark-950 border border-gray-700 rounded px-1.5 py-0.5 text-white font-mono"></div>
-                                                <div><span class="text-amber-300 block">自尊</span><input type="number" value="${opt.esteem}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].esteem = Number(this.value)" class="w-full bg-dark-950 border border-gray-700 rounded px-1.5 py-0.5 text-white font-mono"></div>
-                                                <div><span class="text-emerald-300 block">能量</span><input type="number" value="${opt.energy}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].energy = Number(this.value)" class="w-full bg-dark-950 border border-gray-700 rounded px-1.5 py-0.5 text-white font-mono"></div>
+                                                <div>
+                                                    <span class="text-cyan-300 block">安全感</span>
+                                                    <input type="number" value="${opt.safety}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].safety = Number(this.value)" class="w-full bg-dark-950 border border-gray-700 rounded px-1.5 py-0.5 text-white font-mono">
+                                                </div>
+                                                <div>
+                                                    <span class="text-amber-300 block">道德自尊</span>
+                                                    <input type="number" value="${opt.esteem}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].esteem = Number(this.value)" class="w-full bg-dark-950 border border-gray-700 rounded px-1.5 py-0.5 text-white font-mono">
+                                                </div>
+                                                <div>
+                                                    <span class="text-emerald-300 block">社交能量</span>
+                                                    <input type="number" value="${opt.energy}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].energy = Number(this.value)" class="w-full bg-dark-950 border border-gray-700 rounded px-1.5 py-0.5 text-white font-mono">
+                                                </div>
                                             </div>
                                         </div>
                                     `;
                                 }).join('')}
                             </div>
-                        ` : `<p class="text-xs text-neon-purple font-bold">💡 此階段為破局階段，學生平板將顯示方案 D 提案框。</p>`}
+                        ` : '<p class="text-xs text-neon-purple font-bold">💡 此階段為獨立「破局階段」，學生平板將顯示行動命名與具體步驟雙輸入框（可反覆修改）。</p>'}
                     </div>
-                `).join('') : `<p class="text-xs text-gray-400">（點擊卡片展開編輯 ${sc.stages.length} 個階段）</p>`;
+                `).join('') : `<p class="text-xs text-gray-400">（點擊此卡片任意處即可展開編輯此情境的 ${sc.stages.length} 個階段）</p>`;
 
                 return `
-                    <div onclick="window.selectAdminScenario(${scIdx})" class="p-4 rounded-2xl transition-all cursor-pointer space-y-3 ${borderCls}">
-                        <div class="flex justify-between items-center gap-2">
-                            <input type="text" value="${escapeHtmlAttr(sc.title)}" onclick="event.stopPropagation()" onchange="window.scenarioLines[${scIdx}].title = this.value" class="bg-dark-950 border border-gray-700 rounded-xl px-3 py-1.5 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
-                            <button onclick="window.deleteScenarioLine(${scIdx}, event)" class="px-3 py-1.5 rounded-xl bg-neon-rose/20 text-neon-rose text-xs font-black">🗑️ 刪除情境</button>
+                    <div onclick="window.selectAdminScenario(${scIdx})" class="p-4 rounded-2xl transition-all cursor-pointer space-y-3 ${cardBorder}">
+                        <div class="flex flex-wrap justify-between items-center gap-2">
+                            <div class="flex items-center gap-2.5 flex-1">
+                                ${isEditing ? '<span class="px-2.5 py-1 rounded-lg bg-neon-cyan text-dark-950 text-xs font-black animate-pulse">✏️ 正在編輯此情境</span>' : `<span class="px-2 py-0.5 rounded bg-dark-800 text-gray-400 text-xs font-bold">情境 #${scIdx + 1}</span>`}
+                                <input type="text" value="${escapeHtml(sc.title)}" onclick="event.stopPropagation()" onchange="window.scenarioLines[${scIdx}].title = this.value" class="bg-dark-950 border border-gray-700 rounded-xl px-3 py-1.5 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
+                            </div>
+                            <button onclick="window.deleteScenarioLine(${scIdx}, event)" class="px-3 py-1.5 rounded-xl bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-black transition-all">
+                                🗑️ 刪除情境
+                            </button>
                         </div>
                         ${stagesHtml}
                     </div>
@@ -2097,13 +2273,13 @@
         window.saveAndApplyAdminChanges = async function() {
             window.currentScenarioIndex = window.adminActiveScenarioIdx;
             window.currentStageIndex = 0;
+            window.studentLoadedSolDKey = '';
             window.closeAdminPanel();
             window.renderAllUI();
             await window.syncRoomStateToCloud();
-            window.showToast('💾 設定已儲存並即時同步至所有平板！');
+            window.showToast('💾 情境設定已儲存並即時同步至主控台與所有平板！');
         };
 
-        // 雲端與本機班級存檔檢視與刪除
         window.loadAllClassRecords = async function() {
             const listEl = document.getElementById('admin-class-records-list');
             if (!listEl) return;
@@ -2113,7 +2289,8 @@
                 const key = localStorage.key(i);
                 if (key && key.startsWith('room_')) {
                     const cName = key.replace('room_', '');
-                    classMap.set(cName, { className: cName, updatedAt: 0 });
+                    const raw = JSON.parse(localStorage.getItem(key) || '{}');
+                    classMap.set(cName, raw.updatedAt || 0);
                 }
             }
 
@@ -2122,87 +2299,143 @@
                 try {
                     const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms');
                     const snap = await getDocs(colRef);
-                    snap.forEach(dSnap => {
-                        const d = dSnap.data();
-                        if (d && d.className) {
-                            classMap.set(d.className, { className: d.className, updatedAt: d.updatedAt || 0 });
-                        }
+                    snap.forEach(d => {
+                        const data = d.data();
+                        if (data && data.className) classMap.set(data.className, data.updatedAt || 0);
                     });
                 } catch (e) {}
             }
 
-            const list = Array.from(classMap.values());
-            if (list.length === 0) {
-                listEl.innerHTML = `<p class="text-xs text-gray-500 text-center py-8">尚無班級存檔紀錄</p>`;
-                return;
-            }
-            listEl.innerHTML = list.map(item => `
-                <div onclick="window.viewClassRecordDetail('${escapeHtmlAttr(item.className)}')" class="p-3 rounded-xl bg-dark-950 border border-gray-800 hover:border-neon-cyan cursor-pointer flex justify-between items-center">
-                    <span class="text-sm font-black text-white">🏫 ${escapeHtmlAttr(item.className)} 班</span>
-                    <button onclick="window.deleteClassRecord('${escapeHtmlAttr(item.className)}', event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">🗑️ 刪除</button>
-                </div>
-            `).join('');
+            let html = '';
+            classMap.forEach((updatedAt, cName) => {
+                const dateStr = updatedAt ? new Date(updatedAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+                html += `
+                    <div data-class="${escapeHtml(cName)}" onclick="window.viewClassRecordDetail(this.dataset.class)" class="p-3 rounded-xl bg-dark-950 border border-gray-800 hover:border-neon-cyan cursor-pointer flex justify-between items-center transition-all">
+                        <div>
+                            <span class="text-sm font-black text-white block">🏫 ${escapeHtml(cName)} 班</span>
+                            <span class="text-[10px] text-gray-500">最後更新：${dateStr}</span>
+                        </div>
+                        <button data-class="${escapeHtml(cName)}" onclick="window.deleteClassRecord(this.dataset.class, event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">
+                            🗑️ 刪除
+                        </button>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html || '<p class="text-xs text-gray-500 text-center py-8">目前尚無任何班級存檔紀錄</p>';
         };
 
         window.viewClassRecordDetail = async function(className) {
             const detailEl = document.getElementById('admin-class-record-detail');
             if (!detailEl) return;
-            detailEl.innerHTML = `<p class="text-xs text-neon-cyan p-4">載入【${escapeHtmlAttr(className)}】班級雲端紀錄中...</p>`;
-            const teams = await fetchClassTeams(className);
-            let cards = '';
+            detailEl.innerHTML = `<p class="text-xs text-neon-cyan p-6">載入【${escapeHtml(className)}】班級完整歷程中...</p>`;
+
+            let scenarios = getDefaultScenarios();
+            const teamsMap = {};
+
+            if (db) {
+                try {
+                    const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className);
+                    const roomSnap = await getDoc(roomRef);
+                    if (roomSnap.exists() && roomSnap.data().scenarioLines) {
+                        scenarios = JSON.parse(roomSnap.data().scenarioLines);
+                    }
+                    const teamsCol = collection(db, 'artifacts', appId, 'public', 'data', 'classrooms', className, 'teams');
+                    const teamsSnap = await getDocs(teamsCol);
+                    teamsSnap.forEach(d => { teamsMap[d.data().id] = d.data(); });
+                } catch (e) {}
+            }
+
+            if (Object.keys(teamsMap).length === 0) {
+                const localRoom = localStorage.getItem(`room_${className}`);
+                if (localRoom && JSON.parse(localRoom).scenarioLines) {
+                    scenarios = JSON.parse(JSON.parse(localRoom).scenarioLines);
+                }
+                for (let i = 1; i <= 6; i++) {
+                    const tData = localStorage.getItem(`team_${className}_${i}`);
+                    if (tData) teamsMap[i] = JSON.parse(tData);
+                }
+            }
+
+            let cardsHtml = '';
             for (let i = 1; i <= 6; i++) {
-                const t = teams[i];
-                const solTexts = t.solutionsD ? Object.values(t.solutionsD).filter(s => s && s.text).map(s => s.text).join(' / ') : '';
-                cards += `
-                    <div class="p-3.5 rounded-xl bg-dark-950 border ${t.isDead ? 'border-neon-rose' : 'border-gray-800'} space-y-1">
+                const t = teamsMap[i] || { name: `智囊團 ${i}`, safety: 50, esteem: 50, energy: 50, isDead: false, history: {}, solutionsD: {} };
+                let historyLines = '';
+                scenarios.forEach(sc => {
+                    const scHist = (t.history && t.history[sc.id]) || {};
+                    const solD = t.solutionsD && t.solutionsD[sc.id];
+                    let steps = [];
+                    sc.stages.forEach((st, idx) => {
+                        if (!st.isBreakthrough && scHist[st.id]) {
+                            steps.push(`階段${idx + 1}選【${scHist[st.id].choice}】`);
+                        }
+                    });
+                    if (steps.length > 0 || (solD && (solD.text || solD.title))) {
+                        const solTitleStr = solD && solD.title ? `【${escapeHtml(solD.title)}】` : '';
+                        historyLines += `
+                            <div class="mt-2 p-2.5 rounded-lg bg-dark-900 border border-gray-800 text-xs space-y-1">
+                                <span class="font-bold text-neon-cyan block">${escapeHtml(sc.title)}</span>
+                                <p class="text-gray-300">決策軌跡：${steps.join(' ➔ ') || '無'}</p>
+                                ${solD && (solD.text || solD.title) ? `<p class="text-neon-purple font-bold whitespace-pre-line">💡 方案 D ${solTitleStr}：${escapeHtml(solD.text)}</p>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+
+                cardsHtml += `
+                    <div class="p-3.5 rounded-2xl bg-dark-950 border ${t.isDead ? 'border-neon-rose' : 'border-gray-800'} space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-black text-white">#${i} ${escapeHtmlAttr(t.name)}</span>
-                            <span class="text-xs font-bold ${t.isDead ? 'text-neon-rose' : 'text-neon-green'}">${t.isDead ? '💀 已淘汰' : '✅ 存活'}</span>
+                            <span class="text-sm font-black text-white">#${i} ${escapeHtml(t.name)}</span>
+                            <span class="px-2 py-0.5 rounded text-xs font-black ${t.isDead ? 'bg-neon-rose/20 text-neon-rose' : 'bg-neon-green/20 text-neon-green'}">
+                                ${t.isDead ? '💀 已淘汰' : '✅ 存活'}
+                            </span>
                         </div>
-                        <div class="text-xs text-gray-400 font-mono">安全感:${t.safety} | 自尊:${t.esteem} | 能量:${t.energy}</div>
-                        ${solTexts ? `<p class="text-xs text-neon-purple font-bold pt-1">💡 方案D：${escapeHtmlAttr(solTexts)}</p>` : ''}
+                        <div class="flex gap-3 text-xs font-mono font-bold text-gray-400">
+                            <span>安全感: ${t.safety}</span>
+                            <span>道德自尊: ${t.esteem}</span>
+                            <span>社交能量: ${t.energy}</span>
+                        </div>
+                        ${t.isDead && t.deathReason ? `<div class="p-2 rounded bg-neon-rose/10 border border-neon-rose/30 text-xs text-rose-200 whitespace-pre-line leading-relaxed">${escapeHtml(t.deathReason)}</div>` : ''}
+                        ${historyLines || '<p class="text-xs text-gray-600">尚無作答歷程</p>'}
                     </div>
                 `;
             }
+
             detailEl.innerHTML = `
-                <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-800">
-                    <h3 class="text-base font-black text-white">📊 【${escapeHtmlAttr(className)} 班】雲端全組紀錄</h3>
-                    <button onclick="window.deleteClassRecord('${escapeHtmlAttr(className)}', event)" class="px-3 py-1 rounded-lg bg-neon-rose text-white text-xs font-black">🗑️ 刪除此班存檔</button>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                        <h3 class="text-lg font-black text-white">📊 【${escapeHtml(className)} 班】課堂全組歷程與提案總覽</h3>
+                        <button data-class="${escapeHtml(className)}" onclick="window.deleteClassRecord(this.dataset.class, event)" class="px-3 py-1.5 rounded-xl bg-neon-rose text-white text-xs font-black hover:bg-rose-500">
+                            🗑️ 永久刪除此班存檔
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">${cardsHtml}</div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">${cards}</div>
             `;
         };
 
         window.deleteClassRecord = async function(className, event) {
             if (event) event.stopPropagation();
+            if (!className) return;
             localStorage.removeItem(`room_${className}`);
             for (let i = 1; i <= 6; i++) {
                 localStorage.removeItem(`team_${className}_${i}`);
             }
             if (db) {
-                await ensureAuth();
                 try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className));
                     for (let i = 1; i <= 6; i++) {
-                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'classroom_teams', getTeamDocId(className, i)));
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className, 'teams', `team_${i}`));
                     }
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'classrooms', className));
                 } catch (e) {}
             }
-            document.getElementById('admin-class-record-detail').innerHTML = `<p class="text-xs text-gray-500 text-center py-10">已刪除【${escapeHtmlAttr(className)}】班級存檔</p>`;
+            window.showToast(`🗑️ 已刪除【${className}】班級存檔紀錄！`);
+            document.getElementById('admin-class-record-detail').innerHTML = '<p class="text-xs text-gray-500 text-center py-10">該班級紀錄已移除</p>';
             window.loadAllClassRecords();
-            window.showToast(`🗑️ 已刪除【${className}】班級雲端存檔！`);
         };
 
-        // 啟動入口（支援 QR Code 掃描 ?class=XXX&role=student 自動跨裝置連入）
-        window.onload = async function() {
+        async function initApp() {
+            await ensureAuth();
             window.renderAllUI();
-            if (db) {
-                await ensureAuth();
-                setCloudIndicator('connected');
-            } else {
-                setCloudIndicator('offline');
-            }
-
             const params = new URLSearchParams(window.location.search);
             const urlClass = params.get('class');
             const urlRole = params.get('role');
@@ -2218,7 +2451,13 @@
             } else {
                 window.listenLobbyActiveClasses();
             }
-        };
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
