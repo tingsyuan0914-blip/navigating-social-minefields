@@ -34,14 +34,14 @@
             -webkit-user-select: text;
         }
         .glass-panel {
-            background: rgba(13, 20, 36, 0.88);
+            background: rgba(13, 20, 36, 0.9);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(7, 11, 20, 0.5); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.3); border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 243, 255, 0.6); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.35); border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 243, 255, 0.65); }
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(255, 51, 102, 0.35); }
             50% { box-shadow: 0 0 28px rgba(255, 51, 102, 0.75); }
@@ -61,7 +61,7 @@
                     ⚡ 跨裝置雲端即時課堂連線系統
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">人際風暴生存戰</h1>
-                <p class="text-xs text-gray-400">請選擇操作身分並設定班級代碼，確保各班數據獨立留存、平板即時同步</p>
+                <p class="text-xs sm:text-sm text-gray-400">請選擇操作身分並設定班級代碼，確保各班數據獨立留存、平板即時同步</p>
             </div>
 
             <!-- 身分切換頁籤 -->
@@ -77,26 +77,26 @@
             <!-- 教師開局設定區 -->
             <div id="lobby-panel-teacher" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1.5">設定本次上課班級（例：901、九年一班）：</label>
+                    <label class="block text-xs sm:text-sm font-bold text-gray-300 mb-1.5">設定本次上課班級（例：901、九年一班）：</label>
                     <input type="text" id="lobby-input-teacher-class" placeholder="請輸入班級代碼，例如：901" class="w-full bg-dark-900 border border-gray-700 focus:border-neon-cyan rounded-xl px-4 py-3 text-base font-black text-white outline-none transition-all" onkeydown="if(event.key==='Enter') window.enterAsTeacher()">
                 </div>
                 <button onclick="window.enterAsTeacher()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neon-cyan to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-dark-950 font-black text-base shadow-[0_0_25px_rgba(0,243,255,0.4)] transition-all">
                     🚀 啟動此班級主控台並進入大螢幕
                 </button>
                 <div class="flex justify-between items-center pt-2 border-t border-gray-800">
-                    <span class="text-[11px] text-gray-500">管理題庫或調閱各班歷史存檔：</span>
-                    <button onclick="window.openAdminModal()" class="text-xs font-bold text-neon-amber hover:underline">🔐 進入教師後台</button>
+                    <span class="text-xs text-gray-500">管理題庫或調閱各班歷史存檔：</span>
+                    <button onclick="window.openAdminModal()" class="text-xs sm:text-sm font-bold text-neon-amber hover:underline">🔐 進入教師後台</button>
                 </div>
             </div>
 
             <!-- 學生平板連線區 -->
             <div id="lobby-panel-student" class="hidden space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1.5">請輸入講台大螢幕顯示的班級代碼：</label>
+                    <label class="block text-xs sm:text-sm font-bold text-gray-300 mb-1.5">請輸入講台大螢幕顯示的班級代碼：</label>
                     <input type="text" id="lobby-input-student-class" placeholder="例如：901" class="w-full bg-dark-900 border border-gray-700 focus:border-neon-green rounded-xl px-4 py-3 text-base font-black text-white outline-none transition-all" onkeydown="if(event.key==='Enter') window.enterAsStudent()">
                 </div>
                 <div class="space-y-1.5">
-                    <span class="text-[11px] font-bold text-gray-400 block">📡 偵測目前在線教室（可直接點擊進入）：</span>
+                    <span class="text-xs font-bold text-gray-400 block">📡 偵測目前在線教室（可直接點擊進入）：</span>
                     <div id="lobby-active-classes-list" class="flex flex-wrap gap-2 min-h-[32px]">
                         <span class="text-xs text-gray-500 italic">搜尋雲端講台訊號中...</span>
                     </div>
@@ -109,82 +109,82 @@
     </div>
 
     <!-- ==================== 2. 頂部全域導覽列 ==================== -->
-    <header class="w-full px-3 sm:px-4 py-2 bg-dark-900/95 border-b border-gray-800 flex flex-wrap justify-between items-center gap-2 shrink-0 z-30">
-        <div class="flex items-center gap-2">
-            <span class="text-lg">🌪️</span>
-            <h1 class="text-sm sm:text-base font-black text-white tracking-wide">人際風暴生存戰</h1>
-            <span id="header-class-badge" class="px-2.5 py-0.5 rounded-full bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan text-xs font-black">
+    <header class="w-full px-3 sm:px-5 py-2.5 bg-dark-900/95 border-b border-gray-800 flex flex-wrap justify-between items-center gap-2 shrink-0 z-30">
+        <div class="flex items-center gap-2.5">
+            <span class="text-xl">🌪️</span>
+            <h1 class="text-base sm:text-lg font-black text-white tracking-wide">人際風暴生存戰</h1>
+            <span id="header-class-badge" class="px-3 py-0.5 rounded-full bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan text-xs sm:text-sm font-black">
                 班級：未連線
             </span>
-            <span id="sync-status-indicator" class="px-2 py-0.5 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-[10px] font-black">
+            <span id="sync-status-indicator" class="px-2.5 py-0.5 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-xs font-black">
                 🟢 雲端連線就緒
             </span>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2">
-            <button id="btn-show-qrcode" onclick="window.openQrCodeModal()" class="px-3 py-1 rounded-lg bg-neon-green text-dark-950 hover:bg-green-300 text-xs font-black shadow-[0_0_15px_rgba(0,255,102,0.4)] transition-all flex items-center gap-1">
+        <div class="flex items-center gap-2">
+            <button id="btn-show-qrcode" onclick="window.openQrCodeModal()" class="px-3.5 py-1.5 rounded-lg bg-neon-green text-dark-950 hover:bg-green-300 text-xs sm:text-sm font-black shadow-[0_0_15px_rgba(0,255,102,0.4)] transition-all flex items-center gap-1.5">
                 📱 平板掃描 QR Code
             </button>
-            <button onclick="window.manualForceSync(false)" class="px-2.5 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-neon-cyan border border-neon-cyan/30 text-xs font-bold transition-all" title="立即強制同步">
+            <button onclick="window.manualForceSync(false)" class="px-3 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-neon-cyan border border-neon-cyan/30 text-xs sm:text-sm font-bold transition-all" title="立即強制同步">
                 ⚡ 同步
             </button>
             <div class="hidden md:flex bg-dark-950 p-0.5 rounded-lg border border-gray-800">
-                <button id="nav-teacher-btn" onclick="window.switchView('teacher')" class="px-2.5 py-1 rounded-md text-xs font-black bg-neon-cyan text-dark-950 transition-all">
+                <button id="nav-teacher-btn" onclick="window.switchView('teacher')" class="px-3 py-1 rounded-md text-xs sm:text-sm font-black bg-neon-cyan text-dark-950 transition-all">
                     🖥️ 大螢幕
                 </button>
-                <button id="nav-student-btn" onclick="window.switchView('student')" class="px-2.5 py-1 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all">
+                <button id="nav-student-btn" onclick="window.switchView('student')" class="px-3 py-1 rounded-md text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition-all">
                     📱 平板端
                 </button>
             </div>
-            <button onclick="window.openAdminModal()" class="px-2.5 py-1 rounded-lg bg-neon-amber/20 hover:bg-neon-amber/30 text-neon-amber border border-neon-amber/40 text-xs font-black transition-all">
+            <button onclick="window.openAdminModal()" class="px-3 py-1.5 rounded-lg bg-neon-amber/20 hover:bg-neon-amber/30 text-neon-amber border border-neon-amber/40 text-xs sm:text-sm font-black transition-all">
                 ⚙️ 教師後台
             </button>
-            <button onclick="window.returnToLobby()" class="px-2.5 py-1 rounded-lg bg-dark-800 hover:bg-neon-rose/20 text-gray-400 hover:text-neon-rose text-xs font-bold transition-all">
+            <button onclick="window.returnToLobby()" class="px-3 py-1.5 rounded-lg bg-dark-800 hover:bg-neon-rose/20 text-gray-400 hover:text-neon-rose text-xs sm:text-sm font-bold transition-all">
                 🚪 換班
             </button>
         </div>
     </header>
 
-    <!-- ==================== 3. 講台大螢幕主控台 (4:3 免滾動全覽佈局) ==================== -->
-    <main id="view-teacher" class="flex-1 w-full max-w-[1440px] mx-auto p-3 grid grid-cols-12 gap-3 overflow-y-auto lg:overflow-hidden">
+    <!-- ==================== 3. 講台大螢幕主控台 (大字體高可讀性全覽佈局) ==================== -->
+    <main id="view-teacher" class="flex-1 w-full max-w-[1600px] mx-auto p-3 sm:p-4 grid grid-cols-12 gap-3.5 overflow-y-auto lg:overflow-hidden">
         <!-- 左側 5 欄：情境翻頁選單、階段切換與放大故事選項區 -->
-        <section class="col-span-12 lg:col-span-5 glass-panel rounded-2xl p-3.5 flex flex-col justify-between overflow-hidden border border-gray-800">
-            <div class="space-y-2 shrink-0">
+        <section class="col-span-12 lg:col-span-5 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-hidden border border-gray-800">
+            <div class="space-y-2.5 shrink-0">
                 <div class="flex items-center justify-between gap-2">
                     <div id="scenario-tabs-container" class="flex flex-wrap gap-1.5"></div>
                 </div>
-                <div class="flex items-center justify-between gap-2 pt-1 border-t border-gray-800/80">
-                    <div id="stage-tabs-container" class="flex flex-wrap gap-1"></div>
-                    <div class="flex items-center gap-1 shrink-0">
-                        <button onclick="window.prevStage()" class="px-2 py-1 rounded bg-dark-800 hover:bg-dark-700 text-xs font-bold text-gray-300">◀</button>
-                        <span id="stage-progress-text" class="text-xs font-mono font-black text-neon-cyan px-1">1 / 6</span>
-                        <button onclick="window.nextStage()" class="px-2 py-1 rounded bg-dark-800 hover:bg-dark-700 text-xs font-bold text-gray-300">▶</button>
+                <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/80">
+                    <div id="stage-tabs-container" class="flex flex-wrap gap-1.5"></div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="window.prevStage()" class="px-2.5 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-sm font-black text-gray-200">◀</button>
+                        <span id="stage-progress-text" class="text-sm font-mono font-black text-neon-cyan px-1">1 / 6</span>
+                        <button onclick="window.nextStage()" class="px-2.5 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-sm font-black text-gray-200">▶</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 故事標題與敘述 -->
-            <div class="my-2 p-3.5 rounded-xl bg-dark-950/90 border border-gray-800 space-y-1.5 shrink-0">
-                <div class="flex items-center justify-between gap-2">
-                    <h2 id="stage-title" class="text-lg sm:text-xl font-black text-white leading-tight">載入中...</h2>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <span id="history-mode-badge" class="hidden px-2 py-0.5 rounded bg-neon-amber/20 text-neon-amber border border-neon-amber/40 text-[10px] font-black">
-                            ⏪ 歷史回溯中
-                        </span>
-                        <span id="stage-type-badge" class="px-2.5 py-1 rounded text-xs font-black bg-blue-500/20 text-blue-300">
+            <!-- 故事標題與敘述 (大字體優化) -->
+            <div class="my-2.5 p-4 rounded-2xl bg-dark-950/95 border border-gray-700/80 space-y-2 shrink-0 shadow-inner">
+                <div class="flex items-start justify-between gap-2">
+                    <h2 id="stage-title" class="text-xl sm:text-2xl xl:text-[26px] font-black text-white leading-snug">載入中...</h2>
+                    <div class="flex flex-col items-end gap-1 shrink-0">
+                        <span id="stage-type-badge" class="px-3 py-1 rounded-lg text-xs sm:text-sm font-black bg-blue-500/20 text-blue-300 border border-blue-500/30">
                             🎯 抉擇階段
                         </span>
+                        <span id="history-mode-badge" class="hidden px-2.5 py-0.5 rounded bg-neon-amber/20 text-neon-amber border border-neon-amber/40 text-xs font-black">
+                            ⏪ 歷史回溯中
+                        </span>
                     </div>
                 </div>
-                <p id="stage-story" class="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">正在載入情境內容...</p>
+                <p id="stage-story" class="text-base sm:text-lg xl:text-[19px] text-gray-100 leading-relaxed font-semibold">正在載入情境內容...</p>
             </div>
 
-            <!-- A / B / C 選項展示區 -->
-            <div id="teacher-options-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-2 pr-1"></div>
+            <!-- A / B / C 選項展示區 (大字體與清晰分層) -->
+            <div id="teacher-options-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-2.5 pr-1"></div>
         </section>
 
-        <!-- 右側 7 欄：6 組智囊團即時生存儀表板 -->
-        <section id="teams-grid" class="col-span-12 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-rows-2 gap-2.5 overflow-visible lg:overflow-hidden"></section>
+        <!-- 右側 7 欄：6 組智囊團即時生存儀表板 (大字體清晰卡片) -->
+        <section id="teams-grid" class="col-span-12 lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 lg:grid-rows-2 gap-3 overflow-visible lg:overflow-hidden"></section>
     </main>
 
     <!-- ==================== 4. 學生平板全螢幕操作端 (支援自由上下滑動，確保按鈕不被遮擋) ==================== -->
@@ -192,7 +192,7 @@
         <!-- 頂部：組別認證與隊名鎖定列 -->
         <div class="glass-panel rounded-2xl p-3 border border-gray-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div class="flex flex-wrap items-center gap-2.5">
-                <span class="text-xs font-black text-neon-cyan">🛡️ 智囊團身分認證：</span>
+                <span class="text-xs sm:text-sm font-black text-neon-cyan">🛡️ 智囊團身分認證：</span>
                 <select id="student-team-select" onchange="window.onStudentSelectTeamChange()" class="bg-dark-900 border border-gray-700 rounded-xl px-3 py-2 text-sm font-black text-white outline-none focus:border-neon-cyan">
                     <option value="1">第 1 組</option>
                     <option value="2">第 2 組</option>
@@ -223,17 +223,20 @@
                 <p class="text-xs sm:text-sm text-gray-400 max-w-md">請先在上方選擇「第 1～6 組」並輸入隊名，按下 <span class="text-neon-green font-bold">「🔒 確定鎖定並作答」</span> 即可解鎖！</p>
             </div>
 
-            <!-- 角色數值歸零死亡全屏警告遮罩 -->
-            <div id="student-death-overlay" class="hidden absolute inset-0 min-h-[300px] bg-dark-950/95 backdrop-blur-md z-30 rounded-2xl flex flex-col items-center justify-center p-6 text-center space-y-4 border-2 border-neon-rose">
-                <div class="text-5xl animate-bounce">💀</div>
-                <h3 class="text-xl sm:text-2xl font-black text-neon-rose">警告！你們的角色心理防線已全面崩潰</h3>
-                <p id="student-death-reason-text" class="text-sm sm:text-base text-rose-200 max-w-xl font-bold leading-relaxed bg-neon-rose/15 p-4 rounded-2xl border border-neon-rose/40">
-                    某項生存數值歸零，角色已淘汰。
-                </p>
-                <button id="btn-request-revive" onclick="window.requestTeamRevive()" class="px-6 py-3 rounded-xl bg-neon-amber text-dark-950 font-black text-sm hover:bg-amber-300 shadow-lg transition-all">
+            <!-- 角色數值歸零死亡全屏警告遮罩 (顯示客製化回溯心理崩潰故事) -->
+            <div id="student-death-overlay" class="hidden absolute inset-0 min-h-[360px] bg-dark-950/96 backdrop-blur-md z-30 rounded-2xl flex flex-col items-center justify-center p-5 sm:p-8 text-center space-y-4 border-2 border-neon-rose overflow-y-auto">
+                <div class="text-5xl animate-bounce shrink-0">💀</div>
+                <h3 class="text-xl sm:text-2xl font-black text-neon-rose shrink-0">警告！你們的角色心理防線已全面崩潰</h3>
+                <div class="w-full max-w-2xl bg-neon-rose/10 border border-neon-rose/40 rounded-2xl p-4 sm:p-5 text-left space-y-2 shadow-xl">
+                    <span class="text-xs font-black text-neon-rose tracking-wider block">📖 【角色心路歷程回溯・心理崩潰報告】</span>
+                    <p id="student-death-reason-text" class="text-sm sm:text-base text-rose-100 font-medium leading-relaxed whitespace-pre-line">
+                        某項生存數值歸零，角色已淘汰。
+                    </p>
+                </div>
+                <button id="btn-request-revive" onclick="window.requestTeamRevive()" class="px-6 py-3 rounded-xl bg-neon-amber text-dark-950 font-black text-sm sm:text-base hover:bg-amber-300 shadow-lg transition-all shrink-0">
                     🆘 向講台老師發送救援復活請求
                 </button>
-                <p id="student-revive-pending-msg" class="hidden text-xs font-black text-neon-amber animate-pulse">
+                <p id="student-revive-pending-msg" class="hidden text-xs sm:text-sm font-black text-neon-amber animate-pulse shrink-0">
                     ⏳ 已發送救援請求，請等待講台老師在大螢幕核准復活...
                 </p>
             </div>
@@ -242,16 +245,16 @@
             <div class="lg:col-span-5 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-visible lg:overflow-hidden border border-gray-800">
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <span id="student-team-badge" class="px-3 py-1 rounded-lg bg-neon-cyan/15 text-neon-cyan text-xs font-black">第 1 組</span>
+                        <span id="student-team-badge" class="px-3 py-1 rounded-lg bg-neon-cyan/15 text-neon-cyan text-xs sm:text-sm font-black">第 1 組</span>
                         <div class="text-xs text-gray-400 font-bold">
                             <span id="student-current-scenario-label">情境 1</span>・<span id="student-current-stage-label" class="text-white">階段 1</span>
                         </div>
                     </div>
 
                     <!-- 三大生存數值即時條 -->
-                    <div class="p-3 rounded-xl bg-dark-950 border border-gray-800 space-y-2">
+                    <div class="p-3 rounded-xl bg-dark-950 border border-gray-800 space-y-2.5">
                         <div>
-                            <div class="flex justify-between text-xs font-black text-cyan-300 mb-0.5">
+                            <div class="flex justify-between text-xs sm:text-sm font-black text-cyan-300 mb-0.5">
                                 <span>🛡️ 同儕安全感</span>
                                 <span id="stu-val-safety" class="font-mono">50</span>
                             </div>
@@ -260,7 +263,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-xs font-black text-amber-300 mb-0.5">
+                            <div class="flex justify-between text-xs sm:text-sm font-black text-amber-300 mb-0.5">
                                 <span>👑 道德自尊</span>
                                 <span id="stu-val-esteem" class="font-mono">50</span>
                             </div>
@@ -269,7 +272,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-xs font-black text-emerald-300 mb-0.5">
+                            <div class="flex justify-between text-xs sm:text-sm font-black text-emerald-300 mb-0.5">
                                 <span>⚡ 社交能量</span>
                                 <span id="stu-val-energy" class="font-mono">50</span>
                             </div>
@@ -282,17 +285,17 @@
 
                 <!-- 故事卡片 -->
                 <div class="mt-3 p-4 rounded-xl bg-dark-950/90 border border-gray-800 flex flex-col justify-center space-y-2 lg:flex-1 lg:overflow-y-auto custom-scrollbar">
-                    <h3 id="student-stage-title" class="text-lg font-black text-white">階段標題</h3>
-                    <p id="student-stage-story" class="text-sm text-gray-200 leading-relaxed">故事內容...</p>
+                    <h3 id="student-stage-title" class="text-lg sm:text-xl font-black text-white">階段標題</h3>
+                    <p id="student-stage-story" class="text-sm sm:text-base text-gray-200 leading-relaxed">故事內容...</p>
                 </div>
             </div>
 
-            <!-- 右側 7 欄：平板大型觸控選項區 或 破局階段方案 D 輸入區 -->
+            <!-- 右側 7 欄：平板大型觸控選項區 或 破局階段方案 D 雙輸入區 -->
             <div class="lg:col-span-7 glass-panel rounded-2xl p-4 flex flex-col justify-between overflow-visible lg:overflow-hidden border border-gray-800">
                 <!-- 一般選擇題模式 -->
                 <div id="student-choice-mode" class="flex-1 flex flex-col justify-between space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm font-black text-white">🎯 請全組討論後點選一個行動方案：</span>
+                        <span class="text-sm sm:text-base font-black text-white">🎯 請全組討論後點選一個行動方案：</span>
                         <span id="student-submitted-badge" class="hidden px-3 py-1 rounded-full bg-neon-green/20 text-neon-green border border-neon-green/40 text-xs font-black">
                             🔒 本階段選擇已鎖定提交
                         </span>
@@ -305,16 +308,36 @@
                     </button>
                 </div>
 
-                <!-- 破局階段 (方案 D) 填寫模式 -->
+                <!-- 破局階段 (方案 D) 雙格填寫模式（送出後可反覆修改） -->
                 <div id="student-solution-d-mode" class="hidden flex-1 flex flex-col justify-between space-y-3">
-                    <div class="space-y-1">
-                        <span class="px-2.5 py-0.5 rounded bg-neon-purple/20 text-neon-purple border border-neon-purple/40 text-xs font-black">💡 系統破局階段・方案 D 提案</span>
-                        <h3 class="text-lg font-black text-white">設計不硬碰硬、也不犧牲底線的「微小行動」</h3>
-                        <p class="text-xs text-gray-400">請全組共同撰寫具體做法，按下送出後才會解鎖顯示於講台大螢幕！</p>
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <div class="space-y-0.5">
+                            <span class="px-2.5 py-0.5 rounded bg-neon-purple/20 text-neon-purple border border-neon-purple/40 text-xs font-black">💡 系統破局階段・方案 D 提案</span>
+                            <h3 class="text-base sm:text-lg font-black text-white">設計不硬碰硬、也不犧牲底線的「微小行動」</h3>
+                        </div>
+                        <span id="student-sol-d-status-badge" class="hidden px-3 py-1 rounded-full bg-neon-green/20 text-neon-green border border-neon-green/40 text-xs font-black">
+                            ✅ 已公開至大螢幕（可隨時修改更新）
+                        </span>
                     </div>
-                    <textarea id="student-solution-d-input" rows="5" placeholder="請輸入你們的方案 D 破局行動（例如：下課私下找阿光聊天，並約他一起去合作社或找輔導老師討論...）" class="w-full min-h-[130px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-base text-white outline-none resize-y"></textarea>
+
+                    <!-- 小輸入格：行動命名 -->
+                    <div class="space-y-1 shrink-0">
+                        <label for="student-solution-d-title" class="text-xs sm:text-sm font-black text-neon-purple block">
+                            1️⃣ 為你們的破局行動取一個名字：
+                        </label>
+                        <input type="text" id="student-solution-d-title" oninput="window.markSolDDirty()" placeholder="範例：溫柔的破冰船（或：圖書館的秘密邀請）" class="w-full bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl px-4 py-3 text-base font-black text-white placeholder-gray-500/65 outline-none transition-all">
+                    </div>
+
+                    <!-- 大輸入格：具體行為與步驟 -->
+                    <div class="space-y-1 flex-1 flex flex-col">
+                        <label for="student-solution-d-input" class="text-xs sm:text-sm font-black text-neon-purple block">
+                            2️⃣ 寫出具體行為與執行步驟：
+                        </label>
+                        <textarea id="student-solution-d-input" rows="5" oninput="window.markSolDDirty()" placeholder="範例步驟：&#10;1. 下課時不在教室大聲找阿光，避免引發阿健正面衝突。&#10;2. 趁去裝水時私下遞紙條或傳訊息，約阿光午休一起去圖書館。&#10;3. 邀請平時也覺得阿健太過分的同學加入，建立友善支持小圈圈。" class="w-full min-h-[145px] lg:flex-1 bg-dark-950 border border-gray-700 focus:border-neon-purple rounded-xl p-4 text-sm sm:text-base text-white placeholder-gray-500/65 outline-none resize-y leading-relaxed transition-all"></textarea>
+                    </div>
+
                     <button id="btn-submit-solution-d" onclick="window.submitSolutionD()" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-purple to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-black text-base shadow-lg transition-all shrink-0">
-                        🚀 確定送出方案 D（送出後大螢幕立即公開）
+                        🚀 確定送出方案 D（送出後大螢幕立即公開，仍可反覆修改）
                     </button>
                 </div>
             </div>
@@ -416,14 +439,20 @@
         </div>
     </div>
 
-    <!-- ==================== 8. 方案 D 全螢幕放大檢視視窗 ==================== -->
-    <div id="modal-solution-d-viewer" class="hidden fixed inset-0 bg-dark-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="window.closeSolutionDViewer()">
-        <div class="glass-panel max-w-2xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-purple shadow-2xl space-y-4" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
-                <span id="viewer-sol-d-team" class="text-lg font-black text-neon-purple">智囊團破局提案</span>
-                <button onclick="window.closeSolutionDViewer()" class="px-3 py-1 bg-dark-800 rounded-lg text-xs font-bold text-gray-300">✕ 關閉</button>
+    <!-- ==================== 8. 方案 D 與死亡故事全螢幕放大檢視視窗 ==================== -->
+    <div id="modal-solution-d-viewer" class="hidden fixed inset-0 bg-dark-950/92 backdrop-blur-md z-50 flex items-center justify-center p-4" onclick="window.closeSolutionDViewer()">
+        <div id="viewer-modal-card" class="glass-panel max-w-3xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-purple shadow-2xl space-y-4 max-h-[88vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3 shrink-0">
+                <span id="viewer-sol-d-team" class="text-xl sm:text-2xl font-black text-neon-purple">智囊團破局提案</span>
+                <button onclick="window.closeSolutionDViewer()" class="px-4 py-1.5 bg-dark-800 hover:bg-dark-700 rounded-xl text-sm font-black text-gray-200">✕ 關閉</button>
             </div>
-            <p id="viewer-sol-d-content" class="text-lg sm:text-xl text-white font-bold leading-relaxed whitespace-pre-wrap py-4"></p>
+            <div id="viewer-sol-d-action-title-box" class="hidden px-4 py-3 rounded-2xl bg-neon-purple/15 border border-neon-purple/40 shrink-0">
+                <span class="text-xs font-bold text-neon-purple block">🎯 行動代號：</span>
+                <h4 id="viewer-sol-d-action-title" class="text-xl sm:text-2xl font-black text-white mt-0.5"></h4>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar pr-1">
+                <p id="viewer-sol-d-content" class="text-lg sm:text-xl text-gray-100 font-semibold leading-relaxed whitespace-pre-wrap py-2"></p>
+            </div>
         </div>
     </div>
 
@@ -470,7 +499,7 @@
     </div>
 
     <!-- 通用提示條 -->
-    <div id="toast-notification" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] bg-dark-900 border border-neon-cyan text-white px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,243,255,0.4)] text-xs font-bold flex items-center gap-2 transition-all">
+    <div id="toast-notification" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] bg-dark-900 border border-neon-cyan text-white px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,243,255,0.4)] text-xs sm:text-sm font-bold flex items-center gap-2 transition-all">
         <span id="toast-message">訊息提示</span>
     </div>
 
@@ -480,9 +509,18 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 啟用 QR Code UTF-8 編碼支援（確保中文班級名稱可正常產生條碼）
+        // 啟用 QR Code UTF-8 編碼支援
         if (typeof qrcode !== 'undefined' && qrcode.stringToBytesFuncs) {
             qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         let db = null;
@@ -519,10 +557,10 @@
             if (!badge) return;
             if (isCloudOk) {
                 badge.innerText = '🟢 雲端即時連線中';
-                badge.className = 'px-2 py-0.5 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-[10px] font-black';
+                badge.className = 'px-2.5 py-0.5 rounded-full bg-neon-green/15 border border-neon-green/40 text-neon-green text-xs font-black';
             } else {
                 badge.innerText = `🟠 雲端受阻${reason ? ` (${reason})` : ''}`;
-                badge.className = 'px-2 py-0.5 rounded-full bg-neon-amber/15 border border-neon-amber/40 text-neon-amber text-[10px] font-black';
+                badge.className = 'px-2.5 py-0.5 rounded-full bg-neon-amber/15 border border-neon-amber/40 text-neon-amber text-xs font-black';
             }
         }
 
@@ -541,7 +579,6 @@
                     currentUser = res.user;
                 }
             } catch (e) {
-                // 即使匿名登入未開啟，仍保留 db 物件以支援公開讀寫的 Firestore 規則
                 console.warn("Auth skipped, continuing with Firestore:", e.code || e.message);
             }
             return currentUser;
@@ -652,6 +689,7 @@
         window.studentSelectedTeamId = 1;
         window.studentIsTeamLocked = false;
         window.studentTempChoice = null;
+        window.studentSolDDirty = false;
         window.renameTargetTeamId = null;
         window.adminActiveScenarioIdx = 0;
 
@@ -669,6 +707,10 @@
             window._toastTimer = setTimeout(() => {
                 toast.classList.add('hidden');
             }, 3200);
+        };
+
+        window.markSolDDirty = function() {
+            window.studentSolDDirty = true;
         };
 
         window.setLobbyRole = function(role) {
@@ -752,7 +794,7 @@
                     listEl.innerHTML = `<span class="text-xs text-gray-500">目前尚無在線教室，請等待講台開啟或手動輸入班級代碼</span>`;
                     return;
                 }
-                listEl.innerHTML = arr.map(c => `<button onclick="window.quickSelectLobbyClass('${c}')" class="px-3 py-1.5 rounded-lg bg-neon-green/15 border border-neon-green/50 text-neon-green text-xs font-black hover:bg-neon-green/25 transition-all">🟢 ${c} 班 (點擊直接連線)</button>`).join('');
+                listEl.innerHTML = arr.map(c => `<button onclick="window.quickSelectLobbyClass('${escapeHtml(c)}')" class="px-3 py-1.5 rounded-lg bg-neon-green/15 border border-neon-green/50 text-neon-green text-xs font-black hover:bg-neon-green/25 transition-all">🟢 ${escapeHtml(c)} 班 (點擊直接連線)</button>`).join('');
             };
 
             const localSet = new Set();
@@ -947,6 +989,7 @@
                         window.currentStageIndex = data.currentStageIndex ?? 0;
                         if (stageChanged) {
                             window.studentTempChoice = null;
+                            window.studentSolDDirty = false;
                         }
                         window.renderAllUI();
                     }
@@ -976,7 +1019,6 @@
                 });
             }
 
-            // 備援輪詢（每 3 秒同步一次雲端與本機狀態）
             pollIntervalId = setInterval(() => {
                 window.manualForceSync(true);
             }, 3000);
@@ -1084,7 +1126,7 @@
                         svgEl.setAttribute('height', '184px');
                     }
                 } catch (e) {
-                    container.innerHTML = `<span class="text-xl font-black text-black">${window.activeClassName}</span>`;
+                    container.innerHTML = `<span class="text-xl font-black text-black">${escapeHtml(window.activeClassName)}</span>`;
                 }
             }
             document.getElementById('qr-class-pin').innerText = window.activeClassName;
@@ -1105,7 +1147,7 @@
                 const isJoined = t && t.name && t.name !== `智囊團 ${i}`;
                 html += `
                     <div class="px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-between ${isJoined ? 'bg-neon-green/15 border-neon-green text-white' : 'bg-dark-950/70 border-gray-800 text-gray-500'}">
-                        <span class="truncate">${isJoined ? `🟢 ${t.name}` : `⚪ 第 ${i} 組 (等待加入)`}</span>
+                        <span class="truncate">${isJoined ? `🟢 ${escapeHtml(t.name)}` : `⚪ 第 ${i} 組 (等待加入)`}</span>
                         <span class="text-[10px] font-mono shrink-0 ml-1">#${i}</span>
                     </div>
                 `;
@@ -1113,7 +1155,7 @@
             grid.innerHTML = html;
         };
 
-        // 視角切換（講台大螢幕維持全覽、學生平板端允許自由滑動）
+        // 視角切換
         window.switchView = function(view) {
             const tView = document.getElementById('view-teacher');
             const sView = document.getElementById('view-student');
@@ -1126,15 +1168,15 @@
                 tView.classList.remove('hidden');
                 sView.classList.add('hidden');
                 if (qrBtn) qrBtn.classList.remove('hidden');
-                if (tBtn) tBtn.className = "px-2.5 py-1 rounded-md text-xs font-black bg-neon-cyan text-dark-950 transition-all";
-                if (sBtn) sBtn.className = "px-2.5 py-1 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all";
+                if (tBtn) tBtn.className = "px-3 py-1 rounded-md text-xs sm:text-sm font-black bg-neon-cyan text-dark-950 transition-all";
+                if (sBtn) sBtn.className = "px-3 py-1 rounded-md text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition-all";
             } else {
                 document.body.classList.remove('lg:h-screen', 'lg:overflow-hidden');
                 sView.classList.remove('hidden');
                 tView.classList.add('hidden');
                 if (qrBtn) qrBtn.classList.add('hidden');
-                if (sBtn) sBtn.className = "px-2.5 py-1 rounded-md text-xs font-black bg-neon-green text-dark-950 transition-all";
-                if (tBtn) tBtn.className = "px-2.5 py-1 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all";
+                if (sBtn) sBtn.className = "px-3 py-1 rounded-md text-xs sm:text-sm font-black bg-neon-green text-dark-950 transition-all";
+                if (tBtn) tBtn.className = "px-3 py-1 rounded-md text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition-all";
                 window.updateStudentUI();
             }
         };
@@ -1156,6 +1198,7 @@
             window.currentScenarioIndex = newIdx;
             window.currentStageIndex = 0;
             window.studentTempChoice = null;
+            window.studentSolDDirty = false;
 
             const newScenario = window.scenarioLines[newIdx];
             if (newScenario && window.scenarioSnapshots[newScenario.id]) {
@@ -1182,6 +1225,7 @@
         window.switchStage = async function(stageIdx) {
             window.currentStageIndex = stageIdx;
             window.studentTempChoice = null;
+            window.studentSolDDirty = false;
             window.renderAllUI();
             await window.syncRoomStateToCloud();
         };
@@ -1199,6 +1243,7 @@
             }
         };
 
+        // 更新講台大螢幕左側情境與選項 (放大字體與間距)
         window.updateStageUI = function() {
             const scenarioContainer = document.getElementById('scenario-tabs-container');
             const stageContainer = document.getElementById('stage-tabs-container');
@@ -1214,7 +1259,7 @@
             scenarioContainer.innerHTML = window.scenarioLines.map((sc, idx) => {
                 const isActive = idx === window.currentScenarioIndex;
                 const activeStyle = scenarioColors[idx % scenarioColors.length];
-                return `<button onclick="window.switchScenario(${idx})" class="px-2.5 py-1 rounded-lg text-xs font-black border transition-all ${isActive ? activeStyle + ' shadow-md' : 'bg-dark-900 text-gray-400 border-gray-700 hover:text-white'}">${sc.title}</button>`;
+                return `<button onclick="window.switchScenario(${idx})" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-black border transition-all ${isActive ? activeStyle + ' shadow-md' : 'bg-dark-900 text-gray-400 border-gray-700 hover:text-white'}">${escapeHtml(sc.title)}</button>`;
             }).join('');
 
             const currentScenario = window.scenarioLines[window.currentScenarioIndex] || window.scenarioLines[0];
@@ -1229,7 +1274,7 @@
                         ? 'bg-neon-purple text-white border-neon-purple shadow-md'
                         : 'bg-blue-500 text-white border-blue-400 shadow-md';
                 }
-                return `<button onclick="window.switchStage(${idx})" class="px-2.5 py-1 rounded-lg text-xs font-black border transition-all ${btnClass}">${label}</button>`;
+                return `<button onclick="window.switchStage(${idx})" class="px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-black border transition-all ${btnClass}">${label}</button>`;
             }).join('');
 
             const currentStage = currentScenario.stages[window.currentStageIndex] || currentScenario.stages[0];
@@ -1242,10 +1287,10 @@
             const typeBadge = document.getElementById('stage-type-badge');
             if (currentStage.isBreakthrough) {
                 typeBadge.innerText = '💡 系統破局階段';
-                typeBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-neon-purple/20 text-neon-purple border border-neon-purple/40 shrink-0';
+                typeBadge.className = 'px-3 py-1 rounded-lg text-xs sm:text-sm font-black bg-neon-purple/20 text-neon-purple border border-neon-purple/40 shrink-0';
             } else {
                 typeBadge.innerText = '🎯 抉擇扣血階段';
-                typeBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0';
+                typeBadge.className = 'px-3 py-1 rounded-lg text-xs sm:text-sm font-black bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0';
             }
 
             const histBadge = document.getElementById('history-mode-badge');
@@ -1257,18 +1302,37 @@
 
             const optListEl = document.getElementById('teacher-options-list');
             if (currentStage.isBreakthrough) {
-                optListEl.innerHTML = `<div class="p-4 rounded-xl bg-neon-purple/10 border border-neon-purple/40 text-center space-y-2"><div class="text-3xl">💡</div><h4 class="text-base font-black text-neon-purple">目前進入「方案 D 破局提案」階段</h4><p class="text-xs sm:text-sm text-gray-200">各組在平板輸入並按下「確定送出」後，右側各組卡片將自動解鎖顯示該組的破局行動！</p></div>`;
+                optListEl.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-neon-purple/15 border border-neon-purple/50 text-center space-y-2.5">
+                        <div class="text-4xl">💡</div>
+                        <h4 class="text-lg sm:text-xl font-black text-neon-purple">目前進入「方案 D 破局提案」階段</h4>
+                        <p class="text-sm sm:text-base text-gray-100 leading-relaxed font-medium">各組在平板輸入「行動代號」與「具體步驟」送出後，右側卡片將即時公開（學生可隨時修改更新，點擊卡片可全螢幕放大檢視）！</p>
+                    </div>
+                `;
             } else {
                 const keyColors = { A: 'text-neon-cyan', B: 'text-neon-amber', C: 'text-neon-green' };
                 optListEl.innerHTML = ['A', 'B', 'C'].map(k => {
                     const opt = currentStage.options[k];
                     if (!opt) return '';
                     const fmt = (v) => (v > 0 ? `+${v}` : `${v}`);
-                    return `<div class="p-3 rounded-xl bg-dark-900/90 border border-gray-800 flex flex-col gap-1.5"><div class="flex justify-between items-center"><span class="text-sm sm:text-base font-black ${keyColors[k]}">【方案 ${k}】${opt.title}</span><div class="flex gap-1.5 text-xs font-mono font-black"><span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300">安${fmt(opt.safety)}</span><span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300">尊${fmt(opt.esteem)}</span><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300">能${fmt(opt.energy)}</span></div></div><p class="text-xs sm:text-sm text-gray-300 font-medium">${opt.desc}</p></div>`;
+                    return `
+                        <div class="p-3.5 rounded-2xl bg-dark-900/95 border border-gray-800 flex flex-col gap-1.5 shadow-sm">
+                            <div class="flex flex-wrap justify-between items-center gap-1.5">
+                                <span class="text-base sm:text-lg xl:text-[19px] font-black ${keyColors[k]}">【方案 ${k}】${escapeHtml(opt.title)}</span>
+                                <div class="flex gap-1.5 text-xs sm:text-sm font-mono font-black shrink-0">
+                                    <span class="px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">安${fmt(opt.safety)}</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800/50">尊${fmt(opt.esteem)}</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800/50">能${fmt(opt.energy)}</span>
+                                </div>
+                            </div>
+                            <p class="text-sm sm:text-base text-gray-200 font-medium leading-snug">${escapeHtml(opt.desc)}</p>
+                        </div>
+                    `;
                 }).join('');
             }
         };
 
+        // 渲染講台大螢幕右側 6 組智囊團卡片 (放大字體與清晰排版)
         window.renderTeams = function() {
             const grid = document.getElementById('teams-grid');
             if (!grid) return;
@@ -1289,81 +1353,91 @@
                 const displayIsDead = stageRecord ? stageRecord.isDead : team.isDead;
                 const displayDeathReason = stageRecord ? stageRecord.deathReason : team.deathReason;
 
-                // 本階段作答狀態提示標籤
                 const solD = team.solutionsD && team.solutionsD[currentScenario.id];
                 let stageStatusTag = '';
                 if (currentStage.isBreakthrough) {
                     stageStatusTag = (solD && solD.submitted)
-                        ? `<span class="px-1.5 py-0.5 rounded bg-neon-purple/25 text-neon-purple text-[10px] font-black shrink-0">✅ 已提案</span>`
-                        : `<span class="px-1.5 py-0.5 rounded bg-dark-800 text-gray-500 text-[10px] font-bold shrink-0">⏳ 撰寫中</span>`;
+                        ? `<span class="px-2 py-0.5 rounded-md bg-neon-purple/25 text-neon-purple text-xs font-black shrink-0">✅ 已提案</span>`
+                        : `<span class="px-2 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs font-bold shrink-0">⏳ 撰寫中</span>`;
                 } else {
                     stageStatusTag = stageRecord
-                        ? `<span class="px-1.5 py-0.5 rounded bg-neon-green/20 text-neon-green text-[10px] font-black shrink-0">✅ 選 ${stageRecord.choice}</span>`
-                        : `<span class="px-1.5 py-0.5 rounded bg-dark-800 text-gray-500 text-[10px] font-bold shrink-0">⏳ 討論中</span>`;
+                        ? `<span class="px-2 py-0.5 rounded-md bg-neon-green/20 text-neon-green text-xs font-black shrink-0">✅ 選 ${stageRecord.choice}</span>`
+                        : `<span class="px-2 py-0.5 rounded-md bg-dark-800 text-gray-400 text-xs font-bold shrink-0">⏳ 討論中</span>`;
                 }
 
                 let badgesHtml = '';
                 currentScenario.stages.forEach((st, sIdx) => {
                     if (!st.isBreakthrough && scHist[st.id]) {
-                        badgesHtml += `<span class="px-1.5 py-0.5 rounded bg-dark-800 border border-gray-700 text-[10px] font-mono font-bold text-neon-cyan">階${sIdx + 1}:${scHist[st.id].choice}</span>`;
+                        badgesHtml += `<span class="px-2 py-0.5 rounded bg-dark-800 border border-gray-700 text-xs font-mono font-black text-neon-cyan">階${sIdx + 1}:${scHist[st.id].choice}</span>`;
                     }
                 });
 
                 let solDHtml = '';
                 if (currentStage.isBreakthrough) {
-                    if (solD && solD.submitted && solD.text) {
-                        solDHtml = `<div onclick="window.openSolutionDViewerById(${i})" class="mt-1.5 p-2 rounded-lg bg-neon-purple/20 border border-neon-purple text-xs text-white font-bold cursor-pointer hover:bg-neon-purple/30 transition-all line-clamp-2" title="點擊全螢幕放大檢視">💡 方案D：${solD.text}</div>`;
+                    if (solD && solD.submitted && (solD.text || solD.title)) {
+                        const titleLabel = solD.title ? `【${escapeHtml(solD.title)}】` : '';
+                        solDHtml = `
+                            <div onclick="window.openSolutionDViewerById(${i})" class="mt-1.5 p-2.5 rounded-xl bg-neon-purple/20 border border-neon-purple text-xs sm:text-sm text-white font-bold cursor-pointer hover:bg-neon-purple/30 transition-all space-y-0.5" title="點擊全螢幕放大檢視">
+                                ${titleLabel ? `<div class="text-neon-purple font-black truncate">💡 ${titleLabel}</div>` : ''}
+                                <div class="line-clamp-2 text-gray-100 leading-snug">${escapeHtml(solD.text)}</div>
+                            </div>
+                        `;
                     } else {
-                        solDHtml = `<div class="mt-1.5 p-2 rounded-lg bg-dark-950/80 border border-dashed border-gray-700 text-[11px] text-gray-500 text-center">🔒 保密鎖定中，等待平板提交方案 D...</div>`;
+                        solDHtml = `<div class="mt-1.5 p-2.5 rounded-xl bg-dark-950/80 border border-dashed border-gray-700 text-xs sm:text-sm text-gray-400 text-center font-bold">🔒 等待平板提交方案 D...</div>`;
                     }
                 }
 
                 let bodyContent = '';
                 if (displayIsDead) {
                     bodyContent = `
-                        <div class="flex-1 flex flex-col justify-between bg-neon-rose/10 border border-neon-rose/50 rounded-xl p-2 mt-1">
-                            <div>
-                                <span class="text-xs font-black text-neon-rose">💀 角色防線崩潰 (已淘汰)</span>
-                                <p class="text-[11px] text-rose-200 mt-1 leading-snug line-clamp-3">${displayDeathReason || '某項生存數值歸零，無法承受人際壓力。'}</p>
+                        <div class="flex-1 flex flex-col justify-between bg-neon-rose/12 border border-neon-rose/50 rounded-xl p-2.5 mt-1">
+                            <div class="space-y-1">
+                                <span class="text-sm sm:text-base font-black text-neon-rose block">💀 角色防線崩潰 (已淘汰)</span>
+                                <p class="text-xs sm:text-sm text-rose-100 leading-snug line-clamp-3">${escapeHtml(displayDeathReason || '某項生存數值歸零，無法承受人際壓力。')}</p>
                             </div>
-                            ${team.reviveRequested ? `
-                                <button onclick="window.approveTeamRevive(${i})" class="w-full mt-1.5 py-1 rounded-lg bg-neon-amber text-dark-950 font-black text-xs animate-bounce">
-                                    ✨ 核准救援復活 (重置 20 點)
+                            <div class="space-y-1.5 mt-2">
+                                <button onclick="window.openDeathStoryViewerById(${i})" class="w-full py-1.5 rounded-lg bg-neon-rose/25 hover:bg-neon-rose/40 text-rose-100 border border-neon-rose/50 font-black text-xs sm:text-sm transition-all">
+                                    📖 查看完整心理崩潰故事
                                 </button>
-                            ` : `
-                                <button onclick="window.approveTeamRevive(${i})" class="w-full mt-1.5 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-gray-300 font-bold text-[10px]">
-                                    🔄 教師手動復活
-                                </button>
-                            `}
+                                ${team.reviveRequested ? `
+                                    <button onclick="window.approveTeamRevive(${i})" class="w-full py-1.5 rounded-lg bg-neon-amber text-dark-950 font-black text-xs sm:text-sm animate-bounce">
+                                        ✨ 核准救援復活 (重置 20 點)
+                                    </button>
+                                ` : `
+                                    <button onclick="window.approveTeamRevive(${i})" class="w-full py-1 rounded-lg bg-dark-800 hover:bg-dark-700 text-gray-300 font-bold text-xs">
+                                        🔄 教師手動復活
+                                    </button>
+                                `}
+                            </div>
                         </div>
                     `;
                 } else {
                     bodyContent = `
-                        <div class="space-y-1.5 my-1">
+                        <div class="space-y-2 my-1">
                             <div>
-                                <div class="flex justify-between text-[11px] font-bold">
+                                <div class="flex justify-between text-xs sm:text-sm xl:text-base font-black">
                                     <span class="text-cyan-300">🛡️ 安全感</span>
-                                    <span class="font-mono font-black text-cyan-300">${displaySafety}</span>
+                                    <span class="font-mono text-cyan-300 text-sm sm:text-base xl:text-lg">${displaySafety}</span>
                                 </div>
-                                <div class="w-full h-2 bg-dark-950 rounded-full overflow-hidden">
+                                <div class="w-full h-2.5 sm:h-3 bg-dark-950 rounded-full overflow-hidden mt-0.5">
                                     <div class="h-full bg-neon-cyan transition-all duration-500" style="width: ${Math.max(0, Math.min(100, displaySafety))}%"></div>
                                 </div>
                             </div>
                             <div>
-                                <div class="flex justify-between text-[11px] font-bold">
+                                <div class="flex justify-between text-xs sm:text-sm xl:text-base font-black">
                                     <span class="text-amber-300">👑 道德自尊</span>
-                                    <span class="font-mono font-black text-amber-300">${displayEsteem}</span>
+                                    <span class="font-mono text-amber-300 text-sm sm:text-base xl:text-lg">${displayEsteem}</span>
                                 </div>
-                                <div class="w-full h-2 bg-dark-950 rounded-full overflow-hidden">
+                                <div class="w-full h-2.5 sm:h-3 bg-dark-950 rounded-full overflow-hidden mt-0.5">
                                     <div class="h-full bg-neon-amber transition-all duration-500" style="width: ${Math.max(0, Math.min(100, displayEsteem))}%"></div>
                                 </div>
                             </div>
                             <div>
-                                <div class="flex justify-between text-[11px] font-bold">
+                                <div class="flex justify-between text-xs sm:text-sm xl:text-base font-black">
                                     <span class="text-emerald-300">⚡ 社交能量</span>
-                                    <span class="font-mono font-black text-emerald-300">${displayEnergy}</span>
+                                    <span class="font-mono text-emerald-300 text-sm sm:text-base xl:text-lg">${displayEnergy}</span>
                                 </div>
-                                <div class="w-full h-2 bg-dark-950 rounded-full overflow-hidden">
+                                <div class="w-full h-2.5 sm:h-3 bg-dark-950 rounded-full overflow-hidden mt-0.5">
                                     <div class="h-full bg-neon-green transition-all duration-500" style="width: ${Math.max(0, Math.min(100, displayEnergy))}%"></div>
                                 </div>
                             </div>
@@ -1377,22 +1451,22 @@
                     : (isJoined ? 'border-neon-cyan/50 shadow-[0_0_15px_rgba(0,243,255,0.12)]' : 'border-gray-800');
 
                 html += `
-                    <div class="glass-panel rounded-2xl p-2.5 flex flex-col justify-between border ${cardBorder} overflow-hidden">
-                        <div class="flex items-center justify-between gap-1 border-b border-gray-800/80 pb-1.5">
+                    <div class="glass-panel rounded-2xl p-3 flex flex-col justify-between border ${cardBorder} overflow-hidden">
+                        <div class="flex items-center justify-between gap-1.5 border-b border-gray-800/80 pb-2">
                             <div class="flex items-center gap-1.5 truncate">
-                                <span class="px-1.5 py-0.5 rounded ${isJoined ? 'bg-neon-green/20 text-neon-green' : 'bg-dark-800 text-gray-400'} text-[10px] font-mono font-black">#${i}</span>
-                                <h3 class="text-xs sm:text-sm font-black text-white truncate">${team.name}</h3>
+                                <span class="px-2 py-0.5 rounded-md ${isJoined ? 'bg-neon-green/20 text-neon-green' : 'bg-dark-800 text-gray-400'} text-xs sm:text-sm font-mono font-black">#${i}</span>
+                                <h3 class="text-base sm:text-lg xl:text-xl font-black text-white truncate">${escapeHtml(team.name)}</h3>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
                                 ${stageStatusTag}
-                                <button onclick="window.openRenameModal(${i}, event)" class="px-1.5 py-0.5 rounded bg-dark-800 hover:bg-neon-cyan hover:text-dark-950 text-gray-300 text-[10px] font-bold transition-all" title="強制修改隊名">
+                                <button onclick="window.openRenameModal(${i}, event)" class="px-2 py-0.5 rounded-md bg-dark-800 hover:bg-neon-cyan hover:text-dark-950 text-gray-300 text-xs font-bold transition-all" title="強制修改隊名">
                                     ✏️
                                 </button>
                             </div>
                         </div>
                         ${bodyContent}
-                        <div class="flex flex-wrap gap-1 pt-1 border-t border-gray-800/60 min-h-[22px]">
-                            ${badgesHtml || '<span class="text-[10px] text-gray-600">尚無選擇紀錄</span>'}
+                        <div class="flex flex-wrap gap-1.5 pt-1.5 border-t border-gray-800/60 min-h-[26px]">
+                            ${badgesHtml || '<span class="text-xs text-gray-500">尚無選擇紀錄</span>'}
                         </div>
                     </div>
                 `;
@@ -1439,9 +1513,39 @@
             const team = window.teamsData[teamId];
             const currentScenario = window.scenarioLines[window.currentScenarioIndex];
             const solD = team && team.solutionsD && currentScenario ? team.solutionsD[currentScenario.id] : null;
-            if (!solD || !solD.text) return;
-            document.getElementById('viewer-sol-d-team').innerText = `💡 【${team.name}】的系統破局方案 D`;
-            document.getElementById('viewer-sol-d-content').innerText = solD.text;
+            if (!solD || (!solD.text && !solD.title)) return;
+
+            const card = document.getElementById('viewer-modal-card');
+            card.className = 'glass-panel max-w-3xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-purple shadow-2xl space-y-4 max-h-[88vh] flex flex-col';
+            const headerEl = document.getElementById('viewer-sol-d-team');
+            headerEl.innerText = `💡 【${team.name}】的系統破局方案 D`;
+            headerEl.className = 'text-xl sm:text-2xl font-black text-neon-purple';
+
+            const titleBox = document.getElementById('viewer-sol-d-action-title-box');
+            const titleEl = document.getElementById('viewer-sol-d-action-title');
+            if (solD.title) {
+                titleBox.classList.remove('hidden');
+                titleEl.innerText = solD.title;
+            } else {
+                titleBox.classList.add('hidden');
+            }
+
+            document.getElementById('viewer-sol-d-content').innerText = solD.text || '';
+            document.getElementById('modal-solution-d-viewer').classList.remove('hidden');
+        };
+
+        window.openDeathStoryViewerById = function(teamId) {
+            const team = window.teamsData[teamId];
+            if (!team) return;
+
+            const card = document.getElementById('viewer-modal-card');
+            card.className = 'glass-panel max-w-3xl w-full p-6 sm:p-8 rounded-3xl border-2 border-neon-rose shadow-2xl space-y-4 max-h-[88vh] flex flex-col';
+            const headerEl = document.getElementById('viewer-sol-d-team');
+            headerEl.innerText = `💀 【${team.name}】角色心路歷程回溯與崩潰原因`;
+            headerEl.className = 'text-xl sm:text-2xl font-black text-neon-rose';
+
+            document.getElementById('viewer-sol-d-action-title-box').classList.add('hidden');
+            document.getElementById('viewer-sol-d-content').innerText = team.deathReason || '某項核心心理籌碼耗盡，角色心理防線崩潰。';
             document.getElementById('modal-solution-d-viewer').classList.remove('hidden');
         };
 
@@ -1458,6 +1562,7 @@
             if (nameInput && t) {
                 nameInput.value = t.name === `智囊團 ${t.id}` ? '' : t.name;
             }
+            window.studentSolDDirty = false;
         };
 
         window.lockStudentTeam = async function() {
@@ -1472,6 +1577,7 @@
             }
             window.studentSelectedTeamId = teamId;
             window.studentIsTeamLocked = true;
+            window.studentSolDDirty = false;
             window.teamsData[teamId].name = customName;
 
             sel.disabled = true;
@@ -1491,6 +1597,7 @@
 
         window.unlockStudentTeam = function() {
             window.studentIsTeamLocked = false;
+            window.studentSolDDirty = false;
             document.getElementById('student-team-select').disabled = false;
             document.getElementById('student-team-name-input').disabled = false;
             document.getElementById('btn-lock-team').classList.remove('hidden');
@@ -1513,17 +1620,80 @@
             window.updateStudentUI();
         };
 
-        function generateDeathReason(team, optionTitle) {
+        // 回溯過去所有選擇，生成客製化心理崩潰小故事
+        function generateCustomDeathStory(team, currentScenario, currentStage, finalChoiceKey, finalOpt) {
+            const scHist = (team.history && team.history[currentScenario.id]) || {};
+            const steps = [];
+            let conformCount = 0;
+            let confrontCount = 0;
+            let avoidCount = 0;
+
+            currentScenario.stages.forEach((st, idx) => {
+                if (st.isBreakthrough) return;
+                let rec = null;
+                let optObj = null;
+                if (st.id === currentStage.id) {
+                    rec = { choice: finalChoiceKey, choiceTitle: finalOpt.title };
+                    optObj = finalOpt;
+                } else if (scHist[st.id]) {
+                    rec = scHist[st.id];
+                    optObj = st.options ? st.options[rec.choice] : null;
+                }
+                if (rec) {
+                    steps.push({
+                        stageNum: idx + 1,
+                        stageName: st.name.replace(/^階段\s*\d+[：:]\s*/, ''),
+                        choice: rec.choice,
+                        title: rec.choiceTitle || (optObj ? optObj.title : `方案 ${rec.choice}`)
+                    });
+                    if (optObj) {
+                        if ((optObj.safety || 0) >= 10 && (optObj.esteem || 0) < 0) conformCount++;
+                        else if ((optObj.safety || 0) < 0 && (optObj.esteem || 0) >= 10) confrontCount++;
+                        else avoidCount++;
+                    }
+                }
+            });
+
+            let journeyText = '';
+            if (steps.length === 1) {
+                journeyText = `風暴剛開始，在「${steps[0].stageName}」時，小宇便選擇了「${steps[0].title}」（方案 ${steps[0].choice}）。`;
+            } else {
+                const first = steps[0];
+                const last = steps[steps.length - 1];
+                const middle = steps.slice(1, -1);
+                const middleDesc = middle.length > 0
+                    ? `，接著在壓力逼近時陸續選擇了${middle.map(m => `「${m.title}」`).join('、')}`
+                    : '';
+                journeyText = `回顧這段風暴歷程：一開始面對「${first.stageName}」，小宇選擇了「${first.title}」${middleDesc}；直到最後在「${last.stageName}」中，又做出了「${last.title}」的決定。`;
+            }
+
+            let painText = '';
+            if (conformCount > 0 && confrontCount > 0) {
+                painText = `在這段期間，小宇一直被撕裂在「想被群體接納」與「不想違背良心」的夾縫中——時而戴上面具附和大家，時而又忍不住想守住底線。反覆的搖擺與自我懷疑，讓他既得不到小圈圈的真正信任，也無法原諒妥協過的自己，內心承受著巨大的拉扯與孤獨。`;
+            } else if (conformCount >= confrontCount && conformCount >= avoidCount) {
+                painText = `一路走來，為了不被班上排擠，小宇一次又一次把真實的感受吞進肚子裡，用笑臉和順從換取表面的安全。但每次轉過身，看著無助的阿光與鏡子裡越來越陌生的自己，那種「明明知道不對卻不敢發聲」的愧疚感與自我厭惡，就像針一樣日夜刺痛著他的內心。`;
+            } else if (confrontCount >= conformCount && confrontCount >= avoidCount) {
+                painText = `一路走來，小宇始終不願向不公低頭，每一次挺身而出都像是在與整個班級的潛規則為敵。雖然守住了原則，但下課時周圍刻意壓低的竊竊私語、分組時無人願意靠近的冷漠眼神，那種被全班孤立、彷彿獨自站在暴風雪中的窒息感，早已讓他遍體鱗傷。`;
+            } else {
+                painText = `在這段風暴裡，小宇總是選擇把情緒鎖進心底、獨自消化每一場衝突。他小心翼翼地閃躲每一個眼神與質問，深怕說錯一句話就引爆危機；長期的過度警覺與壓抑，讓他的心像一條繃到極限的橡皮筋，在無人看見的角落裡默默耗盡了所有力氣。`;
+            }
+
+            let collapseText = '';
             if (team.safety <= 0) {
-                return `在選擇「${optionTitle}」後，同儕安全感徹底歸零！小宇因無法承受全班孤立與集體排擠的冷暴力壓力，心理防線全面崩潰。`;
+                collapseText = `當「${finalOpt.title}」成為最後一根稻草，小宇的【同儕安全感】徹底歸零——在鋪天蓋地的排擠與孤立感襲來時，他的心理防線終於全面潰堤。`;
+            } else if (team.esteem <= 0) {
+                collapseText = `當「${finalOpt.title}」成為最後一根稻草，小宇的【道德自尊】徹底歸零——在無止盡的退讓與自我否定中，他再也找不到自我價值，心理防線就此崩塌。`;
+            } else if (team.energy <= 0) {
+                collapseText = `當「${finalOpt.title}」成為最後一根稻草，小宇的【社交能量】徹底耗竭——長期內耗與情緒過載讓他陷入深深的無力感，再也無法承受任何一點風吹草動。`;
+            } else {
+                collapseText = `最終某項核心心理籌碼耗盡，小宇的心理防線在重壓下徹底崩潰。`;
             }
-            if (team.esteem <= 0) {
-                return `在選擇「${optionTitle}」後，道德自尊徹底歸零！為了討好群體一再退讓底線，小宇在強烈的自我厭惡與愧疚感中失去了自己。`;
-            }
-            if (team.energy <= 0) {
-                return `在選擇「${optionTitle}」後，社交能量徹底耗竭！長期在人際夾縫中過度內耗與偽裝，小宇已精疲力竭、無力再應對任何互動。`;
-            }
-            return '某項核心心理籌碼耗盡，角色已無法繼續承受風暴。';
+
+            return `${journeyText}
+
+${painText}
+
+${collapseText}`;
         }
 
         window.confirmAndSubmitChoice = async function() {
@@ -1551,7 +1721,7 @@
 
             if (team.safety <= 0 || team.esteem <= 0 || team.energy <= 0) {
                 team.isDead = true;
-                team.deathReason = generateDeathReason(team, opt.title);
+                team.deathReason = generateCustomDeathStory(team, currentScenario, currentStage, choiceKey, opt);
             }
 
             team.history[currentScenario.id][currentStage.id] = {
@@ -1578,24 +1748,44 @@
             window.showToast('🆘 已向講台老師發送救援復活請求！');
         };
 
+        // 提交或修改破局階段方案 D（支援反覆修改）
         window.submitSolutionD = async function() {
             if (!window.studentIsTeamLocked) return;
-            const text = document.getElementById('student-solution-d-input').value.trim();
-            if (!text) {
-                window.showToast('⚠️ 請輸入你們的方案 D 具體破局行動內容！');
+            const titleEl = document.getElementById('student-solution-d-title');
+            const inputEl = document.getElementById('student-solution-d-input');
+            const actionTitle = titleEl ? titleEl.value.trim() : '';
+            const text = inputEl ? inputEl.value.trim() : '';
+
+            if (!actionTitle) {
+                window.showToast('⚠️ 請先為你們的破局行動取一個名字！');
+                if (titleEl) titleEl.focus();
                 return;
             }
+            if (!text) {
+                window.showToast('⚠️ 請寫出具體行為與執行步驟！');
+                if (inputEl) inputEl.focus();
+                return;
+            }
+
             const team = window.teamsData[window.studentSelectedTeamId];
             const currentScenario = window.scenarioLines[window.currentScenarioIndex];
             if (!team.solutionsD) team.solutionsD = {};
-            team.solutionsD[currentScenario.id] = { text, submitted: true };
+            const isUpdate = !!(team.solutionsD[currentScenario.id] && team.solutionsD[currentScenario.id].submitted);
+
+            team.solutionsD[currentScenario.id] = {
+                title: actionTitle,
+                text: text,
+                submitted: true,
+                updatedAt: Date.now()
+            };
+            window.studentSolDDirty = false;
+
             window.renderAllUI();
             await window.syncSingleTeamToCloud(team.id);
-            window.showToast('🚀 方案 D 已成功送出並公開至講台大螢幕！');
+            window.showToast(isUpdate ? '🔄 方案 D 已更新並即時同步至大螢幕！' : '🚀 方案 D 已成功送出並公開至講台大螢幕！');
         };
 
         window.updateStudentUI = function() {
-            // 即時更新下拉選單的組別佔用提示
             const sel = document.getElementById('student-team-select');
             if (sel && !window.studentIsTeamLocked) {
                 for (let i = 1; i <= 6; i++) {
@@ -1652,18 +1842,30 @@
             if (currentStage.isBreakthrough) {
                 choiceModeEl.classList.add('hidden');
                 solDModeEl.classList.remove('hidden');
+
                 const solD = team.solutionsD && team.solutionsD[currentScenario.id];
+                const titleEl = document.getElementById('student-solution-d-title');
                 const inputEl = document.getElementById('student-solution-d-input');
                 const subBtn = document.getElementById('btn-submit-solution-d');
+                const statusBadge = document.getElementById('student-sol-d-status-badge');
+
+                const isTyping = (document.activeElement === titleEl || document.activeElement === inputEl || window.studentSolDDirty);
+                if (!isTyping) {
+                    titleEl.value = (solD && solD.title) ? solD.title : '';
+                    inputEl.value = (solD && solD.text) ? solD.text : '';
+                }
+
+                // 保持永遠可編輯、可反覆送出修改
+                titleEl.disabled = false;
+                inputEl.disabled = false;
+                subBtn.disabled = false;
+
                 if (solD && solD.submitted) {
-                    inputEl.value = solD.text;
-                    inputEl.disabled = true;
-                    subBtn.disabled = true;
-                    subBtn.innerText = '✅ 方案 D 已送出並公開至大螢幕';
+                    if (statusBadge) statusBadge.classList.remove('hidden');
+                    subBtn.innerText = '🔄 更新並重新送出方案 D（已公開至大螢幕，可隨時修改）';
                 } else {
-                    inputEl.disabled = false;
-                    subBtn.disabled = false;
-                    subBtn.innerText = '🚀 確定送出方案 D（送出後大螢幕立即公開）';
+                    if (statusBadge) statusBadge.classList.add('hidden');
+                    subBtn.innerText = '🚀 確定送出方案 D（送出後大螢幕立即公開，仍可反覆修改）';
                 }
             } else {
                 choiceModeEl.classList.remove('hidden');
@@ -1691,7 +1893,7 @@
                     const opt = currentStage.options[k];
                     if (!opt) return '';
                     const isSelected = submittedRec ? submittedRec.choice === k : window.studentTempChoice === k;
-                    return `<button onclick="window.selectStudentOption('${k}')" ${submittedRec ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-2xl transition-all flex items-center justify-between gap-3 ${isSelected ? 'border-2 border-neon-cyan bg-neon-cyan/15 shadow-[0_0_20px_rgba(0,243,255,0.2)]' : 'border border-gray-800 bg-dark-950/80 hover:border-gray-600'}"><div class="space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-md text-xs font-black ${isSelected ? 'bg-neon-cyan text-dark-950' : 'bg-dark-800 text-gray-300'}">方案 ${k}</span><span class="text-sm sm:text-base font-black text-white">${opt.title}</span></div><p class="text-xs text-gray-400">${opt.desc}</p></div><span class="text-xl shrink-0">${isSelected ? '🔘' : '⚪'}</span></button>`;
+                    return `<button onclick="window.selectStudentOption('${k}')" ${submittedRec ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-2xl transition-all flex items-center justify-between gap-3 ${isSelected ? 'border-2 border-neon-cyan bg-neon-cyan/15 shadow-[0_0_20px_rgba(0,243,255,0.2)]' : 'border border-gray-800 bg-dark-950/80 hover:border-gray-600'}"><div class="space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-md text-xs font-black ${isSelected ? 'bg-neon-cyan text-dark-950' : 'bg-dark-800 text-gray-300'}">方案 ${k}</span><span class="text-sm sm:text-base font-black text-white">${escapeHtml(opt.title)}</span></div><p class="text-xs text-gray-400">${escapeHtml(opt.desc)}</p></div><span class="text-xl shrink-0">${isSelected ? '🔘' : '⚪'}</span></button>`;
                 }).join('');
             }
         };
@@ -1868,7 +2070,7 @@
                         <div class="flex flex-wrap justify-between items-center gap-2 border-b border-gray-800 pb-2">
                             <div class="flex items-center gap-2 flex-1">
                                 <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-xs font-black">#${stIdx + 1}</span>
-                                <input type="text" value="${st.name}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].name = this.value" class="bg-dark-900 border border-gray-700 rounded-lg px-3 py-1 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
+                                <input type="text" value="${escapeHtml(st.name)}" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].name = this.value" class="bg-dark-900 border border-gray-700 rounded-lg px-3 py-1 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
                             </div>
                             <div class="flex items-center gap-1.5">
                                 <button onclick="window.toggleStageBreakthrough(${scIdx}, ${stIdx}, event)" class="px-2.5 py-1 rounded-lg text-xs font-black border ${st.isBreakthrough ? 'bg-neon-purple text-white border-neon-purple' : 'bg-dark-800 text-gray-300 border-gray-700'}">
@@ -1881,7 +2083,7 @@
                         </div>
                         <div>
                             <label class="text-[11px] font-bold text-gray-400 block mb-1">情境故事描述：</label>
-                            <textarea rows="2" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].story = this.value" class="w-full bg-dark-900 border border-gray-700 rounded-xl p-2.5 text-xs text-gray-200 outline-none focus:border-neon-cyan">${st.story}</textarea>
+                            <textarea rows="2" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].story = this.value" class="w-full bg-dark-900 border border-gray-700 rounded-xl p-2.5 text-xs text-gray-200 outline-none focus:border-neon-cyan">${escapeHtml(st.story)}</textarea>
                         </div>
                         ${!st.isBreakthrough ? `
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1890,8 +2092,8 @@
                                     return `
                                         <div class="p-3 rounded-xl bg-dark-900 border border-gray-800 space-y-2">
                                             <span class="text-xs font-black text-neon-cyan">方案 ${k}</span>
-                                            <input type="text" value="${opt.title}" placeholder="選項標題" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].title = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-xs font-bold text-white">
-                                            <input type="text" value="${opt.desc}" placeholder="選項說明" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].desc = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-[11px] text-gray-300">
+                                            <input type="text" value="${escapeHtml(opt.title)}" placeholder="選項標題" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].title = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-xs font-bold text-white">
+                                            <input type="text" value="${escapeHtml(opt.desc)}" placeholder="選項說明" onchange="window.scenarioLines[${scIdx}].stages[${stIdx}].options['${k}'].desc = this.value" class="w-full bg-dark-950 border border-gray-700 rounded px-2 py-1 text-[11px] text-gray-300">
                                             <div class="grid grid-cols-3 gap-1.5 text-[10px]">
                                                 <div>
                                                     <span class="text-cyan-300 block">安全感</span>
@@ -1910,7 +2112,7 @@
                                     `;
                                 }).join('')}
                             </div>
-                        ` : `<p class="text-xs text-neon-purple font-bold">💡 此階段為獨立「破局階段」，學生平板將顯示方案 D 自由填答框。</p>`}
+                        ` : `<p class="text-xs text-neon-purple font-bold">💡 此階段為獨立「破局階段」，學生平板將顯示行動命名與具體步驟雙輸入框（可反覆修改）。</p>`}
                     </div>
                 `).join('') : `<p class="text-xs text-gray-400">（點擊此卡片任意處即可展開編輯此情境的 ${sc.stages.length} 個階段）</p>`;
 
@@ -1919,7 +2121,7 @@
                         <div class="flex flex-wrap justify-between items-center gap-2">
                             <div class="flex items-center gap-2.5 flex-1">
                                 ${isEditing ? `<span class="px-2.5 py-1 rounded-lg bg-neon-cyan text-dark-950 text-xs font-black animate-pulse">✏️ 正在編輯此情境</span>` : `<span class="px-2 py-0.5 rounded bg-dark-800 text-gray-400 text-xs font-bold">情境 #${scIdx + 1}</span>`}
-                                <input type="text" value="${sc.title}" onclick="event.stopPropagation()" onchange="window.scenarioLines[${scIdx}].title = this.value" class="bg-dark-950 border border-gray-700 rounded-xl px-3 py-1.5 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
+                                <input type="text" value="${escapeHtml(sc.title)}" onclick="event.stopPropagation()" onchange="window.scenarioLines[${scIdx}].title = this.value" class="bg-dark-950 border border-gray-700 rounded-xl px-3 py-1.5 text-sm font-black text-white flex-1 outline-none focus:border-neon-cyan">
                             </div>
                             <button onclick="window.deleteScenarioLine(${scIdx}, event)" class="px-3 py-1.5 rounded-xl bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-black transition-all">
                                 🗑️ 刪除情境
@@ -1970,12 +2172,12 @@
             classMap.forEach((updatedAt, cName) => {
                 const dateStr = updatedAt ? new Date(updatedAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
                 html += `
-                    <div onclick="window.viewClassRecordDetail('${cName}')" class="p-3 rounded-xl bg-dark-950 border border-gray-800 hover:border-neon-cyan cursor-pointer flex justify-between items-center transition-all">
+                    <div onclick="window.viewClassRecordDetail('${escapeHtml(cName)}')" class="p-3 rounded-xl bg-dark-950 border border-gray-800 hover:border-neon-cyan cursor-pointer flex justify-between items-center transition-all">
                         <div>
-                            <span class="text-sm font-black text-white block">🏫 ${cName} 班</span>
+                            <span class="text-sm font-black text-white block">🏫 ${escapeHtml(cName)} 班</span>
                             <span class="text-[10px] text-gray-500">最後更新：${dateStr}</span>
                         </div>
-                        <button onclick="window.deleteClassRecord('${cName}', event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">
+                        <button onclick="window.deleteClassRecord('${escapeHtml(cName)}', event)" class="px-2.5 py-1 rounded-lg bg-neon-rose/20 text-neon-rose hover:bg-neon-rose hover:text-white text-xs font-bold">
                             🗑️ 刪除
                         </button>
                     </div>
@@ -1987,7 +2189,7 @@
         window.viewClassRecordDetail = async function(className) {
             const detailEl = document.getElementById('admin-class-record-detail');
             if (!detailEl) return;
-            detailEl.innerHTML = `<p class="text-xs text-neon-cyan p-6">載入【${className}】班級完整歷程中...</p>`;
+            detailEl.innerHTML = `<p class="text-xs text-neon-cyan p-6">載入【${escapeHtml(className)}】班級完整歷程中...</p>`;
 
             let scenarios = getDefaultScenarios();
             const teamsMap = {};
@@ -2029,12 +2231,13 @@
                             steps.push(`階段${idx + 1}選【${scHist[st.id].choice}】`);
                         }
                     });
-                    if (steps.length > 0 || (solD && solD.text)) {
+                    if (steps.length > 0 || (solD && (solD.text || solD.title))) {
+                        const solTitleStr = solD && solD.title ? `【${escapeHtml(solD.title)}】` : '';
                         historyLines += `
-                            <div class="mt-2 p-2 rounded-lg bg-dark-900 border border-gray-800 text-xs space-y-1">
-                                <span class="font-bold text-neon-cyan block">${sc.title}</span>
+                            <div class="mt-2 p-2.5 rounded-lg bg-dark-900 border border-gray-800 text-xs space-y-1">
+                                <span class="font-bold text-neon-cyan block">${escapeHtml(sc.title)}</span>
                                 <p class="text-gray-300">決策軌跡：${steps.join(' ➔ ') || '無'}</p>
-                                ${solD && solD.text ? `<p class="text-neon-purple font-bold">💡 方案 D 提案：${solD.text}</p>` : ''}
+                                ${solD && (solD.text || solD.title) ? `<p class="text-neon-purple font-bold whitespace-pre-line">💡 方案 D ${solTitleStr}：${escapeHtml(solD.text)}</p>` : ''}
                             </div>
                         `;
                     }
@@ -2043,7 +2246,7 @@
                 cardsHtml += `
                     <div class="p-3.5 rounded-2xl bg-dark-950 border ${t.isDead ? 'border-neon-rose' : 'border-gray-800'} space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-black text-white">#${i} ${t.name}</span>
+                            <span class="text-sm font-black text-white">#${i} ${escapeHtml(t.name)}</span>
                             <span class="px-2 py-0.5 rounded text-xs font-black ${t.isDead ? 'bg-neon-rose/20 text-neon-rose' : 'bg-neon-green/20 text-neon-green'}">
                                 ${t.isDead ? '💀 已淘汰' : '✅ 存活'}
                             </span>
@@ -2053,7 +2256,7 @@
                             <span>道德自尊: ${t.esteem}</span>
                             <span>社交能量: ${t.energy}</span>
                         </div>
-                        ${t.isDead && t.deathReason ? `<p class="text-xs text-neon-rose font-bold">死因：${t.deathReason}</p>` : ''}
+                        ${t.isDead && t.deathReason ? `<div class="p-2 rounded bg-neon-rose/10 border border-neon-rose/30 text-xs text-rose-200 whitespace-pre-line leading-relaxed">${escapeHtml(t.deathReason)}</div>` : ''}
                         ${historyLines || '<p class="text-xs text-gray-600">尚無作答歷程</p>'}
                     </div>
                 `;
@@ -2062,8 +2265,8 @@
             detailEl.innerHTML = `
                 <div class="space-y-4">
                     <div class="flex justify-between items-center border-b border-gray-800 pb-3">
-                        <h3 class="text-lg font-black text-white">📊 【${className} 班】課堂全組歷程與提案總覽</h3>
-                        <button onclick="window.deleteClassRecord('${className}', event)" class="px-3 py-1.5 rounded-xl bg-neon-rose text-white text-xs font-black hover:bg-rose-500">
+                        <h3 class="text-lg font-black text-white">📊 【${escapeHtml(className)} 班】課堂全組歷程與提案總覽</h3>
+                        <button onclick="window.deleteClassRecord('${escapeHtml(className)}', event)" class="px-3 py-1.5 rounded-xl bg-neon-rose text-white text-xs font-black hover:bg-rose-500">
                             🗑️ 永久刪除此班存檔
                         </button>
                     </div>
